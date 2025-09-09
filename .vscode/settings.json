@@ -2,6 +2,8 @@
     "editor.defaultFormatter": "biomejs.biome",
     "editor.formatOnSave": true,
     "editor.insertSpaces": true,
+    "oxc.enable": true,
+    "oxc.requireConfig": true,
     "[javascript]": {
         "editor.tabSize": 2,
         "editor.defaultFormatter": "biomejs.biome"
