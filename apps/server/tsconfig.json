@@ -11,10 +11,7 @@
       "@/*": ["./src/*"]
     },
     "outDir": "./dist",
-    "types": [
-        "node"
-
-    ],
+    "types": ["node"],
     "composite": true,
     "jsx": "react-jsx"
   }

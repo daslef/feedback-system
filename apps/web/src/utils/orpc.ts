@@ -24,6 +24,6 @@ export const link = new RPCLink({
   url: `${import.meta.env.VITE_SERVER_URL}/rpc`,
 });
 
-export const client: AppRouterClient = createORPCClient(link)
+export const client: AppRouterClient = createORPCClient(link);
 
-export const orpc = createTanstackQueryUtils(client)
+export const orpc = createTanstackQueryUtils(client);

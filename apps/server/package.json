@@ -27,10 +27,10 @@
     "@libsql/client": "^0.15.9"
   },
   "devDependencies": {
+    "@types/node": "^22.13.11",
     "tsdown": "^0.14.1",
     "typescript": "^5.8.2",
     "tsx": "^4.19.2",
-    "@types/node": "^22.13.11",
     "drizzle-kit": "^0.31.2"
   }
 }

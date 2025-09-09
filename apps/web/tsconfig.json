@@ -24,7 +24,9 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "references": [{
-    "path": "../server"
-  }]
+  "references": [
+    {
+      "path": "../server"
+    }
+  ]
 }

@@ -16,7 +16,7 @@ export default function Header() {
               <NavLink
                 key={to}
                 to={to}
-                className={({ isActive }) => isActive ? "font-bold" : ""}
+                className={({ isActive }) => (isActive ? "font-bold" : "")}
                 end
               >
                 {label}

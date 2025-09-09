@@ -2,7 +2,6 @@ import "dotenv/config";
 import Fastify from "fastify";
 import fastifyCors from "@fastify/cors";
 
-
 import { OpenAPIHandler } from "@orpc/openapi/node";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
@@ -12,16 +11,10 @@ import { onError } from "@orpc/server";
 import { appRouter } from "./routers/index";
 import { createServer } from "node:http";
 
-
-
 const baseCorsConfig = {
   origin: process.env.CORS_ORIGIN || "",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: [
-    "Content-Type",
-    "Authorization",
-    "X-Requested-With"
-  ],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   credentials: true,
   maxAge: 86400,
 };
@@ -85,11 +78,8 @@ const fastify = Fastify({
 
 fastify.register(fastifyCors, baseCorsConfig);
 
-
-
-
-fastify.get('/', async () => {
-  return 'OK';
+fastify.get("/", async () => {
+  return "OK";
 });
 
 fastify.listen({ port: 3000 }, (err) => {

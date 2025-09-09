@@ -7,5 +7,4 @@ export async function createContext(req: IncomingHttpHeaders) {
   };
 }
 
-
 export type Context = Awaited<ReturnType<typeof createContext>>;
