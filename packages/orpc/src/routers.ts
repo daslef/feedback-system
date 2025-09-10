@@ -1,12 +1,13 @@
-import { publicProcedure } from "../lib/orpc";
 import type { RouterClient } from "@orpc/server";
-import { todoRouter } from "./todo";
+import { publicProcedure } from "./lib/orpc";
+
+import { projectRouter } from "./project";
 
 export const appRouter = {
   healthCheck: publicProcedure.handler(() => {
     return "OK";
   }),
-  todo: todoRouter,
+  project: projectRouter,
 };
 export type AppRouter = typeof appRouter;
 export type AppRouterClient = RouterClient<typeof appRouter>;

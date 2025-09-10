@@ -1,15 +1,11 @@
+import { createServer } from "node:http";
 import "dotenv/config";
+
 import Fastify from "fastify";
 import fastifyCors from "@fastify/cors";
 
-import { OpenAPIHandler } from "@orpc/openapi/node";
-import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
-import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
-import { RPCHandler } from "@orpc/server/node";
-import { CORSPlugin } from "@orpc/server/plugins";
-import { onError } from "@orpc/server";
-import { appRouter } from "./routers/index";
-import { createServer } from "node:http";
+import { apiHandler, rpcHandler } from "@shared/orpc";
+import { createContext } from "./lib/context";
 
 const baseCorsConfig = {
   origin: process.env.CORS_ORIGIN || "",
@@ -18,34 +14,6 @@ const baseCorsConfig = {
   credentials: true,
   maxAge: 86400,
 };
-
-const rpcHandler = new RPCHandler(appRouter, {
-  plugins: [
-    new CORSPlugin({
-      origin: process.env.CORS_ORIGIN,
-      credentials: true,
-      allowHeaders: ["Content-Type", "Authorization"],
-    }),
-  ],
-  interceptors: [
-    onError((error) => {
-      console.error(error);
-    }),
-  ],
-});
-
-const apiHandler = new OpenAPIHandler(appRouter, {
-  plugins: [
-    new OpenAPIReferencePlugin({
-      schemaConverters: [new ZodToJsonSchemaConverter()],
-    }),
-  ],
-  interceptors: [
-    onError((error) => {
-      console.error(error);
-    }),
-  ],
-});
 
 const fastify = Fastify({
   logger: true,

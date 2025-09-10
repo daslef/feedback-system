@@ -1,48 +1,48 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.3/schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
-  "files": {
-    "ignoreUnknown": true,
-    "includes": [
-      "**",
-      "!**/.next",
-      "!**/dist",
-      "!**/.turbo",
-      "!**/dev-dist",
-      "!**/.zed",
-      "!**/.vscode",
-      "!**/routeTree.gen.ts",
-      "!**/src-tauri",
-      "!**/.nuxt",
-      "!bts.jsonc",
-      "!**/.expo",
-      "!**/.wrangler",
-      "!**/.alchemy",
-      "!**/wrangler.jsonc",
-      "!**/.source"
-    ]
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "space"
-  },
-  "assist": {
-    "actions": {
-      "source": {
-        "organizeImports": "on"
-      }
-    }
-  },
-  "linter": {
-    "enabled": false
-  },
-  "javascript": {
+    "$schema": "https://biomejs.dev/schemas/2.2.3/schema.json",
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true
+    },
+    "files": {
+        "ignoreUnknown": true,
+        "includes": [
+            "**",
+            "!**/.next",
+            "!**/dist",
+            "!**/.turbo",
+            "!**/dev-dist",
+            "!**/.zed",
+            "!**/.vscode",
+            "!**/routeTree.gen.ts",
+            "!**/src-tauri",
+            "!**/.nuxt",
+            "!bts.jsonc",
+            "!**/.expo",
+            "!**/.wrangler",
+            "!**/.alchemy",
+            "!**/wrangler.jsonc",
+            "!**/.source"
+        ]
+    },
     "formatter": {
-      "quoteStyle": "double"
+        "enabled": true,
+        "indentStyle": "space"
+    },
+    "assist": {
+        "actions": {
+            "source": {
+                "organizeImports": "off"
+            }
+        }
+    },
+    "linter": {
+        "enabled": false
+    },
+    "javascript": {
+        "formatter": {
+            "quoteStyle": "double"
+        }
     }
-  }
 }
