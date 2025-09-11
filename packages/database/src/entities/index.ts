@@ -1,3 +1,11 @@
 export * as project from "./project";
-export * as projectType from "./project_type";
 export * as administrativeUnit from "./administrative_unit";
+export * as feedback from "./feedback";
+export * as feedbackStatus from "./feedback_status";
+export * as feedbackImage from "./feedback_image";
+export * as person from "./person";
+export * as personType from "./person_type";
+export * as personContact from "./person_contact";
+export * as contact from "./contact";
+export * as contactType from "./contact_type";
+export * as officialResponsibility from "./official_responsibility";

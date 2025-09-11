@@ -3,10 +3,9 @@
     "type": "module",
     "scripts": {
         "check-types": "tsc -b",
-        "db:push": "drizzle-kit push",
-        "db:studio": "drizzle-kit studio",
-        "db:generate": "drizzle-kit generate",
-        "db:migrate": "drizzle-kit migrate"
+        "db:reset": "tsx src/seed/index.ts reset",
+        "db:seed": "tsx src/seed/index.ts seed",
+        "db:migrate": "tsx src/migrate.ts"
     },
     "exports": {
         ".": "./src/index.ts"
@@ -21,6 +20,8 @@
         "@types/node": "^22.13.11",
         "@types/pg": "^8.15.5",
         "@types/better-sqlite3": "^7.6.13",
+        "@ngneat/falso": "^8.0.2",
+        "tsx": "^4.19.2",
         "typescript": "^5.8.2"
     }
 }

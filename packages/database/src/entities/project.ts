@@ -6,7 +6,6 @@ export interface ProjectTable {
   longitude: number;
   year_of_completion: number;
   administrative_unit_id: number;
-  project_type_id: number;
   title: string;
 }
 
