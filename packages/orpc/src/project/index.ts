@@ -2,7 +2,6 @@ import { implement } from "@orpc/server";
 import { ORPCError } from "@orpc/server";
 import { projectContract } from "./contract";
 import { db } from "@shared/database";
-// import { publicProcedure } from "../lib/orpc";
 
 const os = implement(projectContract);
 
@@ -17,7 +16,7 @@ const find = os.project.find.handler(async ({ input }) => {
       .selectAll()
       .where("id", "=", input.id)
       .executeTakeFirstOrThrow();
-  } catch (_) {
+  } catch {
     throw new ORPCError("NOT_FOUND");
   }
 });

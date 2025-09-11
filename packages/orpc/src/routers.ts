@@ -1,6 +1,5 @@
 import type { RouterClient } from "@orpc/server";
 import { publicProcedure } from "./lib/orpc";
-
 import { projectRouter } from "./project";
 
 export const appRouter = {

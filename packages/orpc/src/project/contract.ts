@@ -7,7 +7,7 @@ export const listProjectContract = oc
   .route({ method: "GET", path: "/projects" })
   .input(
     z.object({
-      limit: z.number().int().min(1).max(100).optional(),
+      limit: z.number().int().min(1).max(50).optional(),
       cursor: z.number().int().min(0).default(0),
     }),
   )
