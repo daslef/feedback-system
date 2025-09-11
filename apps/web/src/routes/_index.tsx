@@ -1,6 +1,6 @@
 import type { Route } from "./+types/_index";
 import { useQuery } from "@tanstack/react-query";
-import { orpc } from "@/utils/orpc";
+import { orpc } from "@shared/orpc";
 
 const TITLE_TEXT = `
  ██████╗ ███████╗████████╗████████╗███████╗██████╗

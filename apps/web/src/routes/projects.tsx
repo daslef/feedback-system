@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -6,12 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { Loader2, Trash2 } from "lucide-react";
-import { useState } from "react";
 
-import { orpc } from "@/utils/orpc";
+import { orpc } from "@shared/orpc";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export default function Projects() {

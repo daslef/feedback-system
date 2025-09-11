@@ -14,7 +14,7 @@ import { Toaster } from "./components/ui/sonner";
 
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { queryClient } from "./utils/orpc";
+import { queryClient } from "./clients/query-client";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
