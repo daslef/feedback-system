@@ -5,8 +5,14 @@ import { db } from "../index";
 
 async function seedDatabase() {
   const seedFunctionIdentifiers = [
+    "seedAdministrativeUnitTypes",
     "seedAdministrativeUnits",
     "seedFeedbackStatuses",
+    "seedFeedbackTypes",
+    "seedFeedbackTopics",
+    "seedFeedbackTopicCategories",
+    "seedFeedbackTopicCategoryTopic",
+    "seedPersonTypes",
     "seedPersons",
     "seedProjects",
     // "seedFeedbacks",

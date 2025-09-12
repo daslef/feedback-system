@@ -2,11 +2,12 @@ import type { Generated, Insertable, Updateable, Selectable } from "kysely";
 
 export interface ProjectTable {
   id: Generated<number>;
+  title: string;
   latitude: number;
   longitude: number;
   year_of_completion: number;
   administrative_unit_id: number;
-  title: string;
+  created_at: Generated<number>;
 }
 
 export type Project = Selectable<ProjectTable>;

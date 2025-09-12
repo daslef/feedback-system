@@ -9,6 +9,12 @@ import type { Kysely } from "kysely";
 import type { Database } from "../interface";
 
 export async function seedPersons(db: Kysely<Database>) {
+  const personTypes = await db
+    .selectFrom("person_type")
+    .select(["id"])
+    .execute();
+  const personTypesIds = personTypes.map((p) => p.id);
+
   for (let i = 0; i < 10; i++) {
     await db
       .insertInto("person")
@@ -16,7 +22,7 @@ export async function seedPersons(db: Kysely<Database>) {
         first_name: randFirstName(),
         last_name: randLastName(),
         middle_name: randFirstName(),
-        person_type_id: 1,
+        person_type_id: rand(personTypesIds),
       })
       .execute();
   }
@@ -29,10 +35,14 @@ export async function seedFeedbacks(db: Kysely<Database>) {
     .selectFrom("feedback_status")
     .select(["id"])
     .execute();
+  const types = await db.selectFrom("feedback_type").select(["id"]).execute();
+  const topics = await db.selectFrom("feedback_topic").select(["id"]).execute();
 
   const projectIds = projects.map((p) => p.id);
   const personIds = persons.map((p) => p.id);
   const statusIds = statuses.map((s) => s.id);
+  const typeIds = types.map((s) => s.id);
+  const topicsIds = topics.map((s) => s.id);
 
   for (let i = 0; i < 30; i++) {
     await db
@@ -41,8 +51,9 @@ export async function seedFeedbacks(db: Kysely<Database>) {
         project_id: rand(projectIds),
         description: randProductDescription(),
         person_contact_id: rand(personIds),
-        created_at: new Date().toISOString(),
         feedback_status_id: rand(statusIds),
+        feedback_topic_id: rand(topicsIds),
+        feedback_type_id: rand(typeIds),
       })
       .execute();
   }

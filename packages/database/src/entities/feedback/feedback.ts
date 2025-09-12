@@ -4,9 +4,11 @@ export interface FeedbackTable {
   id: Generated<number>;
   project_id: number;
   description: string;
+  feedback_type_id: number;
+  feedback_topic_id: number;
   person_contact_id: number;
-  created_at: string;
   feedback_status_id: number;
+  created_at: Generated<number>;
 }
 
 export type Feedback = Selectable<FeedbackTable>;

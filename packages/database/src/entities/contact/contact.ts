@@ -1,4 +1,9 @@
-import { Generated, Selectable, Updateable, Insertable } from "kysely";
+import {
+  Generated,
+  Selectable,
+  Updateable,
+  Insertable,
+} from "kysely";
 
 export interface ContactTable {
   id: Generated<number>;
