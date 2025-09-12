@@ -5,11 +5,11 @@ import { Kysely, SqliteDialect, PostgresDialect } from "kysely";
 import type { Database } from "./interface";
 
 function getDialect() {
-  const environment = process.env.ENVIRONMENT;
+  const postgresURI = process.env.POSTGRES_DATABASE_URI;
 
-  if (environment === "prod") {
+  if (postgresURI) {
     return new PostgresDialect({
-      pool: new Pool(process.env.DATABASE_URL as PoolConfig),
+      pool: new Pool(postgresURI as PoolConfig),
     });
   }
 
