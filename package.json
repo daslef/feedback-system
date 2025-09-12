@@ -15,9 +15,9 @@
         "dev:form": "turbo -F form dev",
         "dev:web": "turbo -F web dev",
         "dev:server": "turbo -F server dev",
-        "db:reset": "pnpm --filter @shared/database db:reset",
-        "db:seed": "pnpm --filter @shared/database db:seed",
-        "db:migrate": "pnpm --filter @shared/database db:migrate"
+        "db:reset": "turbo -F @shared/database db:reset",
+        "db:seed": "turbo -F @shared/database db:seed",
+        "db:migrate": "turbo -F @shared/database db:migrate"
     },
     "devDependencies": {
         "@biomejs/biome": "2.2.3",
