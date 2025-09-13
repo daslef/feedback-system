@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "es2023",
+    "lib": [
+      "es2023"
+    ],
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": false,
+    "incremental": true,
+    "disableSourceOfProjectReferenceRedirect": true,
+    "tsBuildInfoFile": "${configDir}/.cache/tsbuildinfo.json",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "checkJs": true,
+    "module": "es2023",
+    "moduleResolution": "bundler",
+    "noEmit": true
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist"
+  ]
+}

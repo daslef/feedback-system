@@ -2,10 +2,6 @@
     "name": "feedback-system",
     "private": true,
     "type": "module",
-    "workspaces": [
-        "apps/*",
-        "packages/*"
-    ],
     "scripts": {
         "check": "oxlint",
         "dev": "turbo dev",
@@ -20,14 +16,18 @@
         "db:migrate": "turbo -F @shared/database db:migrate"
     },
     "devDependencies": {
-        "@biomejs/biome": "2.2.3",
-        "oxlint": "^1.12.0",
-        "turbo": "^2.5.4"
+        "@biomejs/biome": "catalog:",
+        "oxlint": "catalog:",
+        "turbo": "catalog:"
     },
     "packageManager": "pnpm@10.4.1",
+    "engines": {
+        "node": ">=22.10.0"
+    },
     "pnpm": {
         "onlyBuiltDependencies": [
-            "better-sqlite3"
+            "better-sqlite3",
+            "esbuild"
         ]
     }
 }

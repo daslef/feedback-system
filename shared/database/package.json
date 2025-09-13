@@ -1,0 +1,29 @@
+{
+    "name": "@shared/database",
+    "type": "module",
+    "scripts": {
+        "check-types": "tsc -b",
+        "db:reset": "tsx src/seed/index.ts reset",
+        "db:seed": "tsx src/seed/index.ts seed",
+        "db:migrate": "tsx src/migrate.ts"
+    },
+    "exports": {
+        ".": "./src/index.ts"
+    },
+    "dependencies": {
+        "better-sqlite3": "catalog:",
+        "dotenv": "catalog:",
+        "kysely": "catalog:",
+        "pg": "catalog:"
+    },
+    "devDependencies": {
+        "@shared/typescript-config": "workspace:*",
+        "@types/node": "catalog:",
+        "@types/pg": "catalog:",
+        "@types/better-sqlite3": "catalog:",
+        "@ngneat/falso": "^8.0.2",
+        "tsx": "catalog:",
+        "typescript": "catalog:"
+    },
+    "packageManager": "pnpm@10.4.1"
+}

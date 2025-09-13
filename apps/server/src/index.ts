@@ -1,36 +1,37 @@
-import { createServer } from "node:http";
-import Fastify from "fastify";
-import "dotenv/config";
 
-import orpcHandler from "./orpc";
-import withCors from "./cors";
+import { serve } from '@hono/node-server';
+import { env } from './env';
+import createApp from "./createApp";
 
-const fastify = withCors(
-  Fastify({
-    logger: true,
-    serverFactory: (fastifyHandler) => {
-      const server = createServer(async (req, res) => {
-        const isHandledByOrpc = await orpcHandler(req, res);
-
-        if (!isHandledByOrpc) {
-          fastifyHandler(req, res);
-        }
-      });
-
-      return server;
-    },
-  }),
+const server = serve(
+  {
+    fetch: createApp().fetch,
+    port: env.SERVER_PORT,
+    hostname: env.SERVER_HOST,
+  },
+  (info) => {
+    const host = info.address;
+    console.log(`
+Hono
+- internal server url: http://${host}:${info.port}
+- external server url: ${env.PUBLIC_SERVER_URL}
+- public web url: ${env.PUBLIC_WEB_URL}
+- api reference: ${env.PUBLIC_SERVER_URL}/api
+- api reference (auth): ${env.PUBLIC_SERVER_URL}/api/auth/reference
+    `);
+  },
 );
 
-fastify.get("/", async () => {
-  return "OK";
-});
+const shutdown = () => {
+  server.close((error) => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log('\nServer has stopped gracefully.');
+    }
+    process.exit(0);
+  });
+};
 
-fastify.listen({ port: 3000 }, (err) => {
-  if (err) {
-    fastify.log.error(err);
-    process.exit(1);
-  }
-  console.log("Server running on localhost:3000");
-  console.log("Scalar docs running on localhost:3000/api");
-});
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);

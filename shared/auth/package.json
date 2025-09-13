@@ -1,0 +1,24 @@
+{
+  "name": "@shared/auth",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc",
+    "auth:schema:generate": "pnpx @better-auth/cli generate --config ./src/cli-config.ts --output ../database/src/auth.ts",
+    "check-types": "tsc -b"
+  },
+  "dependencies": {
+    "@shared/database": "workspace:*",
+    "better-auth": "catalog:",
+    "url-join": "catalog:"
+  },
+  "devDependencies": {
+    "@shared/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}
