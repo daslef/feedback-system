@@ -1,7 +1,7 @@
 
 import { serve } from '@hono/node-server';
 import { env } from './env';
-import createApp from "./createApp";
+import createApp from "./bootstrap";
 
 const server = serve(
   {

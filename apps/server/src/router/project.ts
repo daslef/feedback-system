@@ -4,8 +4,8 @@ const projectRouter = {
   all: publicProcedure.project.all.handler(async ({ context, input }) => {
     // TODO pagination by limit, offset
     const { offset, limit } = input
+
     const projects = await context.db.selectFrom("project").selectAll().execute()
-    console.log(projects)
     return projects;
   }),
 
