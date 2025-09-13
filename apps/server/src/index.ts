@@ -1,6 +1,5 @@
-
-import { serve } from '@hono/node-server';
-import { env } from './env';
+import { serve } from "@hono/node-server";
+import { env } from "./env";
 import createApp from "./bootstrap";
 
 const server = serve(
@@ -27,11 +26,11 @@ const shutdown = () => {
     if (error) {
       console.error(error);
     } else {
-      console.log('\nServer has stopped gracefully.');
+      console.log("\nServer has stopped gracefully.");
     }
     process.exit(0);
   });
 };
 
-process.on('SIGINT', shutdown);
-process.on('SIGTERM', shutdown);
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);

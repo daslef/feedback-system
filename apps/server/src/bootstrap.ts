@@ -1,13 +1,13 @@
-import { Hono } from 'hono';
-import { logger } from 'hono/logger';
-import { cors } from 'hono/cors';
+import { Hono } from "hono";
+import { logger } from "hono/logger";
+import { cors } from "hono/cors";
 
-import { createApi } from '@shared/api';
-import { createAuth } from '@shared/auth';
-import { db } from '@shared/database';
+import { createApi } from "@shared/api";
+import { createAuth } from "@shared/auth";
+import { db } from "@shared/database";
 
-import { env } from './env';
-import apiRouter from './router';
+import { env } from "./env";
+import apiRouter from "./router";
 
 export default function createApp() {
   const trustedOrigins = [env.PUBLIC_WEB_URL].map((url) => new URL(url).origin);
@@ -25,7 +25,7 @@ export default function createApp() {
     db,
     serverUrl: env.PUBLIC_SERVER_URL,
     apiPath: env.PUBLIC_SERVER_API_PATH,
-    appRouter: apiRouter
+    appRouter: apiRouter,
   });
 
   const app = new Hono<{
@@ -33,10 +33,10 @@ export default function createApp() {
       user: typeof auth.$Infer.Session.user | null;
       session: typeof auth.$Infer.Session.session | null;
     };
-  }>()
+  }>();
 
-  app.get('/healthcheck', (c) => {
-    return c.text('OK');
+  app.get("/healthcheck", (c) => {
+    return c.text("OK");
   });
 
   app.use(logger());
@@ -46,14 +46,14 @@ export default function createApp() {
     cors({
       origin: trustedOrigins,
       credentials: true,
-      allowHeaders: ['Content-Type', 'Authorization'],
-      allowMethods: ['POST', 'GET', 'OPTIONS'],
-      exposeHeaders: ['Content-Length'],
+      allowHeaders: ["Content-Type", "Authorization"],
+      allowMethods: ["POST", "GET", "OPTIONS"],
+      exposeHeaders: ["Content-Length"],
       maxAge: 600,
     }),
   );
 
-  app.on(['POST', 'GET'], `${env.PUBLIC_SERVER_API_PATH}/auth/*`, (c) =>
+  app.on(["POST", "GET"], `${env.PUBLIC_SERVER_API_PATH}/auth/*`, (c) =>
     auth.handler(c.req.raw),
   );
 
@@ -73,5 +73,5 @@ export default function createApp() {
     },
   );
 
-  return app
+  return app;
 }

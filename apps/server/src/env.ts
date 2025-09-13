@@ -1,8 +1,8 @@
-import * as v from 'valibot';
-import "dotenv/config"
+import * as v from "valibot";
+import "dotenv/config";
 
 const DEFAULT_SERVER_PORT = 3000;
-const DEFAULT_SERVER_HOST = 'localhost';
+const DEFAULT_SERVER_HOST = "localhost";
 
 const createPortSchema = ({ defaultPort }: { defaultPort: number }) =>
   v.pipe(
@@ -25,10 +25,10 @@ export const envSchema = v.object({
   PUBLIC_SERVER_URL: v.pipe(v.string(), v.url()),
   PUBLIC_SERVER_API_PATH: v.optional(
     v.custom<`/${string}`>(
-      (input) => typeof input === 'string' && input.startsWith('/'),
+      (input) => typeof input === "string" && input.startsWith("/"),
       'API Path must start with "/" if provided.',
     ),
-    '/api',
+    "/api",
   ),
 
   // Frontend URL, used to configure trusted origin (CORS)

@@ -1,7 +1,7 @@
 import projectRouter from "./project";
 
 const apiRouter = {
-  projects: projectRouter
-}
+  projects: projectRouter,
+};
 
-export default apiRouter
+export default apiRouter;

@@ -1,7 +1,7 @@
-import { type BetterAuthOptions, betterAuth } from 'better-auth';
-import { openAPI } from 'better-auth/plugins';
-import urlJoin from 'url-join';
-import { db } from '@shared/database';
+import { type BetterAuthOptions, betterAuth } from "better-auth";
+import { openAPI } from "better-auth/plugins";
+import urlJoin from "url-join";
+import { db } from "@shared/database";
 
 export interface AuthOptions {
   webUrl: string;
@@ -13,13 +13,11 @@ export interface AuthOptions {
 
 export type AuthInstance = ReturnType<typeof createAuth>;
 
-
 export const getBaseOptions = (databaseInstance: typeof db) =>
   ({
     database: { db: databaseInstance },
     plugins: [openAPI()],
   }) satisfies BetterAuthOptions;
-
 
 export const createAuth = ({
   webUrl,
@@ -30,7 +28,7 @@ export const createAuth = ({
 }: AuthOptions) => {
   return betterAuth({
     ...getBaseOptions(db),
-    baseURL: urlJoin(serverUrl, apiPath, 'auth'),
+    baseURL: urlJoin(serverUrl, apiPath, "auth"),
     secret: authSecret,
     trustedOrigins: [webUrl].map((url) => new URL(url).origin),
     session: {

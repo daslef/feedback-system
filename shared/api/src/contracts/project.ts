@@ -6,13 +6,21 @@ const ProjectSchema = v.object({
   title: v.string(),
   latitude: v.pipe(v.number(), v.minValue(-90), v.maxValue(90)),
   longitude: v.pipe(v.number(), v.minValue(-180), v.maxValue(180)),
-  year_of_completion: v.pipe(v.number(), v.integer(), v.minValue(2010), v.maxValue(2026)),
+  year_of_completion: v.pipe(
+    v.number(),
+    v.integer(),
+    v.minValue(2010),
+    v.maxValue(2026),
+  ),
   administrative_unit_id: v.pipe(v.number(), v.integer()),
   created_at: v.pipe(v.string()),
 });
 
 const GetManyProjectsSchema = v.array(ProjectSchema);
-const GetProjectSchema = v.intersect([v.omit(ProjectSchema, ["administrative_unit_id"]), v.object({ administrative_unit: v.string() })])
+const GetProjectSchema = v.intersect([
+  v.omit(ProjectSchema, ["administrative_unit_id"]),
+  v.object({ administrative_unit: v.string() }),
+]);
 
 const projectContract = oc.prefix("/projects").router({
   one: oc
@@ -34,8 +42,25 @@ const projectContract = oc.prefix("/projects").router({
     })
     .input(
       v.object({
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.integer(), v.minValue(10), v.maxValue(25))),
-        offset: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.integer(), v.minValue(0)))
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.transform(Number),
+            v.number(),
+            v.integer(),
+            v.minValue(10),
+            v.maxValue(25),
+          ),
+        ),
+        offset: v.optional(
+          v.pipe(
+            v.string(),
+            v.transform(Number),
+            v.number(),
+            v.integer(),
+            v.minValue(0),
+          ),
+        ),
       }),
     )
     .output(GetManyProjectsSchema),
