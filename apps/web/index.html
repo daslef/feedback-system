@@ -37,7 +37,7 @@
 
   <meta name="yandex-verification" content="b072c9b5cade00c7" />
 
-  <script src="https://api-maps.yandex.ru/2.1/?apikey=7a8b9c0d-1e2f-3g4h-5i6j-7k8l9m0n1o2p&lang=ru_RU"
+  <script src="https://api-maps.yandex.ru/2.1/?apikey=b0df4dde-693f-4487-a7ff-ae3f4ed8b10c&lang=ru_RU"
     type="text/javascript"></script>
 
 </head>
@@ -47,15 +47,15 @@
     <div class="alert-content">
       <span class="alert-icon">⚠️</span>
       <span class="alert-message"></span>
-      <button class="alert-close" onclick="closeAlert()">×</button>
+      <button class="alert-close">×</button>
     </div>
   </div>
   <div id="mapPopup" class="map-popup">
-    <div class="map-popup-overlay" onclick="closeMapPopup()"></div>
+    <div class="map-popup-overlay"></div>
     <div class="map-popup-content">
       <div class="map-popup-header">
         <h3>Выберите город и проект на карте</h3>
-        <button class="map-popup-close" onclick="closeMapPopup()">×</button>
+        <button class="map-popup-close">×</button>
       </div>
       <div class="map-popup-body">
         <div id="yandexMap" class="yandex-map"></div>
@@ -71,10 +71,10 @@
         </div>
       </div>
       <div class="map-popup-footer">
-        <button class="btn btn-regular btn-green" onclick="applyMapSelection()">
+        <button class="btn btn-regular btn-green">
           Применить выбор
         </button>
-        <button class="btn btn-regular btn-white" onclick="closeMapPopup()">
+        <button class="btn btn-regular btn-white">
           Отмена
         </button>
       </div>
@@ -338,7 +338,7 @@
             </div>
           </div>
 
-          <div class="form-block wd-50" id="categoryBlock" style="display: none">
+          <div class="form-block" id="categoryBlock" style="display: none">
             <div class="form-block-title regular-text fw-600">Категория</div>
             <div class="input-block">
               <select name="category" class="object-location" id="categorySelect" data-required="1">
@@ -347,7 +347,7 @@
             </div>
           </div>
 
-          <div class="form-block wd-50" id="issueBlock" style="display: none">
+          <div class="form-block" id="issueBlock" style="display: none">
             <div class="form-block-title regular-text fw-600">Проблема</div>
             <div class="input-block">
               <select name="issue" class="object-location" id="issueSelect" data-required="1">

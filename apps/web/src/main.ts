@@ -422,8 +422,12 @@ function populateIssues(categoryId: number | string) {
 document.addEventListener("DOMContentLoaded", function () {
   loadDropdownData();
 
-  const requestTypeSelect = document.getElementById("requestTypeSelect");
-  const categorySelect = document.getElementById("categorySelect");
+  const requestTypeSelect = document.getElementById("requestTypeSelect") as HTMLSelectElement;
+  const categorySelect = document.getElementById("categorySelect") as HTMLSelectElement;
+  const alertCloseButton = document.querySelector('#customAlert .alert-close') as HTMLButtonElement;
+  const mapPopupOverlayElement = document.querySelector('#mapPopup .map-popup-overlay') as HTMLDivElement;
+  const mapPopupCloseElement = document.querySelector('#mapPopup .map-popup-close') as HTMLButtonElement;
+  const [mapApplySelectionElement, mapCancelElement] = document.querySelectorAll('.map-popup-footer > button')
 
   if (requestTypeSelect) {
     requestTypeSelect.addEventListener("change", handleRequestTypeChange);
@@ -432,4 +436,11 @@ document.addEventListener("DOMContentLoaded", function () {
   if (categorySelect) {
     categorySelect.addEventListener("change", handleCategoryChange);
   }
+
+  alertCloseButton.addEventListener('click', closeAlert)
+  mapApplySelectionElement?.addEventListener('click', applyMapSelection)
+
+  mapPopupOverlayElement.addEventListener('click', closeMapPopup)
+  mapPopupCloseElement.addEventListener('click', closeMapPopup)
+  mapCancelElement?.addEventListener('click', closeMapPopup)
 });
