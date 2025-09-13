@@ -78,6 +78,9 @@ catalogs:
     valibot:
       specifier: ^1.1.0
       version: 1.1.0
+    vite:
+      specifier: ^7.1.5
+      version: 7.1.5
 
 importers:
 
@@ -141,6 +144,18 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.2
+
+  apps/web:
+    devDependencies:
+      '@shared/typescript-config':
+        specifier: workspace:*
+        version: link:../../shared/typescript-config
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.2
+      vite:
+        specifier: 'catalog:'
+        version: 7.1.5(@types/node@22.18.3)(jiti@2.5.1)(tsx@4.20.5)(yaml@2.8.1)
 
   shared/api:
     dependencies:

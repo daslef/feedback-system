@@ -1,0 +1,16 @@
+{
+  "name": "web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@shared/typescript-config": "workspace:*",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  },
+  "packageManager": "pnpm@10.4.1"
+}

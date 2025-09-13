@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="cleartype" content="on" />
+
+  <meta name="MobileOptimized" content="320" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png?v=3" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png?v=3" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png?v=3" />
+  <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg?v=3" color="#18a763" />
+  <link rel="shortcut icon" href="/favicons/favicon.ico?v=3" />
+
+  <meta name="msapplication-TileColor" content="#ffffff" />
+  <meta name="msapplication-config" content="/favicons/browserconfig.xml?v=3" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <title>«вМесте47.рф» — Обратная связь</title>
+
+  <meta name="description" content="Лучшие проекты благоустройства Ленинградской области" />
+
+  <meta name="keywords" content="" />
+
+  <link rel="stylesheet" href="/css/vendor.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/form-styles.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+  <link rel="stylesheet" href="/css/instruction-styles.css" />
+
+  <meta name="yandex-verification" content="b072c9b5cade00c7" />
+
+  <script src="https://api-maps.yandex.ru/2.1/?apikey=7a8b9c0d-1e2f-3g4h-5i6j-7k8l9m0n1o2p&lang=ru_RU"
+    type="text/javascript"></script>
+
+</head>
+
+<body class="projects-page">
+  <div id="customAlert" class="custom-alert">
+    <div class="alert-content">
+      <span class="alert-icon">⚠️</span>
+      <span class="alert-message"></span>
+      <button class="alert-close" onclick="closeAlert()">×</button>
+    </div>
+  </div>
+  <div id="mapPopup" class="map-popup">
+    <div class="map-popup-overlay" onclick="closeMapPopup()"></div>
+    <div class="map-popup-content">
+      <div class="map-popup-header">
+        <h3>Выберите город и проект на карте</h3>
+        <button class="map-popup-close" onclick="closeMapPopup()">×</button>
+      </div>
+      <div class="map-popup-body">
+        <div id="yandexMap" class="yandex-map"></div>
+        <div class="map-selection-info">
+          <div class="selected-city">
+            <strong>Выбранный город:</strong>
+            <span id="selectedCityName">Не выбран</span>
+          </div>
+          <div class="selected-project">
+            <strong>Выбранный проект:</strong>
+            <span id="selectedProjectName">Не выбран</span>
+          </div>
+        </div>
+      </div>
+      <div class="map-popup-footer">
+        <button class="btn btn-regular btn-green" onclick="applyMapSelection()">
+          Применить выбор
+        </button>
+        <button class="btn btn-regular btn-white" onclick="closeMapPopup()">
+          Отмена
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="top-logos">
+    <div class="container">
+      <div class="logos-row">
+        <div class="main-logo">
+          <a href="/" class="logo">
+            <img src="/img/logo_2022_black.svg" alt="" />
+          </a>
+        </div>
+        <div class="logos-list">
+          <div class="logo">
+            <img src="/img/header-logo-2.png" alt="" />
+          </div>
+          <div class="logo">
+            <img src="/img/partners/centr-kompetencii_black.svg" alt="" />
+          </div>
+          <div class="logo">
+            <img src="/img/partners/nac-project_green.svg" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-container">
+    <header class="header desktop-header">
+      <div class="header-content">
+        <div class="container">
+          <nav class="menu-block">
+            <ul>
+              <li>
+                <a href="/_/">О проекте</a>
+              </li>
+              <li>
+                <a href="/moe-derevo47/">Моё Дерево47</a>
+              </li>
+              <li>
+                <a href="/golosovaniya/">Голосования</a>
+              </li>
+              <li>
+                <a href="/realizovannye-proekty/">Реализованные проекты</a>
+              </li>
+              <li class="active">
+                <a href="/realizovannye-proekty/">ОС</a>
+              </li>
+              <li>
+                <a href="/dokumenty/">Документы</a>
+              </li>
+              <li>
+                <a href="/kontakty/">Контакты</a>
+              </li>
+            </ul>
+          </nav>
+          <div class="login-block">
+            <a href="/auth/" class="login btn btn-regular btn-green">Голосовать</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <header class="header mobile-header">
+      <div class="header-content">
+        <div class="container">
+          <button type="button" class="open-mobile-menu">
+            <span></span>
+          </button>
+          <div class="logo-block">
+            <a href="/" class="logo">
+              <img src="/img/logo_mob.svg" alt="" />
+            </a>
+          </div>
+          <div class="login-block">
+            <a href="/auth/" class="login btn btn-regular btn-green">Голосовать</a>
+          </div>
+        </div>
+      </div>
+      <nav class="mobile-nav">
+        <div class="container">
+          <div class="menu-block">
+            <ul>
+              <li>
+                <a href="/_/">О проекте</a>
+              </li>
+              <li>
+                <a href="/moe-derevo47/">Моё Дерево47</a>
+              </li>
+              <li>
+                <a href="/golosovaniya/">Голосования</a>
+              </li>
+              <li>
+                <a href="/realizovannye-proekty/">Реализованные проекты</a>
+              </li>
+              <li class="active">
+                <a href="/realizovannye-proekty/">Обратная связь</a>
+              </li>
+
+              <li>
+                <a href="/dokumenty/">Документы</a>
+              </li>
+              <li>
+                <a href="/kontakty/">Контакты</a>
+              </li>
+            </ul>
+          </div>
+          <div class="mobile-nav-logos">
+            <div class="logos-list">
+              <div class="logo">
+                <img src="/img/header-logo-2.png" alt="" />
+              </div>
+              <div class="logo">
+                <img src="/img/partners/centr-kompetencii_black.svg" alt="" />
+              </div>
+              <div class="logo">
+                <img src="/img/partners/nac-project_green.svg" alt="" />
+              </div>
+            </div>
+          </div>
+          <div class="mobile-nav-policy">
+            <p>2022, Региональный проект "вМесте47.рф"</p>
+          </div>
+        </div>
+      </nav>
+    </header>
+  </div>
+  <div class="breadcrumbs">
+    <div class="container">
+      <ul class="breadcrumbs-list">
+        <li><a href="/">Главная</a></li>
+        <li><span>Обратная связь</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <section class="instruction">
+    <div class="container">
+      <h1>Обратная связь</h1>
+
+      <div class="instruction-list">
+        <div class="decorative-line"></div>
+
+        <div class="instruction-item">
+          <div class="instruction-item-description">
+            <span class="instruction-item-number decorative-text-small fw-600">1</span>
+            <div class="instruction-item-text medium-text fw-600">
+              Заполните свои данные (Фамилию, Имя, Отчество)
+            </div>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-item-description">
+            <span class="instruction-item-number decorative-text-small fw-600">2</span>
+            <div class="instruction-item-text medium-text fw-600">
+              Выберите территорию и проект на карте или из списка
+            </div>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-item-description">
+            <span class="instruction-item-number decorative-text-small fw-600">3</span>
+            <div class="instruction-item-text medium-text fw-600">
+              Вы можете оставить пожелания по улучшению территории либо отправить замечание
+            </div>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-item-description">
+            <span class="instruction-item-number decorative-text-small fw-600">4</span>
+            <div class="instruction-item-text medium-text fw-600">
+              Предложение по улучшению территории можно заполнить в свободной форме
+            </div>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-item-description">
+            <span class="instruction-item-number decorative-text-small fw-600">5</span>
+            <div class="instruction-item-text medium-text fw-600">
+              Для того, чтобы отправить замечание, выберите категорию и уточните проблемный элемент благоустройства
+            </div>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-item-description">
+            <span class="instruction-item-number decorative-text-small fw-600">6</span>
+            <div class="instruction-item-text medium-text fw-600">
+              Чтобы заявка была принята к рассмотрению, прикрепите фотографии, на которых видна проблема
+            </div>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-item-description">
+            <span class="instruction-item-number decorative-text-small fw-600">7</span>
+            <div class="instruction-item-text medium-text fw-600">
+              Чтобы иметь возможность получить уведомление о статусе вашей заявки, укажите адрес электронной почты
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="planting" id="planting">
+    <div class="container">
+      <h2>Заполните форму</h2>
+      <form class="apply-form add-planting-form" data-form="addPlanting">
+        <div class="info-list">
+          <div class="fio-row">
+            <div class="form-block">
+              <div class="form-block-title regular-text fw-600">Фамилия</div>
+              <div class="input-block">
+                <input type="text" name="last_name" class="object-name" placeholder="Фамилия" data-required="1" />
+              </div>
+            </div>
+            <div class="form-block">
+              <div class="form-block-title regular-text fw-600">Имя</div>
+              <div class="input-block">
+                <input type="text" name="first_name" class="object-name" placeholder="Имя" data-required="1" />
+              </div>
+            </div>
+            <div class="form-block">
+              <div class="form-block-title regular-text fw-600">Отчество</div>
+              <div class="input-block">
+                <input type="text" name="middle_name" class="object-name" placeholder="Отчество" data-required="1" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-block city-map-block">
+            <div class="form-block-title regular-text fw-600">Город</div>
+            <div class="input-block city-map-inputs">
+              <select name="city" class="object-settlement city-select" data-required="1" id="citySelect">
+                <option value="">Выберите город</option>
+              </select>
+              <button type="button" class="btn btn-regular btn-green map-button" id="selectOnMap">
+                Выбрать на карте
+              </button>
+            </div>
+          </div>
+
+          <div class="form-block">
+            <div class="form-block-title regular-text">Проект</div>
+            <div class="input-block">
+              <select name="project" class="object-location" data-required="1" id="projectSelect">
+                <option value="">Сначала выберите город</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-block">
+            <div class="form-block-title regular-text fw-600">
+              Тип запроса
+            </div>
+            <div class="input-block">
+              <select name="request_type" class="object-location" data-required="1" id="requestTypeSelect">
+                <option value="">Загрузка...</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-block wd-50" id="categoryBlock" style="display: none">
+            <div class="form-block-title regular-text fw-600">Категория</div>
+            <div class="input-block">
+              <select name="category" class="object-location" id="categorySelect" data-required="1">
+                <option value="">Выберите категорию</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-block wd-50" id="issueBlock" style="display: none">
+            <div class="form-block-title regular-text fw-600">Проблема</div>
+            <div class="input-block">
+              <select name="issue" class="object-location" id="issueSelect" data-required="1">
+                <option value="">Сначала выберите категорию</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-block">
+            <div class="form-block-title regular-text fw-600">
+              Текстовое пояснение
+            </div>
+            <div class="input-block">
+              <textarea name="explanation" class="object-name" placeholder="Ваше пожелание или замечание"
+                maxlength="1000" data-required="1" rows="6"></textarea>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 2rem;">
+            <div class="form-block" style="flex: 1;">
+              <div class="form-block-title regular-text fw-600">Email</div>
+              <div class="input-block">
+                <input type="email" name="email" class="object-name" placeholder="Email" data-required="1" />
+              </div>
+            </div>
+
+            <div class="form-block" style="flex: 1;">
+              <div class="form-block-title regular-text fw-600">Телефон</div>
+              <div class="input-block">
+                <input type="tel" name="phone" class="object-name" placeholder="Номер телефона" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-block">
+            <div class="form-block-title regular-text fw-600">
+              Прикрепить файлы
+            </div>
+            <div class="input-block">
+              <div class="drag-drop-area" id="dragDropArea" data-required="1">
+                <div class="drag-drop-content">
+                  <p>
+                    Перетащите файлы сюда или
+                    <span class="file-input-trigger">выберите файлы</span>
+                  </p>
+                  <input type="file" id="fileInput" multiple style="display: none" />
+                </div>
+                <div class="file-list" id="fileList"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-block">
+            <div class="checkbox-block">
+              <div class="custom-checkbox">
+                <label>
+                  <input type="checkbox" name="personal_data_agreement" data-required="1" />
+                  <span class="input-title regular-text fw-600">Согласие на обработку персональных данных в
+                    соответствии с
+                    <a href="/policy/" target="_blank">политикой</a>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <button type="submit" class="submit-apply btn btn-regular btn-blue">
+            Отправить
+          </button>
+        </div>
+
+        <div class="form-message" data-block="formMessage"></div>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="logos-row">
+        <div class="main-logo">
+          <a href="/" class="logo">
+            <img src="/img/footer-logo.svg" alt="" />
+          </a>
+        </div>
+        <div class="logos-list">
+          <div class="logo">
+            <img src="/img/footer-logo-1.png" alt="" />
+          </div>
+          <div class="logo">
+            <img src="/img/partners/centr-kompetencii.svg" alt="" />
+          </div>
+          <div class="logo">
+            <img src="/img/partners/nac-project.svg" alt="" />
+          </div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="policy-text small-text">
+          Для обращений по техническим вопросам работы портала:
+          cc.lenreg@sreda47.ru
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="policy-text small-text">
+          2025, Региональный проект "вМесте47.рф"
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="./src/form-manager.ts"></script>
+  <script type="module" src="./src/main.ts"></script>
+</body>
+
+</html>

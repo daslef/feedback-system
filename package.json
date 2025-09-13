@@ -9,7 +9,7 @@
         "check-types": "turbo check-types",
         "format": "pnpm exec biome format --fix --json-formatter-enabled=false",
         "dev:form": "turbo -F form dev",
-        "dev:admin": "turbo -F admin dev",
+        "dev:web": "turbo -F web dev",
         "dev:server": "turbo -F server dev",
         "db:reset": "turbo -F @shared/database db:reset",
         "db:seed": "turbo -F @shared/database db:seed",

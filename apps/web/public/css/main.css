@@ -513,7 +513,7 @@ section {
 .btn.btn-regular {
   padding: 0.89em 1.78em;
   font-size: 1.8rem;
-  line-height: 2.4rem;
+  line-height: 1.8rem;
   font-weight: 600;
 }
 
@@ -752,7 +752,7 @@ input:not([type="checkbox"]):not([type="radio"]):not(ymaps input)::placeholder {
 
 textarea {
   padding: 12px;
-  height: 95px;
+  min-height: 95px;
   width: 100%;
   font-size: 1.8rem;
   font-weight: 500;
@@ -2196,7 +2196,7 @@ body h1 {
 }
 
 .projects-page h1 {
-  margin-bottom: 65px;
+  margin-bottom: 10px;
 }
 
 .projects-page .filter-row {
@@ -3633,6 +3633,7 @@ body h1 {
 /*# sourceMappingURL=main.css.map */
 
 .apply-form {
+  max-width: 720px;
   position: relative;
 }
 
