@@ -9,10 +9,10 @@ class FormManager {
 
   constructor() {
     this.citySelect = document.getElementById(
-      "citySelect"
+      "citySelect",
     ) as HTMLSelectElement;
     this.projectSelect = document.getElementById(
-      "projectSelect"
+      "projectSelect",
     ) as HTMLSelectElement;
     this.dragDropArea = document.getElementById("dragDropArea") as HTMLElement;
     this.fileInput = document.getElementById("fileInput") as HTMLInputElement;
@@ -143,7 +143,7 @@ class FormManager {
 
     files.forEach((file) => {
       const isValidImageType = allowedImageTypes.includes(
-        file.type.toLowerCase()
+        file.type.toLowerCase(),
       );
       const fileExtension = file.name.toLowerCase().split(".").pop();
       const allowedExtensions = [
@@ -162,7 +162,7 @@ class FormManager {
         invalidFiles.push(file.name);
       } else if (
         !this.selectedFiles.find(
-          (f) => f.name === file.name && f.size === file.size
+          (f) => f.name === file.name && f.size === file.size,
         )
       ) {
         this.selectedFiles.push(file);
@@ -171,7 +171,7 @@ class FormManager {
 
     if (invalidFiles.length > 0) {
       const message = `Неподдерживаемый формат файлов: ${invalidFiles.join(
-        ", "
+        ", ",
       )}. Пожалуйста, загружайте только изображения (JPG, PNG, GIF, WebP, BMP, TIFF).`;
       this.showAlert(message);
     }
@@ -183,7 +183,7 @@ class FormManager {
     this.fileList.innerHTML = "";
 
     const dragDropContent = this.dragDropArea.querySelector(
-      ".drag-drop-content"
+      ".drag-drop-content",
     ) as HTMLElement;
 
     if (this.selectedFiles.length > 0) {

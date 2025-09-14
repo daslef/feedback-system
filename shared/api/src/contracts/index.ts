@@ -1,5 +1,9 @@
 import { oc } from "@orpc/contract";
+
 import projectContract from "./project";
+import administrativeUnitContract from "./administrativeUnit";
+import feedbackTopicCategoryContract from "./feedbackTopicCategory";
+import feedbackTopicCategoryTopicContract from "./feedbackTopicCategoryTopic";
 
 const apiContract = oc
   .errors({
@@ -17,6 +21,9 @@ const apiContract = oc
   })
   .router({
     project: projectContract,
+    administrativeUnit: administrativeUnitContract,
+    feedbackTopicCategory: feedbackTopicCategoryContract,
+    feedbackTopicCategoryTopic: feedbackTopicCategoryTopicContract
   });
 
 export default apiContract;

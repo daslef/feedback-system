@@ -33,16 +33,19 @@ function showSuccessAlert(message: string) {
 }
 
 function validateForm() {
-  const requiredFields = [...document.querySelectorAll('[data-required="1"]')] as HTMLInputElement[];
+  const requiredFields = [
+    ...document.querySelectorAll('[data-required="1"]'),
+  ] as HTMLInputElement[];
   const emptyFields: HTMLInputElement[] = [];
 
   requiredFields.forEach((field) => {
     const formBlock = field.closest(".form-block") as HTMLElement;
-    const isFieldVisible =
-      formBlock && formBlock.style.display !== "none";
+    const isFieldVisible = formBlock && formBlock.style.display !== "none";
 
     if (field.id === "dragDropArea") {
-      const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+      const fileInput = document.getElementById(
+        "fileInput",
+      ) as HTMLInputElement;
       const fileList = document.getElementById("fileList") as HTMLElement;
       const hasFiles = fileInput.files && fileInput.files.length > 0;
       const hasFileListItems = fileList && fileList.children.length > 0;
@@ -68,7 +71,7 @@ function validateForm() {
     });
 
     const message = `Пожалуйста, заполните обязательные поля: ${fieldNames.join(
-      ", "
+      ", ",
     )}`;
 
     showAlert(message);
@@ -145,7 +148,7 @@ function openMapPopup() {
     setTimeout(() => {
       try {
         map.container.fitToViewport();
-      } catch (e) { }
+      } catch (e) {}
     }, 100);
   }
 }
@@ -174,7 +177,7 @@ function initYandexMap() {
     window.addEventListener("resize", () => {
       try {
         map.container.fitToViewport();
-      } catch (e) { }
+      } catch (e) {}
     });
   });
 }
@@ -194,7 +197,7 @@ function loadCities() {
             {
               preset: "islands#greenDotIcon",
               iconColor: "#18a763",
-            }
+            },
           );
 
           marker.events.add("click", function () {
@@ -215,13 +218,12 @@ function selectCity(city) {
   selectedCity = city;
   selectedProject = null;
 
-  const selectedCityElement = document.getElementById("selectedCityName")
-  const selectedProjectElement = document.getElementById("selectedProjectName")
+  const selectedCityElement = document.getElementById("selectedCityName");
+  const selectedProjectElement = document.getElementById("selectedProjectName");
 
   if (selectedCityElement && selectedProjectElement) {
     selectedCityElement.textContent = city.name;
-    selectedProjectElement.textContent =
-      "Не выбран";
+    selectedProjectElement.textContent = "Не выбран";
   }
 
   const coords = cityCoordinates[city.id];
@@ -254,7 +256,7 @@ function loadProjectsForCity(cityId) {
               {
                 preset: "islands#blueDotIcon",
                 iconColor: "#48c5df",
-              }
+              },
             );
 
             marker.events.add("click", function () {
@@ -274,17 +276,19 @@ function loadProjectsForCity(cityId) {
 
 function selectProject(project) {
   selectedProject = project;
-  (document.getElementById("selectedProjectName") as HTMLSpanElement).textContent =
-    project.name;
+  (
+    document.getElementById("selectedProjectName") as HTMLSpanElement
+  ).textContent = project.name;
 }
 
 function loadProjectsForSelect(cityId: string | number, callback: Function) {
   fetch("./data/projects.json")
     .then((response) => response.json())
     .then((data) => {
-      const projectSelect = document.getElementById("projectSelect") as HTMLOptionElement;
-      projectSelect.innerHTML =
-        '<option value="">Выберите проект</option>';
+      const projectSelect = document.getElementById(
+        "projectSelect",
+      ) as HTMLOptionElement;
+      projectSelect.innerHTML = '<option value="">Выберите проект</option>';
 
       const cityProjects = data.projects[cityId];
       if (cityProjects) {
@@ -331,7 +335,7 @@ function applyMapSelection() {
     closeMapPopup();
 
     showSuccessAlert(
-      `Выбран город: ${selectedCity.name}, проект: ${selectedProject.name}`
+      `Выбран город: ${selectedCity.name}, проект: ${selectedProject.name}`,
     );
   });
 }
@@ -353,7 +357,9 @@ function loadDropdownData() {
 }
 
 function populateRequestTypes() {
-  const select = document.getElementById("requestTypeSelect") as HTMLSelectElement;
+  const select = document.getElementById(
+    "requestTypeSelect",
+  ) as HTMLSelectElement;
   select.innerHTML = "";
 
   dropdownData.requestTypes.forEach((type) => {
@@ -365,8 +371,12 @@ function populateRequestTypes() {
 }
 
 function handleRequestTypeChange() {
-  const requestTypeSelect = document.getElementById("requestTypeSelect") as HTMLSelectElement;
-  const categoryBlock = document.getElementById("categoryBlock") as HTMLDivElement;
+  const requestTypeSelect = document.getElementById(
+    "requestTypeSelect",
+  ) as HTMLSelectElement;
+  const categoryBlock = document.getElementById(
+    "categoryBlock",
+  ) as HTMLDivElement;
   const issueBlock = document.getElementById("issueBlock") as HTMLDivElement;
 
   if (requestTypeSelect.value === "remark") {
@@ -394,8 +404,12 @@ function populateCategories() {
 }
 
 function handleCategoryChange() {
-  const categorySelect = document.getElementById("categorySelect") as HTMLSelectElement;
-  const issueSelect = document.getElementById("issueSelect") as HTMLSelectElement;
+  const categorySelect = document.getElementById(
+    "categorySelect",
+  ) as HTMLSelectElement;
+  const issueSelect = document.getElementById(
+    "issueSelect",
+  ) as HTMLSelectElement;
 
   if (categorySelect.value) {
     populateIssues(categorySelect.value);
@@ -422,12 +436,23 @@ function populateIssues(categoryId: number | string) {
 document.addEventListener("DOMContentLoaded", function () {
   loadDropdownData();
 
-  const requestTypeSelect = document.getElementById("requestTypeSelect") as HTMLSelectElement;
-  const categorySelect = document.getElementById("categorySelect") as HTMLSelectElement;
-  const alertCloseButton = document.querySelector('#customAlert .alert-close') as HTMLButtonElement;
-  const mapPopupOverlayElement = document.querySelector('#mapPopup .map-popup-overlay') as HTMLDivElement;
-  const mapPopupCloseElement = document.querySelector('#mapPopup .map-popup-close') as HTMLButtonElement;
-  const [mapApplySelectionElement, mapCancelElement] = document.querySelectorAll('.map-popup-footer > button')
+  const requestTypeSelect = document.getElementById(
+    "requestTypeSelect",
+  ) as HTMLSelectElement;
+  const categorySelect = document.getElementById(
+    "categorySelect",
+  ) as HTMLSelectElement;
+  const alertCloseButton = document.querySelector(
+    "#customAlert .alert-close",
+  ) as HTMLButtonElement;
+  const mapPopupOverlayElement = document.querySelector(
+    "#mapPopup .map-popup-overlay",
+  ) as HTMLDivElement;
+  const mapPopupCloseElement = document.querySelector(
+    "#mapPopup .map-popup-close",
+  ) as HTMLButtonElement;
+  const [mapApplySelectionElement, mapCancelElement] =
+    document.querySelectorAll(".map-popup-footer > button");
 
   if (requestTypeSelect) {
     requestTypeSelect.addEventListener("change", handleRequestTypeChange);
@@ -437,10 +462,10 @@ document.addEventListener("DOMContentLoaded", function () {
     categorySelect.addEventListener("change", handleCategoryChange);
   }
 
-  alertCloseButton.addEventListener('click', closeAlert)
-  mapApplySelectionElement?.addEventListener('click', applyMapSelection)
+  alertCloseButton.addEventListener("click", closeAlert);
+  mapApplySelectionElement?.addEventListener("click", applyMapSelection);
 
-  mapPopupOverlayElement.addEventListener('click', closeMapPopup)
-  mapPopupCloseElement.addEventListener('click', closeMapPopup)
-  mapCancelElement?.addEventListener('click', closeMapPopup)
+  mapPopupOverlayElement.addEventListener("click", closeMapPopup);
+  mapPopupCloseElement.addEventListener("click", closeMapPopup);
+  mapCancelElement?.addEventListener("click", closeMapPopup);
 });

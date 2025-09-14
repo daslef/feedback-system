@@ -22,7 +22,7 @@ const GetProjectSchema = v.intersect([
   v.object({ administrative_unit: v.string() }),
 ]);
 
-const projectContract = oc.prefix("/projects").router({
+const projectContract = oc.tag("Projects").prefix("/projects").router({
   one: oc
     .route({
       method: "GET",

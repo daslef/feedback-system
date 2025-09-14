@@ -8,51 +8,51 @@
     max-width: 700px;
     margin: 0 auto;
   }
-  
+
   .form-block {
     text-align: center;
   }
-  
+
   .form-block-title {
     text-align: center;
   }
-  
+
   .input-block {
     text-align: center;
   }
-  
+
   .btn {
     display: block;
     margin: 0 auto;
     text-align: center;
   }
-  
+
   .btn span,
   .btn::before,
   .btn::after {
     text-align: center;
   }
-  
+
   select {
     text-align: center;
   }
-  
+
   input[type="text"],
   input[type="email"],
   input[type="tel"],
   textarea {
     text-align: center;
   }
-  
+
   input::placeholder,
   textarea::placeholder {
     text-align: center;
   }
-  
+
   .checkbox-block {
     text-align: center;
   }
-  
+
   .checkbox-block label {
     justify-content: center;
     text-align: center;
@@ -61,7 +61,7 @@
   .drag-drop-area {
     text-align: center;
   }
-  
+
   .drag-drop-content {
     text-align: center;
   }
@@ -72,27 +72,27 @@
     padding-left: 15px;
     padding-right: 15px;
   }
-  
+
   .apply-form {
     max-width: 100%;
     margin: 0 auto;
     padding: 0 10px;
   }
-  
+
   .form-block {
     text-align: center;
     margin-bottom: 25px;
   }
-  
+
   .form-block-title {
     text-align: center;
     margin-bottom: 8px;
   }
-  
+
   .input-block {
     text-align: center;
   }
-  
+
   .btn {
     display: block;
     margin: 0 auto;
@@ -100,52 +100,52 @@
     width: 100%;
     max-width: 280px;
   }
-  
+
   .btn span,
   .btn::before,
   .btn::after {
     text-align: center;
   }
-  
+
   select {
     text-align: center;
     width: 100%;
   }
-  
+
   input[type="text"],
   input[type="email"],
   input[type="tel"],
   textarea {
     text-align: center;
   }
-  
+
   input::placeholder,
   textarea::placeholder {
     text-align: center;
   }
-  
+
   .checkbox-block {
     text-align: center;
   }
-  
+
   .checkbox-block label {
     justify-content: center;
     text-align: center;
   }
-  
+
   .drag-drop-area {
     text-align: center;
   }
-  
+
   .drag-drop-content {
     text-align: center;
   }
-  
+
   .form-footer {
     text-align: center;
     justify-content: center;
   }
-  
+
   .submit-apply {
     width: 100%;
     max-width: 250px;
@@ -203,15 +203,15 @@
   .planting {
     padding: 20px 0;
   }
-  
+
   .planting h2 {
     margin-bottom: 20px;
   }
-  
+
   .form-block {
     margin-bottom: 15px;
   }
-  
+
   .apply-form {
     padding: 0 15px;
   }
@@ -221,7 +221,7 @@
   .planting .apply-form * {
     text-align: center;
   }
-  
+
   .file-list,
   .file-item,
   .file-name {
@@ -236,11 +236,11 @@
   .instruction h2 {
     text-align: center;
   }
-  
+
   .instruction-item-description {
     text-align: center;
   }
-  
+
   .instruction-item-text {
     text-align: left;
   }
@@ -248,7 +248,7 @@
   .breadcrumbs {
     text-align: center;
   }
-  
+
   .breadcrumbs-list {
     justify-content: center;
   }
