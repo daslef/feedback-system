@@ -92,23 +92,62 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-let map;
-let selectedCity = null;
-let selectedProject = null;
-let cityMarkers = [];
-let projectMarkers = [];
+// Типы для Яндекс.Карт
+declare const ymaps: any;
+
+let map: any;
+let selectedCity: any = null;
+let selectedProject: any = null;
+let cityMarkers: any[] = [];
+let projectMarkers: any[] = [];
 
 const cityCoordinates = {
-  1: [55.7558, 37.6176],
-  2: [59.9311, 30.3609],
-  3: [55.0084, 82.9357],
-  4: [56.8431, 60.6454],
-  5: [55.8304, 49.0661],
-  6: [56.2965, 43.9361],
-  7: [55.1644, 61.4368],
-  8: [53.2001, 50.15],
-  9: [54.9885, 73.3242],
-  10: [47.2357, 39.7015],
+  // Координаты для городов из API (примерные координаты для Ленинградской области)
+  56: [59.378053, 28.601209], // Кингисеппский МР
+  57: [59.56841, 30.122892],  // Гатчинский МР
+  58: [60.021321, 30.654084], // Всеволожский МР
+  59: [59.473576, 33.847675], // Бокситогорский МР
+  60: [59.449695, 32.008716], // Киришский МР
+  61: [59.87533, 30.981457],  // Кировский МР
+  62: [59.447275, 29.484819], // Волосовский МР
+  63: [59.77409, 30.794553],  // Ломоносовский МР
+  64: [59.900543, 32.352681], // Волховский МР
+  65: [58.735207, 29.847945], // Лужский МР
+  66: [60.912097, 34.167952], // Подпорожский МР
+  67: [61.035979, 30.115589], // Приозерский МР
+  68: [59.11779, 28.088145],  // Сланцевский МР
+  69: [59.541179, 30.875006], // Тосненский МР
+  70: [60.710496, 28.749781], // Выборгский МР
+  71: [59.644213, 33.542105], // Тихвинский МР
+  72: [59.904225, 29.09221],  // Сосновоборский городской округ
+  73: [60.734305, 33.543183], // Лодейнопольский МР
+  // Города
+  75: [59.473576, 33.847675], // Бокситогорск
+  77: [59.447275, 29.484819], // Волосово
+  78: [59.900543, 32.352681], // Волхов
+  79: [60.021321, 30.654084], // Всеволожск
+  80: [60.710496, 28.749781], // Выборг
+  82: [59.56841, 30.122892],  // Гатчина
+  83: [59.37649, 28.219712],  // Ивангород
+  85: [59.378053, 28.601209], // Кингисепп
+  86: [59.449695, 32.008716], // Кириши
+  87: [59.87533, 30.981457],  // Кировск
+  92: [58.735207, 29.847945], // Луга
+  93: [59.349301, 31.24858],  // Любань
+  95: [59.704642, 30.788975], // Никольское
+  96: [60.106401, 32.316183], // Новая Ладога
+  97: [59.77409, 30.794553],  // Отрадное
+  98: [59.512684, 34.177483], // Пикалёво
+  99: [60.912097, 34.167952], // Подпорожье
+  100: [60.366014, 28.613561], // Приморск
+  101: [61.035979, 30.115589], // Приозерск
+  102: [61.113731, 28.865879], // Светогорск
+  103: [60.143531, 30.217179], // Сертолово
+  104: [59.11779, 28.088145],  // Сланцы
+  105: [59.904225, 29.09221],  // Сосновый Бор
+  108: [59.644213, 33.542105], // Тихвин
+  109: [59.541179, 30.875006], // Тосно
+  110: [59.944959, 31.034754], // Шлиссельбург
 };
 
 // projectCoordinates больше не используется, так как координаты берутся из API
@@ -124,7 +163,7 @@ function openMapPopup() {
     setTimeout(() => {
       try {
         map.container.fitToViewport();
-      } catch (_e) {}
+      } catch {}
     }, 100);
   }
 }
@@ -153,7 +192,9 @@ function initYandexMap() {
     window.addEventListener("resize", () => {
       try {
         map.container.fitToViewport();
-      } catch (_e) {}
+      } catch {
+        // Игнорируем ошибки при изменении размера
+      }
     });
   });
 }
@@ -166,7 +207,7 @@ async function loadCities() {
     cities.forEach((city: any) => {
       // Используем координаты из статических данных для городов
       // В реальном проекте координаты должны быть в API
-      const coords = cityCoordinates[city.id];
+      const coords = cityCoordinates[city.id as keyof typeof cityCoordinates];
       if (coords) {
         const marker = new ymaps.Placemark(
           coords,
@@ -204,7 +245,7 @@ function selectCity(city: any) {
     selectedProjectElement.textContent = "Не выбран";
   }
 
-  const coords = cityCoordinates[city.id];
+  const coords = cityCoordinates[city.id as keyof typeof cityCoordinates];
   if (coords) {
     map.setCenter(coords, 10);
   }
@@ -297,8 +338,13 @@ function applyMapSelection() {
     return;
   }
 
-  const citySelect = document.getElementById("citySelect");
-  const projectSelect = document.getElementById("projectSelect");
+  const citySelect = document.getElementById("citySelect") as HTMLSelectElement;
+  const projectSelect = document.getElementById("projectSelect") as HTMLSelectElement;
+
+  if (!citySelect || !projectSelect) {
+    console.error("Не найдены элементы select для города или проекта");
+    return;
+  }
 
   for (let option of citySelect.options) {
     if (option.textContent === selectedCity.title) {
@@ -375,8 +421,10 @@ function handleRequestTypeChange() {
   } else {
     categoryBlock.style.display = "none";
     issueBlock.style.display = "none";
-    document.getElementById("categorySelect")!.value = "";
-    document.getElementById("issueSelect")!.value = "";
+    const categorySelect = document.getElementById("categorySelect") as HTMLSelectElement;
+    const issueSelect = document.getElementById("issueSelect") as HTMLSelectElement;
+    if (categorySelect) categorySelect.value = "";
+    if (issueSelect) issueSelect.value = "";
   }
 }
 
