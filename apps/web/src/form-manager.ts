@@ -1,3 +1,5 @@
+import { apiClient, type Project, type AdministrativeUnit, type FeedbackTopicCategory } from './api-client.js';
+
 class FormManager {
   private citySelect: HTMLSelectElement;
   private projectSelect: HTMLSelectElement;
@@ -6,6 +8,9 @@ class FormManager {
   private fileList: HTMLElement;
   private form: HTMLFormElement;
   private selectedFiles: File[] = [];
+  private projects: Project[] = [];
+  private cities: AdministrativeUnit[] = [];
+  private categories: FeedbackTopicCategory[] = [];
 
   constructor() {
     this.citySelect = document.getElementById(
@@ -24,47 +29,62 @@ class FormManager {
 
   private async init(): Promise<void> {
     await this.loadCities();
+    await this.loadProjects();
+    await this.loadCategories();
     this.setupEventListeners();
   }
 
   private async loadCities(): Promise<void> {
     try {
-      const response = await fetch("./data/cities.json");
-      const data = await response.json();
-
+      this.cities = await apiClient.getAdministrativeUnits();
+      
       this.citySelect.innerHTML = '<option value="">Выберите город</option>';
-      data.cities.forEach((city: any) => {
+      this.cities.forEach((city) => {
         const option = document.createElement("option");
-        option.value = city.id;
-        option.textContent = city.name;
+        option.value = city.id.toString();
+        option.textContent = city.title;
         this.citySelect.appendChild(option);
       });
     } catch (error) {
       console.error("Ошибка загрузки городов:", error);
+      this.showAlert("Ошибка загрузки списка городов. Попробуйте обновить страницу.");
     }
   }
 
-  private async loadProjects(cityId: string): Promise<void> {
+  private async loadProjects(): Promise<void> {
     try {
-      const response = await fetch("./data/projects.json");
-      const data = await response.json();
-
-      this.projectSelect.innerHTML =
-        '<option value="">Выберите проект</option>';
-
-      if (data.projects[cityId]) {
-        data.projects[cityId].forEach((project: any) => {
-          const option = document.createElement("option");
-          option.value = project.id;
-          option.textContent = project.name;
-          this.projectSelect.appendChild(option);
-        });
-      } else {
-        this.projectSelect.innerHTML =
-          '<option value="">Проекты не найдены</option>';
-      }
+      this.projects = await apiClient.getProjects();
     } catch (error) {
       console.error("Ошибка загрузки проектов:", error);
+      this.showAlert("Ошибка загрузки списка проектов. Попробуйте обновить страницу.");
+    }
+  }
+
+  private async loadCategories(): Promise<void> {
+    try {
+      this.categories = await apiClient.getFeedbackTopicCategories();
+    } catch (error) {
+      console.error("Ошибка загрузки категорий:", error);
+      this.showAlert("Ошибка загрузки списка категорий. Попробуйте обновить страницу.");
+    }
+  }
+
+  private loadProjectsForCity(cityId: string): void {
+    this.projectSelect.innerHTML = '<option value="">Выберите проект</option>';
+
+    const cityProjects = this.projects.filter(
+      project => project.administrative_unit_id.toString() === cityId
+    );
+
+    if (cityProjects.length > 0) {
+      cityProjects.forEach((project) => {
+        const option = document.createElement("option");
+        option.value = project.id.toString();
+        option.textContent = project.title;
+        this.projectSelect.appendChild(option);
+      });
+    } else {
+      this.projectSelect.innerHTML = '<option value="">Проекты не найдены</option>';
     }
   }
 
@@ -72,10 +92,9 @@ class FormManager {
     this.citySelect.addEventListener("change", (e) => {
       const target = e.target as HTMLSelectElement;
       if (target.value) {
-        this.loadProjects(target.value);
+        this.loadProjectsForCity(target.value);
       } else {
-        this.projectSelect.innerHTML =
-          '<option value="">Сначала выберите город</option>';
+        this.projectSelect.innerHTML = '<option value="">Сначала выберите город</option>';
       }
     });
 
