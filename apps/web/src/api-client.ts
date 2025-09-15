@@ -1,4 +1,3 @@
-// API клиент для работы с backend
 const API_BASE_URL = 'http://localhost:3000/api';
 
 export interface Project {
@@ -31,7 +30,7 @@ export interface TopicCategoryTopic {
 class ApiClient {
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
-    
+
     try {
       const response = await fetch(url, {
         headers: {
@@ -52,22 +51,18 @@ class ApiClient {
     }
   }
 
-  // Получить все проекты
   async getProjects(): Promise<Project[]> {
     return this.request<Project[]>('/projects');
   }
 
-  // Получить все административные единицы (города)
   async getAdministrativeUnits(): Promise<AdministrativeUnit[]> {
     return this.request<AdministrativeUnit[]>('/administrative_units');
   }
 
-  // Получить все категории обратной связи
   async getFeedbackTopicCategories(): Promise<FeedbackTopicCategory[]> {
     return this.request<FeedbackTopicCategory[]>('/topic_categories');
   }
 
-  // Получить темы для конкретной категории
   async getTopicsByCategory(categoryId: number): Promise<TopicCategoryTopic[]> {
     return this.request<TopicCategoryTopic[]>(`/topic_category_topics?filter_by=category&field_id=${categoryId}`);
   }
