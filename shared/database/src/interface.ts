@@ -17,7 +17,6 @@ export interface Database {
   person: entities.person.PersonTable;
   person_type: entities.personType.PersonTypeTable;
 
-  person_contact: entities.personContact.PersonContactTable;
   official_responsibility: entities.officialResponsibility.OfficialResponsibilityTable;
   feedback_topic_category_topic: entities.feedbackTopicCategoryTopic.FeedbackTopicCategoryTopicTable;
 

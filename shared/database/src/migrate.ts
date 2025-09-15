@@ -133,18 +133,6 @@ async function migrate() {
     .execute();
 
   await db.schema
-    .createTable("person_contact")
-    .ifNotExists()
-    .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
-    .addColumn("contact_id", "integer", (col) =>
-      col.notNull().references("contact.id").onDelete("cascade"),
-    )
-    .addColumn("person_id", "integer", (col) =>
-      col.notNull().references("person.id").onDelete("cascade"),
-    )
-    .execute();
-
-  await db.schema
     .createTable("contact")
     .ifNotExists()
     .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
