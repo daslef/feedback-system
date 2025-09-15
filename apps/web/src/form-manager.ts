@@ -1,11 +1,18 @@
+import { apiClient, type Project, type AdministrativeUnit, type FeedbackTopicCategory, type FeedbackType } from './api-client.js';
+
 class FormManager {
   private citySelect: HTMLSelectElement;
   private projectSelect: HTMLSelectElement;
+  private typeSelect: HTMLSelectElement;
   private dragDropArea: HTMLElement;
   private fileInput: HTMLInputElement;
   private fileList: HTMLElement;
   private form: HTMLFormElement;
   private selectedFiles: File[] = [];
+  private projects: Project[] = [];
+  private cities: AdministrativeUnit[] = [];
+  private feedbackTypes: FeedbackType[] = [];
+  private categories: FeedbackTopicCategory[] = [];
 
   constructor() {
     this.citySelect = document.getElementById(
@@ -14,6 +21,7 @@ class FormManager {
     this.projectSelect = document.getElementById(
       "projectSelect",
     ) as HTMLSelectElement;
+    this.typeSelect = document.getElementById("requestTypeSelect") as HTMLSelectElement;
     this.dragDropArea = document.getElementById("dragDropArea") as HTMLElement;
     this.fileInput = document.getElementById("fileInput") as HTMLInputElement;
     this.fileList = document.getElementById("fileList") as HTMLElement;
@@ -24,47 +32,81 @@ class FormManager {
 
   private async init(): Promise<void> {
     await this.loadCities();
+    await this.loadProjects();
+    await this.loadCategories();
+    await this.loadTypes();
     this.setupEventListeners();
   }
 
   private async loadCities(): Promise<void> {
     try {
-      const response = await fetch("./data/cities.json");
-      const data = await response.json();
+      this.cities = await apiClient.getAdministrativeUnits();
 
       this.citySelect.innerHTML = '<option value="">Выберите город</option>';
-      data.cities.forEach((city: any) => {
+      this.cities.forEach((city) => {
         const option = document.createElement("option");
-        option.value = city.id;
-        option.textContent = city.name;
+        option.value = city.id.toString();
+        option.textContent = city.title;
         this.citySelect.appendChild(option);
       });
     } catch (error) {
       console.error("Ошибка загрузки городов:", error);
+      this.showAlert("Ошибка загрузки списка городов. Попробуйте обновить страницу.");
     }
   }
 
-  private async loadProjects(cityId: string): Promise<void> {
+  private async loadProjects(): Promise<void> {
     try {
-      const response = await fetch("./data/projects.json");
-      const data = await response.json();
-
-      this.projectSelect.innerHTML =
-        '<option value="">Выберите проект</option>';
-
-      if (data.projects[cityId]) {
-        data.projects[cityId].forEach((project: any) => {
-          const option = document.createElement("option");
-          option.value = project.id;
-          option.textContent = project.name;
-          this.projectSelect.appendChild(option);
-        });
-      } else {
-        this.projectSelect.innerHTML =
-          '<option value="">Проекты не найдены</option>';
-      }
+      this.projects = await apiClient.getProjects();
     } catch (error) {
       console.error("Ошибка загрузки проектов:", error);
+      this.showAlert("Ошибка загрузки списка проектов. Попробуйте обновить страницу.");
+    }
+  }
+
+  private async loadCategories(): Promise<void> {
+    try {
+      this.categories = await apiClient.getFeedbackTopicCategories();
+    } catch (error) {
+      console.error("Ошибка загрузки категорий:", error);
+      this.showAlert("Ошибка загрузки списка категорий. Попробуйте обновить страницу.");
+    }
+  }
+
+  private async loadTypes(): Promise<void> {
+    try {
+      this.feedbackTypes = await apiClient.getFeedbackTypes();
+      this.typeSelect.innerHTML = ''
+      this.feedbackTypes.forEach(({ id, title }) => {
+        const feedbackTypeSelect = document.createElement('option')
+        feedbackTypeSelect.textContent = title
+        feedbackTypeSelect.value = String(id)
+        this.typeSelect.appendChild(feedbackTypeSelect)
+      })
+
+    } catch (error) {
+      console.error("Ошибка загрузки категорий:", error);
+      this.showAlert("Ошибка загрузки списка категорий. Попробуйте обновить страницу.");
+    }
+  }
+
+
+  private loadProjectsForCity(cityId: string): void {
+    this.projectSelect.innerHTML = '<option value="">Выберите проект</option>';
+
+    const cityProjects = this.projects.filter(
+      project => project.administrative_unit_id.toString() === cityId
+    );
+
+    if (cityProjects.length > 0) {
+      cityProjects.forEach((project) => {
+        const option = document.createElement("option");
+        option.value = project.id.toString();
+        option.textContent = project.title;
+        this.projectSelect.appendChild(option);
+      });
+    } else {
+      this.projectSelect.innerHTML = '<option value="">Проекты не найдены</option>';
     }
   }
 
@@ -72,10 +114,9 @@ class FormManager {
     this.citySelect.addEventListener("change", (e) => {
       const target = e.target as HTMLSelectElement;
       if (target.value) {
-        this.loadProjects(target.value);
+        this.loadProjectsForCity(target.value);
       } else {
-        this.projectSelect.innerHTML =
-          '<option value="">Сначала выберите город</option>';
+        this.projectSelect.innerHTML = '<option value="">Сначала выберите город</option>';
       }
     });
 
@@ -237,11 +278,13 @@ class FormManager {
         formDataObject[key] = value;
       }
     }
-    formDataObject.files = this.selectedFiles.map((file) => ({
-      name: file.name,
-      size: file.size,
-      type: file.type,
-    }));
+
+    formDataObject.files = this.selectedFiles
+    // .map((file) => ({
+    //   name: file.name,
+    //   size: file.size,
+    //   type: file.type,
+    // }));
 
     console.log("Данные формы:", formDataObject);
   }

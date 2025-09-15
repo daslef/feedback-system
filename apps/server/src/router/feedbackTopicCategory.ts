@@ -26,7 +26,7 @@ const feedbackTopicCategoryRouter = {
           .where("id", "=", Number(insertId))
           .executeTakeFirstOrThrow();
       } catch {
-        throw new Error("Error on create new administrative unit");
+        throw new Error("Error on create new feedback topic category");
       }
     },
   ),

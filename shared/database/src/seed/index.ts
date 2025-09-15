@@ -14,6 +14,7 @@ async function seedDatabase() {
     "seedFeedbackTopicCategoryTopic",
     "seedPersonTypes",
     "seedPersons",
+    "seedContactTypes",
     "seedProjects",
     // "seedFeedbacks",
   ];
@@ -29,11 +30,22 @@ async function seedDatabase() {
 }
 
 (async () => {
-  const commandsMapping = {
+  const commandsMapping: { [K: string]: Function } = {
     reset: () => resetDatabase(db),
     seed: seedDatabase,
-  };
+  } as const;
+
   const command = process.argv[2];
-  await commandsMapping[command]();
+
+  if (!command) {
+    throw new Error("Command [reset | seed] must be provided")
+  }
+
+  if (!(command in commandsMapping)) {
+    throw new Error("Invalid command. Only [reset | seed] are supported")
+  }
+
+  await commandsMapping[command]!();
+
   process.exit(0);
 })();

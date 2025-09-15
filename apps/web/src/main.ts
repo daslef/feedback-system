@@ -92,50 +92,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-let map;
-let selectedCity = null;
-let selectedProject = null;
-let cityMarkers = [];
-let projectMarkers = [];
+declare const ymaps: any;
 
-const cityCoordinates = {
-  1: [55.7558, 37.6176],
-  2: [59.9311, 30.3609],
-  3: [55.0084, 82.9357],
-  4: [56.8431, 60.6454],
-  5: [55.8304, 49.0661],
-  6: [56.2965, 43.9361],
-  7: [55.1644, 61.4368],
-  8: [53.2001, 50.15],
-  9: [54.9885, 73.3242],
-  10: [47.2357, 39.7015],
-};
+let map: any;
+let selectedCity: any = null;
+let selectedProject: any = null;
+let cityMarkers: any[] = [];
+let projectMarkers: any[] = [];
 
-const projectCoordinates = {
-  1: [55.7908, 37.6756],
-  2: [55.7558, 37.6176],
-  3: [55.8304, 37.64],
-  4: [55.752, 37.6175],
-  5: [59.944, 30.336],
-  6: [59.94, 30.33],
-  7: [59.95, 30.32],
-  8: [55.0084, 82.9357],
-  9: [55.0, 82.95],
-  10: [56.8431, 60.6454],
-  11: [56.85, 60.65],
-  12: [55.8304, 49.0661],
-  13: [55.84, 49.07],
-  14: [56.2965, 43.9361],
-  15: [56.3, 43.94],
-  16: [55.1644, 61.4368],
-  17: [55.17, 61.44],
-  18: [53.2001, 50.15],
-  19: [53.19, 50.16],
-  20: [54.9885, 73.3242],
-  21: [54.99, 73.33],
-  22: [47.2357, 39.7015],
-  23: [47.23, 39.71],
-};
 
 function openMapPopup() {
   const popup = document.getElementById("mapPopup") as HTMLElement;
@@ -148,7 +112,7 @@ function openMapPopup() {
     setTimeout(() => {
       try {
         map.container.fitToViewport();
-      } catch (e) {}
+      } catch { }
     }, 100);
   }
 }
@@ -177,44 +141,64 @@ function initYandexMap() {
     window.addEventListener("resize", () => {
       try {
         map.container.fitToViewport();
-      } catch (e) {}
+      } catch {
+      }
     });
   });
 }
 
-function loadCities() {
-  fetch("./data/cities.json")
-    .then((response) => response.json())
-    .then((data) => {
-      data.cities.forEach((city) => {
-        const coords = cityCoordinates[city.id];
-        if (coords) {
-          const marker = new ymaps.Placemark(
-            coords,
-            {
-              balloonContent: `<div><strong>${city.name}</strong></div>`,
-            },
-            {
-              preset: "islands#greenDotIcon",
-              iconColor: "#18a763",
-            },
-          );
+async function loadCities() {
+  try {
+    const [citiesResponse, projectsResponse] = await Promise.all([
+      fetch("http://localhost:3000/api/administrative_units"),
+      fetch("http://localhost:3000/api/projects")
+    ]);
 
-          marker.events.add("click", function () {
-            selectCity(city);
-          });
+    const cities = await citiesResponse.json();
+    const projects = await projectsResponse.json();
 
-          map.geoObjects.add(marker);
-          cityMarkers.push(marker);
-        }
-      });
-    })
-    .catch((error) => {
-      console.error("Ошибка загрузки городов:", error);
+    const projectsByCity = projects.reduce((acc: any, project: any) => {
+      if (!acc[project.administrative_unit_id]) {
+        acc[project.administrative_unit_id] = [];
+      }
+      acc[project.administrative_unit_id].push(project);
+      return acc;
+    }, {});
+
+    cities.forEach((city: any) => {
+      const cityProjects = projectsByCity[city.id] || [];
+
+      if (cityProjects.length > 0) {
+        const avgLat = cityProjects.reduce((sum: number, p: any) => sum + p.latitude, 0) / cityProjects.length;
+        const avgLng = cityProjects.reduce((sum: number, p: any) => sum + p.longitude, 0) / cityProjects.length;
+
+        const coords = [avgLat, avgLng];
+
+        const marker = new ymaps.Placemark(
+          coords,
+          {
+            balloonContent: `<div><strong>${city.title}</strong><br>Проектов: ${cityProjects.length}</div>`,
+          },
+          {
+            preset: "islands#greenDotIcon",
+            iconColor: "#18a763",
+          },
+        );
+
+        marker.events.add("click", function () {
+          selectCity(city);
+        });
+
+        map.geoObjects.add(marker);
+        cityMarkers.push(marker);
+      }
     });
+  } catch (error) {
+    console.error("Ошибка загрузки городов:", error);
+  }
 }
 
-function selectCity(city) {
+async function selectCity(city: any) {
   selectedCity = city;
   selectedProject = null;
 
@@ -222,90 +206,104 @@ function selectCity(city) {
   const selectedProjectElement = document.getElementById("selectedProjectName");
 
   if (selectedCityElement && selectedProjectElement) {
-    selectedCityElement.textContent = city.name;
+    selectedCityElement.textContent = city.title;
     selectedProjectElement.textContent = "Не выбран";
   }
 
-  const coords = cityCoordinates[city.id];
-  if (coords) {
-    map.setCenter(coords, 10);
+  try {
+    const response = await fetch("http://localhost:3000/api/projects");
+    const projects = await response.json();
+    const cityProjects = projects.filter((project: any) => project.administrative_unit_id === city.id);
+
+    if (cityProjects.length > 0) {
+      const avgLat = cityProjects.reduce((sum: number, p: any) => sum + p.latitude, 0) / cityProjects.length;
+      const avgLng = cityProjects.reduce((sum: number, p: any) => sum + p.longitude, 0) / cityProjects.length;
+      const coords = [avgLat, avgLng];
+      map.setCenter(coords, 10);
+    }
+  } catch (error) {
+    console.error("Ошибка получения координат города:", error);
   }
 
   loadProjectsForCity(city.id);
 }
 
-function loadProjectsForCity(cityId) {
+async function loadProjectsForCity(cityId: number) {
   projectMarkers.forEach((marker) => {
     map.geoObjects.remove(marker);
   });
   projectMarkers = [];
 
-  fetch("./data/projects.json")
-    .then((response) => response.json())
-    .then((data) => {
-      const cityProjects = data.projects[cityId];
-      if (cityProjects) {
-        cityProjects.forEach((project) => {
-          const coords = projectCoordinates[project.id];
-          if (coords) {
-            const marker = new ymaps.Placemark(
-              coords,
-              {
-                balloonContent: `<div><strong>${project.name}</strong></div>`,
-              },
-              {
-                preset: "islands#blueDotIcon",
-                iconColor: "#48c5df",
-              },
-            );
+  try {
+    const response = await fetch("http://localhost:3000/api/projects");
+    const projects = await response.json();
 
-            marker.events.add("click", function () {
-              selectProject(project);
-            });
+    const cityProjects = projects.filter((project: any) =>
+      project.administrative_unit_id === cityId
+    );
 
-            map.geoObjects.add(marker);
-            projectMarkers.push(marker);
-          }
+    if (cityProjects.length > 0) {
+      cityProjects.forEach((project: any) => {
+        const coords = [project.latitude, project.longitude];
+        const marker = new ymaps.Placemark(
+          coords,
+          {
+            balloonContent: `<div><strong>${project.title}</strong></div>`,
+          },
+          {
+            preset: "islands#blueDotIcon",
+            iconColor: "#48c5df",
+          },
+        );
+
+        marker.events.add("click", function () {
+          selectProject(project);
         });
-      }
-    })
-    .catch((error) => {
-      console.error("Ошибка загрузки проектов:", error);
-    });
+
+        map.geoObjects.add(marker);
+        projectMarkers.push(marker);
+      });
+    }
+  } catch (error) {
+    console.error("Ошибка загрузки проектов:", error);
+  }
 }
 
-function selectProject(project) {
+function selectProject(project: any) {
   selectedProject = project;
   (
     document.getElementById("selectedProjectName") as HTMLSpanElement
-  ).textContent = project.name;
+  ).textContent = project.title;
 }
 
-function loadProjectsForSelect(cityId: string | number, callback: Function) {
-  fetch("./data/projects.json")
-    .then((response) => response.json())
-    .then((data) => {
-      const projectSelect = document.getElementById(
-        "projectSelect",
-      ) as HTMLOptionElement;
-      projectSelect.innerHTML = '<option value="">Выберите проект</option>';
+async function loadProjectsForSelect(cityId: string | number, callback: Function) {
+  try {
+    const response = await fetch("http://localhost:3000/api/projects");
+    const projects = await response.json();
 
-      const cityProjects = data.projects[cityId];
-      if (cityProjects) {
-        cityProjects.forEach((project) => {
-          const option = document.createElement("option");
-          option.value = project.id;
-          option.textContent = project.name;
-          projectSelect.appendChild(option);
-        });
-      }
+    const projectSelect = document.getElementById(
+      "projectSelect",
+    ) as HTMLSelectElement;
+    projectSelect.innerHTML = '<option value="">Выберите проект</option>';
 
-      if (callback) callback();
-    })
-    .catch((error) => {
-      console.error("Ошибка загрузки проектов для селекта:", error);
-      if (callback) callback();
-    });
+    const cityProjects = projects.filter((project: any) =>
+      project.administrative_unit_id.toString() === cityId.toString()
+    );
+
+    if (cityProjects.length > 0) {
+      cityProjects.forEach((project: any) => {
+        const option = document.createElement("option");
+        option.value = project.id.toString();
+        option.textContent = project.title;
+        projectSelect.appendChild(option);
+      });
+    }
+
+    if (callback) callback();
+  } catch (error) {
+    console.error("Ошибка загрузки проектов для селекта:", error);
+    if (callback) callback();
+  }
 }
 
 function applyMapSelection() {
@@ -314,11 +312,16 @@ function applyMapSelection() {
     return;
   }
 
-  const citySelect = document.getElementById("citySelect");
-  const projectSelect = document.getElementById("projectSelect");
+  const citySelect = document.getElementById("citySelect") as HTMLSelectElement;
+  const projectSelect = document.getElementById("projectSelect") as HTMLSelectElement;
+
+  if (!citySelect || !projectSelect) {
+    console.error("Не найдены элементы select для города или проекта");
+    return;
+  }
 
   for (let option of citySelect.options) {
-    if (option.textContent === selectedCity.name) {
+    if (option.textContent === selectedCity.title) {
       citySelect.value = option.value;
       break;
     }
@@ -326,7 +329,7 @@ function applyMapSelection() {
 
   loadProjectsForSelect(selectedCity.id, () => {
     for (let option of projectSelect.options) {
-      if (option.textContent === selectedProject.name) {
+      if (option.textContent === selectedProject.title) {
         projectSelect.value = option.value;
         break;
       }
@@ -335,39 +338,22 @@ function applyMapSelection() {
     closeMapPopup();
 
     showSuccessAlert(
-      `Выбран город: ${selectedCity.name}, проект: ${selectedProject.name}`,
+      `Выбран город: ${selectedCity.title}, проект: ${selectedProject.title}`,
     );
   });
 }
 
 window.openMapPopup = openMapPopup;
 
-let dropdownData = null;
+let categories: any[] = [];
 
-function loadDropdownData() {
-  fetch("./data/dropdown-options.json")
-    .then((response) => response.json())
-    .then((data) => {
-      dropdownData = data;
-      populateRequestTypes();
-    })
-    .catch((error) => {
-      console.error("Ошибка загрузки данных dropdown:", error);
-    });
-}
-
-function populateRequestTypes() {
-  const select = document.getElementById(
-    "requestTypeSelect",
-  ) as HTMLSelectElement;
-  select.innerHTML = "";
-
-  dropdownData.requestTypes.forEach((type) => {
-    const option = document.createElement("option");
-    option.value = type.id;
-    option.textContent = type.name;
-    select.appendChild(option);
-  });
+async function loadDropdownData() {
+  try {
+    const response = await fetch("http://localhost:3000/api/topic_categories");
+    categories = await response.json();
+  } catch (error) {
+    console.error("Ошибка загрузки данных dropdown:", error);
+  }
 }
 
 function handleRequestTypeChange() {
@@ -379,15 +365,17 @@ function handleRequestTypeChange() {
   ) as HTMLDivElement;
   const issueBlock = document.getElementById("issueBlock") as HTMLDivElement;
 
-  if (requestTypeSelect.value === "remark") {
+  if (requestTypeSelect.value === "Замечание") {
     categoryBlock.style.display = "block";
     issueBlock.style.display = "block";
     populateCategories();
   } else {
     categoryBlock.style.display = "none";
     issueBlock.style.display = "none";
-    document.getElementById("categorySelect")!.value = "";
-    document.getElementById("issueSelect")!.value = "";
+    const categorySelect = document.getElementById("categorySelect") as HTMLSelectElement;
+    const issueSelect = document.getElementById("issueSelect") as HTMLSelectElement;
+    if (categorySelect) categorySelect.value = "";
+    if (issueSelect) issueSelect.value = "";
   }
 }
 
@@ -395,10 +383,10 @@ function populateCategories() {
   const select = document.getElementById("categorySelect") as HTMLSelectElement;
   select.innerHTML = '<option value="">Выберите категорию</option>';
 
-  dropdownData.categories.forEach((category) => {
+  categories.forEach((category) => {
     const option = document.createElement("option");
-    option.value = category.id;
-    option.textContent = category.name;
+    option.value = category.id.toString();
+    option.textContent = category.title;
     select.appendChild(option);
   });
 }
@@ -419,18 +407,23 @@ function handleCategoryChange() {
   }
 }
 
-function populateIssues(categoryId: number | string) {
+async function populateIssues(categoryId: number | string) {
   const select = document.getElementById("issueSelect") as HTMLSelectElement;
   select.innerHTML = '<option value="">Выберите проблему</option>';
 
-  const issues = dropdownData.issues[categoryId];
+  try {
+    const response = await fetch(`http://localhost:3000/api/topic_category_topics?filter_by=category&field_id=${categoryId}`);
+    const issues = await response.json();
 
-  issues?.forEach((issue) => {
-    const option = document.createElement("option");
-    option.value = issue.id;
-    option.textContent = issue.name;
-    select.appendChild(option);
-  });
+    issues.forEach((issue: any) => {
+      const option = document.createElement("option");
+      option.value = issue.id.toString();
+      option.textContent = issue.feedback_topic;
+      select.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Ошибка загрузки тем для категории:", error);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function () {

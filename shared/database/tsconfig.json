@@ -1,12 +1,14 @@
 {
     "extends": "@shared/typescript-config/internal-package.json",
     "compilerOptions": {
-        "module": "es2022"
+        "module": "esnext",
+        "resolveJsonModule": true
     },
     "include": [
-        "src"
+        "src/**/*",
+        "src/seed/data/*.json"
     ],
     "exclude": [
         "node_modules"
-    ]
+    ],
 }

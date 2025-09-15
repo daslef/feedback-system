@@ -84,10 +84,21 @@ export async function seedFeedbackStatuses(db: Kysely<Database>) {
     .execute();
 }
 
+export async function seedContactTypes(db: Kysely<Database>) {
+  await db
+    .insertInto("contact_type")
+    .values([
+      { title: "phone" },
+      { title: "email" },
+      { title: "social" },
+    ])
+    .execute();
+}
+
 export async function seedFeedbackTypes(db: Kysely<Database>) {
   await db
     .insertInto("feedback_type")
-    .values([{ title: "wish" }, { title: "complaint" }])
+    .values([{ title: "Пожелание" }, { title: "Замечание" }])
     .execute();
 }
 
@@ -165,8 +176,8 @@ export async function seedProjects(db: Kysely<Database>) {
 
         return {
           title,
-          latitude: Number.isFinite(latitude) ? latitude : 0,
-          longitude: Number.isFinite(longitude) ? longitude : 0,
+          latitude: (latitude && Number.isFinite(latitude)) ? latitude : 0,
+          longitude: (longitude && Number.isFinite(longitude)) ? longitude : 0,
           year_of_completion: year,
           administrative_unit_id,
         };
