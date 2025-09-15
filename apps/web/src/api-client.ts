@@ -21,6 +21,11 @@ export interface FeedbackTopicCategory {
   title: string;
 }
 
+export interface FeedbackType {
+  id: number;
+  title: string;
+}
+
 export interface TopicCategoryTopic {
   id: number;
   feedback_topic: string;
@@ -57,6 +62,10 @@ class ApiClient {
 
   async getAdministrativeUnits(): Promise<AdministrativeUnit[]> {
     return this.request<AdministrativeUnit[]>('/administrative_units');
+  }
+
+  async getFeedbackTypes(): Promise<FeedbackType[]> {
+    return this.request<FeedbackType[]>('/feedback_types');
   }
 
   async getFeedbackTopicCategories(): Promise<FeedbackTopicCategory[]> {

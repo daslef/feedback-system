@@ -2,7 +2,7 @@ import type { Generated, Updateable, Selectable } from "kysely";
 
 export interface FeedbackTypeTable {
   id: Generated<number>;
-  title: "wish" | "complaint";
+  title: "Пожелание" | "Замечание";
 }
 
 export type FeedbackType = Selectable<FeedbackTypeTable>;

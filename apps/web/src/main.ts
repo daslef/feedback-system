@@ -351,30 +351,9 @@ async function loadDropdownData() {
   try {
     const response = await fetch("http://localhost:3000/api/topic_categories");
     categories = await response.json();
-
-    populateRequestTypes();
   } catch (error) {
     console.error("Ошибка загрузки данных dropdown:", error);
   }
-}
-
-function populateRequestTypes() {
-  const select = document.getElementById(
-    "requestTypeSelect",
-  ) as HTMLSelectElement;
-  select.innerHTML = "";
-
-  const requestTypes = [
-    { id: "wish", name: "Отправить пожелание" },
-    { id: "remark", name: "Отправить замечание" }
-  ];
-
-  requestTypes.forEach((type) => {
-    const option = document.createElement("option");
-    option.value = type.id;
-    option.textContent = type.name;
-    select.appendChild(option);
-  });
 }
 
 function handleRequestTypeChange() {
@@ -386,7 +365,7 @@ function handleRequestTypeChange() {
   ) as HTMLDivElement;
   const issueBlock = document.getElementById("issueBlock") as HTMLDivElement;
 
-  if (requestTypeSelect.value === "remark") {
+  if (requestTypeSelect.value === "Замечание") {
     categoryBlock.style.display = "block";
     issueBlock.style.display = "block";
     populateCategories();

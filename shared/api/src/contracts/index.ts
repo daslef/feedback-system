@@ -4,6 +4,12 @@ import projectContract from "./project";
 import administrativeUnitContract from "./administrativeUnit";
 import feedbackTopicCategoryContract from "./feedbackTopicCategory";
 import feedbackTopicCategoryTopicContract from "./feedbackTopicCategoryTopic";
+import feedbackTypeContract from "./feedbackType";
+import feedbackContract from "./feedback";
+import contactTypeContract from "./contactType";
+import personTypeContract from "./personType";
+import personContract from "./person";
+import contactContract from "./contact";
 
 const apiContract = oc
   .errors({
@@ -22,8 +28,14 @@ const apiContract = oc
   .router({
     project: projectContract,
     administrativeUnit: administrativeUnitContract,
+    feedbackType: feedbackTypeContract,
     feedbackTopicCategory: feedbackTopicCategoryContract,
-    feedbackTopicCategoryTopic: feedbackTopicCategoryTopicContract
+    feedbackTopicCategoryTopic: feedbackTopicCategoryTopicContract,
+    feedback: feedbackContract,
+    contactType: contactTypeContract,
+    personType: personTypeContract,
+    person: personContract,
+    contact: contactContract
   });
 
 export default apiContract;
