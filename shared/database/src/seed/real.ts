@@ -1,7 +1,9 @@
 import type { Kysely } from "kysely";
 import type { Database } from "../interface";
 
-import projectsData from "./data/projects_deserialized.json" with { type: "json" };
+import projectsData from "./data/projects_deserialized.json" with {
+  type: "json",
+};
 import topicsAndCategoriesData from "./data/topics_and_categories.json" with {
   type: "json",
 };
@@ -154,8 +156,8 @@ export async function seedProjects(db: Kysely<Database>) {
 
         return {
           title,
-          latitude: (latitude && Number.isFinite(latitude)) ? latitude : 0,
-          longitude: (longitude && Number.isFinite(longitude)) ? longitude : 0,
+          latitude: latitude && Number.isFinite(latitude) ? latitude : 0,
+          longitude: longitude && Number.isFinite(longitude) ? longitude : 0,
           year_of_completion: year,
           administrative_unit_id,
         };

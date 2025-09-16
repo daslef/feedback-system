@@ -123,7 +123,7 @@ async function migrate() {
     .addColumn("person_type_id", "integer", (col) =>
       col.references("person_type.id").onDelete("set null"),
     )
-    .addColumn("contact_id", "integer", (col) => 
+    .addColumn("contact_id", "integer", (col) =>
       col.references("person_type.id").onDelete("cascade"),
     )
     .execute();

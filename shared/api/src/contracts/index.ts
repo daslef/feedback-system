@@ -33,7 +33,7 @@ const apiContract = oc
     feedback: feedbackContract,
     personType: personTypeContract,
     person: personContract,
-    personContact: personContactContract
+    personContact: personContactContract,
   });
 
 export default apiContract;

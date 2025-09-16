@@ -5,11 +5,7 @@ function prepareBaseQuery(databaseInstance: typeof db) {
   return databaseInstance
     .selectFrom("feedback")
     .innerJoin("project", "feedback.project_id", "project.id")
-    .innerJoin(
-      "feedback_type",
-      "feedback.feedback_type_id",
-      "feedback_type.id",
-    )
+    .innerJoin("feedback_type", "feedback.feedback_type_id", "feedback_type.id")
     .innerJoin(
       "feedback_topic",
       "feedback.feedback_topic_id",
@@ -33,7 +29,7 @@ function prepareBaseQuery(databaseInstance: typeof db) {
       "feedback.feedback_status_id",
       "feedback_status.title as feedback_status",
       "feedback.created_at",
-    ])
+    ]);
 }
 
 const feedbackRouter = {
@@ -61,11 +57,11 @@ const feedbackRouter = {
   create: protectedProcedure.feedback.create.handler(
     async ({ context, input }) => {
       try {
-        const { id: pendingStatusId } = await context.db.
-          selectFrom("feedback_status")
+        const { id: pendingStatusId } = await context.db
+          .selectFrom("feedback_status")
           .select("id")
-          .where("feedback_status.title", '=', 'pending')
-          .executeTakeFirstOrThrow()
+          .where("feedback_status.title", "=", "pending")
+          .executeTakeFirstOrThrow();
 
         const { insertId } = await context.db
           .insertInto("feedback")

@@ -6,19 +6,20 @@ const FeedbackTypeSchema = v.object({
   title: v.string(),
 });
 
-const GetManyFeedbackTypeSchema = v.array(
-  FeedbackTypeSchema,
-);
+const GetManyFeedbackTypeSchema = v.array(FeedbackTypeSchema);
 
-const feedbackTypeContract = oc.tag("Feedback").prefix("/feedback_types").router({
-  all: oc
-    .route({
-      method: "GET",
-      path: "/",
-      summary: "List all feedback types",
-      description: "Get information for all feedback types",
-    })
-    .output(GetManyFeedbackTypeSchema),
-});
+const feedbackTypeContract = oc
+  .tag("Feedback")
+  .prefix("/feedback_types")
+  .router({
+    all: oc
+      .route({
+        method: "GET",
+        path: "/",
+        summary: "List all feedback types",
+        description: "Get information for all feedback types",
+      })
+      .output(GetManyFeedbackTypeSchema),
+  });
 
 export default feedbackTypeContract;

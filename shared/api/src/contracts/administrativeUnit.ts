@@ -16,48 +16,51 @@ const GetAdministrativeUnitSchema = v.intersect([
 
 const GetManyAdministrativeUnitsSchema = v.array(GetAdministrativeUnitSchema);
 
-const administrativeUnitContract = oc.tag("Administrative Units").prefix("/administrative_units").router({
-  all: oc
-    .route({
-      method: "GET",
-      path: "/",
-      summary: "List all administrative units",
-      description: "Get full information for all administrative_units",
-    })
-    .input(
-      v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.transform(Number),
-            v.number(),
-            v.integer(),
-            v.minValue(10),
-            v.maxValue(25),
+const administrativeUnitContract = oc
+  .tag("Administrative Units")
+  .prefix("/administrative_units")
+  .router({
+    all: oc
+      .route({
+        method: "GET",
+        path: "/",
+        summary: "List all administrative units",
+        description: "Get full information for all administrative_units",
+      })
+      .input(
+        v.object({
+          limit: v.optional(
+            v.pipe(
+              v.string(),
+              v.transform(Number),
+              v.number(),
+              v.integer(),
+              v.minValue(10),
+              v.maxValue(25),
+            ),
           ),
-        ),
-        offset: v.optional(
-          v.pipe(
-            v.string(),
-            v.transform(Number),
-            v.number(),
-            v.integer(),
-            v.minValue(0),
+          offset: v.optional(
+            v.pipe(
+              v.string(),
+              v.transform(Number),
+              v.number(),
+              v.integer(),
+              v.minValue(0),
+            ),
           ),
-        ),
-      }),
-    )
-    .output(GetManyAdministrativeUnitsSchema),
+        }),
+      )
+      .output(GetManyAdministrativeUnitsSchema),
 
-  create: oc
-    .route({
-      method: "POST",
-      path: "/",
-      summary: "New administrative unit",
-      description: "Create a new administrative unit",
-    })
-    .input(v.omit(AdministrativeUnitSchema, ["id"]))
-    .output(GetAdministrativeUnitSchema),
-});
+    create: oc
+      .route({
+        method: "POST",
+        path: "/",
+        summary: "New administrative unit",
+        description: "Create a new administrative unit",
+      })
+      .input(v.omit(AdministrativeUnitSchema, ["id"]))
+      .output(GetAdministrativeUnitSchema),
+  });
 
 export default administrativeUnitContract;

@@ -100,7 +100,6 @@ let selectedProject: any = null;
 let cityMarkers: any[] = [];
 let projectMarkers: any[] = [];
 
-
 function openMapPopup() {
   const popup = document.getElementById("mapPopup") as HTMLElement;
   popup.classList.add("show");
@@ -112,7 +111,7 @@ function openMapPopup() {
     setTimeout(() => {
       try {
         map.container.fitToViewport();
-      } catch { }
+      } catch {}
     }, 100);
   }
 }
@@ -141,8 +140,7 @@ function initYandexMap() {
     window.addEventListener("resize", () => {
       try {
         map.container.fitToViewport();
-      } catch {
-      }
+      } catch {}
     });
   });
 }
@@ -151,7 +149,7 @@ async function loadCities() {
   try {
     const [citiesResponse, projectsResponse] = await Promise.all([
       fetch("http://localhost:3000/api/administrative_units"),
-      fetch("http://localhost:3000/api/projects")
+      fetch("http://localhost:3000/api/projects"),
     ]);
 
     const cities = await citiesResponse.json();
@@ -169,8 +167,12 @@ async function loadCities() {
       const cityProjects = projectsByCity[city.id] || [];
 
       if (cityProjects.length > 0) {
-        const avgLat = cityProjects.reduce((sum: number, p: any) => sum + p.latitude, 0) / cityProjects.length;
-        const avgLng = cityProjects.reduce((sum: number, p: any) => sum + p.longitude, 0) / cityProjects.length;
+        const avgLat =
+          cityProjects.reduce((sum: number, p: any) => sum + p.latitude, 0) /
+          cityProjects.length;
+        const avgLng =
+          cityProjects.reduce((sum: number, p: any) => sum + p.longitude, 0) /
+          cityProjects.length;
 
         const coords = [avgLat, avgLng];
 
@@ -213,11 +215,17 @@ async function selectCity(city: any) {
   try {
     const response = await fetch("http://localhost:3000/api/projects");
     const projects = await response.json();
-    const cityProjects = projects.filter((project: any) => project.administrative_unit_id === city.id);
+    const cityProjects = projects.filter(
+      (project: any) => project.administrative_unit_id === city.id,
+    );
 
     if (cityProjects.length > 0) {
-      const avgLat = cityProjects.reduce((sum: number, p: any) => sum + p.latitude, 0) / cityProjects.length;
-      const avgLng = cityProjects.reduce((sum: number, p: any) => sum + p.longitude, 0) / cityProjects.length;
+      const avgLat =
+        cityProjects.reduce((sum: number, p: any) => sum + p.latitude, 0) /
+        cityProjects.length;
+      const avgLng =
+        cityProjects.reduce((sum: number, p: any) => sum + p.longitude, 0) /
+        cityProjects.length;
       const coords = [avgLat, avgLng];
       map.setCenter(coords, 10);
     }
@@ -238,8 +246,8 @@ async function loadProjectsForCity(cityId: number) {
     const response = await fetch("http://localhost:3000/api/projects");
     const projects = await response.json();
 
-    const cityProjects = projects.filter((project: any) =>
-      project.administrative_unit_id === cityId
+    const cityProjects = projects.filter(
+      (project: any) => project.administrative_unit_id === cityId,
     );
 
     if (cityProjects.length > 0) {
@@ -276,7 +284,10 @@ function selectProject(project: any) {
   ).textContent = project.title;
 }
 
-async function loadProjectsForSelect(cityId: string | number, callback: Function) {
+async function loadProjectsForSelect(
+  cityId: string | number,
+  callback: Function,
+) {
   try {
     const response = await fetch("http://localhost:3000/api/projects");
     const projects = await response.json();
@@ -286,8 +297,9 @@ async function loadProjectsForSelect(cityId: string | number, callback: Function
     ) as HTMLSelectElement;
     projectSelect.innerHTML = '<option value="">Выберите проект</option>';
 
-    const cityProjects = projects.filter((project: any) =>
-      project.administrative_unit_id.toString() === cityId.toString()
+    const cityProjects = projects.filter(
+      (project: any) =>
+        project.administrative_unit_id.toString() === cityId.toString(),
     );
 
     if (cityProjects.length > 0) {
@@ -313,7 +325,9 @@ function applyMapSelection() {
   }
 
   const citySelect = document.getElementById("citySelect") as HTMLSelectElement;
-  const projectSelect = document.getElementById("projectSelect") as HTMLSelectElement;
+  const projectSelect = document.getElementById(
+    "projectSelect",
+  ) as HTMLSelectElement;
 
   if (!citySelect || !projectSelect) {
     console.error("Не найдены элементы select для города или проекта");
@@ -372,8 +386,12 @@ function handleRequestTypeChange() {
   } else {
     categoryBlock.style.display = "none";
     issueBlock.style.display = "none";
-    const categorySelect = document.getElementById("categorySelect") as HTMLSelectElement;
-    const issueSelect = document.getElementById("issueSelect") as HTMLSelectElement;
+    const categorySelect = document.getElementById(
+      "categorySelect",
+    ) as HTMLSelectElement;
+    const issueSelect = document.getElementById(
+      "issueSelect",
+    ) as HTMLSelectElement;
     if (categorySelect) categorySelect.value = "";
     if (issueSelect) issueSelect.value = "";
   }
@@ -412,7 +430,9 @@ async function populateIssues(categoryId: number | string) {
   select.innerHTML = '<option value="">Выберите проблему</option>';
 
   try {
-    const response = await fetch(`http://localhost:3000/api/topic_category_topics?filter_by=category&field_id=${categoryId}`);
+    const response = await fetch(
+      `http://localhost:3000/api/topic_category_topics?filter_by=category&field_id=${categoryId}`,
+    );
     const issues = await response.json();
 
     issues.forEach((issue: any) => {

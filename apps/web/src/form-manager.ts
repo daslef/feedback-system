@@ -1,4 +1,10 @@
-import { apiClient, type Project, type AdministrativeUnit, type FeedbackTopicCategory, type FeedbackType } from './api-client.js';
+import {
+  apiClient,
+  type Project,
+  type AdministrativeUnit,
+  type FeedbackTopicCategory,
+  type FeedbackType,
+} from "./api-client.js";
 
 class FormManager {
   private citySelect: HTMLSelectElement;
@@ -21,7 +27,9 @@ class FormManager {
     this.projectSelect = document.getElementById(
       "projectSelect",
     ) as HTMLSelectElement;
-    this.typeSelect = document.getElementById("requestTypeSelect") as HTMLSelectElement;
+    this.typeSelect = document.getElementById(
+      "requestTypeSelect",
+    ) as HTMLSelectElement;
     this.dragDropArea = document.getElementById("dragDropArea") as HTMLElement;
     this.fileInput = document.getElementById("fileInput") as HTMLInputElement;
     this.fileList = document.getElementById("fileList") as HTMLElement;
@@ -51,7 +59,9 @@ class FormManager {
       });
     } catch (error) {
       console.error("Ошибка загрузки городов:", error);
-      this.showAlert("Ошибка загрузки списка городов. Попробуйте обновить страницу.");
+      this.showAlert(
+        "Ошибка загрузки списка городов. Попробуйте обновить страницу.",
+      );
     }
   }
 
@@ -60,7 +70,9 @@ class FormManager {
       this.projects = await apiClient.getProjects();
     } catch (error) {
       console.error("Ошибка загрузки проектов:", error);
-      this.showAlert("Ошибка загрузки списка проектов. Попробуйте обновить страницу.");
+      this.showAlert(
+        "Ошибка загрузки списка проектов. Попробуйте обновить страницу.",
+      );
     }
   }
 
@@ -69,33 +81,35 @@ class FormManager {
       this.categories = await apiClient.getFeedbackTopicCategories();
     } catch (error) {
       console.error("Ошибка загрузки категорий:", error);
-      this.showAlert("Ошибка загрузки списка категорий. Попробуйте обновить страницу.");
+      this.showAlert(
+        "Ошибка загрузки списка категорий. Попробуйте обновить страницу.",
+      );
     }
   }
 
   private async loadTypes(): Promise<void> {
     try {
       this.feedbackTypes = await apiClient.getFeedbackTypes();
-      this.typeSelect.innerHTML = ''
+      this.typeSelect.innerHTML = "";
       this.feedbackTypes.forEach(({ id, title }) => {
-        const feedbackTypeSelect = document.createElement('option')
-        feedbackTypeSelect.textContent = title
-        feedbackTypeSelect.value = String(id)
-        this.typeSelect.appendChild(feedbackTypeSelect)
-      })
-
+        const feedbackTypeSelect = document.createElement("option");
+        feedbackTypeSelect.textContent = title;
+        feedbackTypeSelect.value = String(id);
+        this.typeSelect.appendChild(feedbackTypeSelect);
+      });
     } catch (error) {
       console.error("Ошибка загрузки категорий:", error);
-      this.showAlert("Ошибка загрузки списка категорий. Попробуйте обновить страницу.");
+      this.showAlert(
+        "Ошибка загрузки списка категорий. Попробуйте обновить страницу.",
+      );
     }
   }
-
 
   private loadProjectsForCity(cityId: string): void {
     this.projectSelect.innerHTML = '<option value="">Выберите проект</option>';
 
     const cityProjects = this.projects.filter(
-      project => project.administrative_unit_id.toString() === cityId
+      (project) => project.administrative_unit_id.toString() === cityId,
     );
 
     if (cityProjects.length > 0) {
@@ -106,7 +120,8 @@ class FormManager {
         this.projectSelect.appendChild(option);
       });
     } else {
-      this.projectSelect.innerHTML = '<option value="">Проекты не найдены</option>';
+      this.projectSelect.innerHTML =
+        '<option value="">Проекты не найдены</option>';
     }
   }
 
@@ -116,7 +131,8 @@ class FormManager {
       if (target.value) {
         this.loadProjectsForCity(target.value);
       } else {
-        this.projectSelect.innerHTML = '<option value="">Сначала выберите город</option>';
+        this.projectSelect.innerHTML =
+          '<option value="">Сначала выберите город</option>';
       }
     });
 
@@ -279,7 +295,7 @@ class FormManager {
       }
     }
 
-    formDataObject.files = this.selectedFiles
+    formDataObject.files = this.selectedFiles;
     // .map((file) => ({
     //   name: file.name,
     //   size: file.size,

@@ -22,59 +22,64 @@ const GetProjectSchema = v.intersect([
   v.object({ administrative_unit: v.string() }),
 ]);
 
-const projectContract = oc.tag("Projects").prefix("/projects").router({
-  one: oc
-    .route({
-      method: "GET",
-      path: "/{id}",
-      summary: "Get a project",
-      description: "Get full project information by id",
-    })
-    .input(v.object({ id: v.string() }))
-    .output(GetProjectSchema),
+const projectContract = oc
+  .tag("Projects")
+  .prefix("/projects")
+  .router({
+    one: oc
+      .route({
+        method: "GET",
+        path: "/{id}",
+        summary: "Get a project",
+        description: "Get full project information by id",
+      })
+      .input(v.object({ id: v.string() }))
+      .output(GetProjectSchema),
 
-  all: oc
-    .route({
-      method: "GET",
-      path: "/",
-      summary: "List all projects",
-      description: "Get brief information for all projects",
-    })
-    .input(
-      v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.transform(Number),
-            v.number(),
-            v.integer(),
-            v.minValue(12),
-            v.maxValue(24),
+    all: oc
+      .route({
+        method: "GET",
+        path: "/",
+        summary: "List all projects",
+        description: "Get brief information for all projects",
+      })
+      .input(
+        v.object({
+          limit: v.optional(
+            v.pipe(
+              v.string(),
+              v.transform(Number),
+              v.number(),
+              v.integer(),
+              v.minValue(12),
+              v.maxValue(24),
+            ),
           ),
-        ),
-        offset: v.optional(
-          v.pipe(
-            v.string(),
-            v.transform(Number),
-            v.number(),
-            v.integer(),
-            v.minValue(0),
+          offset: v.optional(
+            v.pipe(
+              v.string(),
+              v.transform(Number),
+              v.number(),
+              v.integer(),
+              v.minValue(0),
+            ),
           ),
-        ),
-        administrative_unit_type: v.optional(v.union([v.literal('settlement'), v.literal('town')]))
-      }),
-    )
-    .output(GetManyProjectsSchema),
+          administrative_unit_type: v.optional(
+            v.union([v.literal("settlement"), v.literal("town")]),
+          ),
+        }),
+      )
+      .output(GetManyProjectsSchema),
 
-  create: oc
-    .route({
-      method: "POST",
-      path: "/",
-      summary: "New project",
-      description: "Create a new project",
-    })
-    .input(v.omit(ProjectSchema, ["id"]))
-    .output(GetProjectSchema),
-});
+    create: oc
+      .route({
+        method: "POST",
+        path: "/",
+        summary: "New project",
+        description: "Create a new project",
+      })
+      .input(v.omit(ProjectSchema, ["id"]))
+      .output(GetProjectSchema),
+  });
 
 export default projectContract;

@@ -37,11 +37,11 @@ async function seedDatabase() {
   const command = process.argv[2];
 
   if (!command) {
-    throw new Error("Command [reset | seed] must be provided")
+    throw new Error("Command [reset | seed] must be provided");
   }
 
   if (!(command in commandsMapping)) {
-    throw new Error("Invalid command. Only [reset | seed] are supported")
+    throw new Error("Invalid command. Only [reset | seed] are supported");
   }
 
   await commandsMapping[command]!();

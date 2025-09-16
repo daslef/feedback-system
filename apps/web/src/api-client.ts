@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = "http://localhost:3000/api";
 
 export interface Project {
   id: number;
@@ -22,7 +22,7 @@ export interface Person {
 export interface AdministrativeUnit {
   id: number;
   title: string;
-  unit_type: 'settlement' | 'town';
+  unit_type: "settlement" | "town";
 }
 
 export interface FeedbackTopicCategory {
@@ -62,13 +62,16 @@ export interface Contact {
 }
 
 class ApiClient {
-  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  private async request<T>(
+    endpoint: string,
+    options: RequestInit = {},
+  ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
 
     try {
       const response = await fetch(url, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           ...options.headers,
         },
         ...options,
@@ -86,28 +89,34 @@ class ApiClient {
   }
 
   async getProjects(): Promise<Project[]> {
-    return this.request<Project[]>('/projects');
+    return this.request<Project[]>("/projects");
   }
 
   async getAdministrativeUnits(): Promise<AdministrativeUnit[]> {
-    return this.request<AdministrativeUnit[]>('/administrative_units');
+    return this.request<AdministrativeUnit[]>("/administrative_units");
   }
 
   async getFeedbackTypes(): Promise<FeedbackType[]> {
-    return this.request<FeedbackType[]>('/feedback_types');
+    return this.request<FeedbackType[]>("/feedback_types");
   }
 
   async getFeedbackTopicCategories(): Promise<FeedbackTopicCategory[]> {
-    return this.request<FeedbackTopicCategory[]>('/topic_categories');
+    return this.request<FeedbackTopicCategory[]>("/topic_categories");
   }
 
   async getTopicsByCategory(categoryId: number): Promise<TopicCategoryTopic[]> {
-    return this.request<TopicCategoryTopic[]>(`/topic_category_topics?filter_by=category&field_id=${categoryId}`);
+    return this.request<TopicCategoryTopic[]>(
+      `/topic_category_topics?filter_by=category&field_id=${categoryId}`,
+    );
   }
 
   async createFeedback(payload: FeedbackIn): Promise<void> {
-    const { id: emailContactId } = await this.request<Person>('/contacts', { method: "POST" })
-    const { id: personId } = await this.request<Person>('/persons', { method: "POST" })
+    const { id: emailContactId } = await this.request<Person>("/contacts", {
+      method: "POST",
+    });
+    const { id: personId } = await this.request<Person>("/persons", {
+      method: "POST",
+    });
   }
 }
 

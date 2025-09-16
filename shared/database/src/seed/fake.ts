@@ -19,31 +19,33 @@ export async function seedPersonsAndContacts(db: Kysely<Database>) {
 
   const personTypesIds = personTypes.map((p) => p.id);
 
-  await Promise.all(Array(10).map(async () => {
-    try {
-      const newPersonContact = await db
-        .insertInto("person_contact")
-        .values({
-          email: randEmail(),
-          phone: randPhoneNumber(),
-          social: randSocial().link,
-        })
-        .executeTakeFirstOrThrow();
+  await Promise.all(
+    Array(10).map(async () => {
+      try {
+        const newPersonContact = await db
+          .insertInto("person_contact")
+          .values({
+            email: randEmail(),
+            phone: randPhoneNumber(),
+            social: randSocial().link,
+          })
+          .executeTakeFirstOrThrow();
 
-      await db
-        .insertInto("person")
-        .values({
-          first_name: randFirstName(),
-          last_name: randLastName(),
-          middle_name: randFirstName(),
-          person_type_id: rand(personTypesIds),
-          contact_id: Number(newPersonContact.insertId)
-        })
-        .execute();
-    } catch (error) {
-      console.warn(error)
-    }
-  }))
+        await db
+          .insertInto("person")
+          .values({
+            first_name: randFirstName(),
+            last_name: randLastName(),
+            middle_name: randFirstName(),
+            person_type_id: rand(personTypesIds),
+            contact_id: Number(newPersonContact.insertId),
+          })
+          .execute();
+      } catch (error) {
+        console.warn(error);
+      }
+    }),
+  );
 }
 
 export async function seedFeedbacks(db: Kysely<Database>) {
