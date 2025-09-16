@@ -12,10 +12,7 @@ export * as project from "./project/project";
 
 export * as person from "./person/person";
 export * as personType from "./person/person_type";
+export * as personContact from "./person/person_contact";
 
-export * as contact from "./contact/contact";
-export * as contactType from "./contact/contact_type";
-
-export * as personContact from "./m2m/person_contact";
 export * as officialResponsibility from "./m2m/official_responsibility";
 export * as feedbackTopicCategoryTopic from "./m2m/feedback_topic_category_topic";

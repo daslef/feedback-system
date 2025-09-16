@@ -5,8 +5,7 @@ import feedbackTopicCategoryTopicRouter from './feedbackTopicCategoryTopic'
 import feedbackTypeRouter from "./feedbackType";
 import feedbackRouter from './feedback'
 import personTypeRouter from "./personType";
-import contactTypeRouter from "./contactType";
-import contactRouter from "./contact";
+import personContactRouter from "./personContact";
 import personRouter from "./person";
 
 const apiRouter = {
@@ -17,8 +16,7 @@ const apiRouter = {
   feedbackTopicCategoryTopic: feedbackTopicCategoryTopicRouter,
   feedback: feedbackRouter,
   personType: personTypeRouter,
-  contactType: contactTypeRouter,
-  contact: contactRouter,
+  personContact: personContactRouter,
   person: personRouter
 };
 

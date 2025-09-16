@@ -29,7 +29,7 @@ function prepareBaseQuery(databaseInstance: typeof db) {
       "feedback_type.title as feedback_type",
       "feedback.feedback_topic_id",
       "feedback_topic.title as feedback_topic",
-      "feedback.person_contact_id",
+      "feedback.person_email_contact_id",
       "feedback.feedback_status_id",
       "feedback_status.title as feedback_status",
       "feedback.created_at",

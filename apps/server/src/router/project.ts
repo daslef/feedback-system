@@ -3,13 +3,40 @@ import { publicProcedure, protectedProcedure } from "@shared/api";
 const projectRouter = {
   all: publicProcedure.project.all.handler(async ({ context, input }) => {
     // TODO pagination by limit, offset
-    const { offset, limit } = input;
+    const { offset, limit, administrative_unit_type } = input;
 
-    const projects = await context.db
-      .selectFrom("project")
-      .selectAll()
+    let query = context.db.selectFrom("project");
+
+    if (offset && limit) {
+      query = query.limit(limit).offset(offset);
+    }
+
+    if (administrative_unit_type) {
+      query = query
+        .innerJoin(
+          "administrative_unit",
+          "administrative_unit.id",
+          "project.administrative_unit_id",
+        )
+        .innerJoin(
+          "administrative_unit_type",
+          "administrative_unit_type.id",
+          "administrative_unit.unit_type_id",
+        )
+        .where("administrative_unit_type.title", "=", administrative_unit_type);
+    }
+
+    return await query
+      .select([
+        "project.id",
+        "project.title",
+        "project.latitude",
+        "project.longitude",
+        "project.year_of_completion",
+        "project.administrative_unit_id",
+        "project.created_at",
+      ])
       .execute();
-    return projects;
   }),
 
   one: publicProcedure.project.one.handler(async ({ context, input }) => {

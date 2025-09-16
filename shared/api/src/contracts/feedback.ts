@@ -10,7 +10,7 @@ const GetFeedbackSchema = v.object({
   feedback_type: v.string(),
   feedback_topic_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
   feedback_topic: v.string(),
-  person_contact_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
+  person_email_contact_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
   feedback_status_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
   feedback_status: v.union([
     v.literal("pending"),
@@ -25,7 +25,7 @@ const CreateFeedbackSchema = v.object({
   description: v.string(),
   feedback_type_id: v.union([v.literal(1), v.literal(2)]),
   feedback_topic_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  person_contact_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
+  person_email_contact_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
 });
 
 const GetManyFeedbackSchema = v.array(GetFeedbackSchema);

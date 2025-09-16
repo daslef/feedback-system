@@ -48,8 +48,8 @@ const projectContract = oc.tag("Projects").prefix("/projects").router({
             v.transform(Number),
             v.number(),
             v.integer(),
-            v.minValue(10),
-            v.maxValue(25),
+            v.minValue(12),
+            v.maxValue(24),
           ),
         ),
         offset: v.optional(
@@ -61,6 +61,7 @@ const projectContract = oc.tag("Projects").prefix("/projects").router({
             v.minValue(0),
           ),
         ),
+        administrative_unit_type: v.optional(v.union([v.literal('settlement'), v.literal('town')]))
       }),
     )
     .output(GetManyProjectsSchema),
