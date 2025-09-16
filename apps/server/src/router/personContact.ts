@@ -3,46 +3,34 @@ import { db } from "@shared/database";
 
 function getBaseQuery(databaseInstance: typeof db) {
   return databaseInstance
-    .selectFrom("contact")
+    .selectFrom("person_contact")
     .selectAll()
-    .innerJoin(
-      "contact_type",
-      "contact_type.id",
-      "contact.contact_type_id",
-    )
-    .select([
-      "contact_type.title as contact_type",
-    ]);
 }
 
-const contactRouter = {
-  all: publicProcedure.contact.all.handler(async ({ context, input }) => {
+const personContactRouter = {
+  all: publicProcedure.personContact.all.handler(async ({ context, input }) => {
     // TODO pagination by limit, offset
-    const { offset, limit, person_id } = input;
-
-    if (person_id) {
-      return await getBaseQuery(context.db).where("contact.person_id", "=", person_id).execute()
-    }
+    const { offset, limit } = input;
 
     return await getBaseQuery(context.db).execute();
   }),
 
-  one: publicProcedure.contact.one.handler(
+  one: publicProcedure.personContact.one.handler(
     async ({ context, input }) => {
       try {
-        return await getBaseQuery(context.db).executeTakeFirstOrThrow();
+        return await getBaseQuery(context.db).where("person_contact.id", '=', +input.id).executeTakeFirstOrThrow();
       } catch {
         throw new Error(`No such contact with ID ${input.id}`);
       }
     },
   ),
 
-  create: protectedProcedure.contact.create.handler(
+  create: protectedProcedure.personContact.create.handler(
     async ({ context, input }) => {
       try {
         const { insertId } = await context.db
-          .insertInto("contact")
-          .values(input)
+          .insertInto("person_contact")
+          .values({ ...input, phone: input.phone ?? "", social: input.social ?? "" })
           .executeTakeFirstOrThrow();
 
         return await getBaseQuery(context.db)
@@ -55,4 +43,4 @@ const contactRouter = {
   ),
 };
 
-export default contactRouter;
+export default personContactRouter;

@@ -6,10 +6,9 @@ import feedbackTopicCategoryContract from "./feedbackTopicCategory";
 import feedbackTopicCategoryTopicContract from "./feedbackTopicCategoryTopic";
 import feedbackTypeContract from "./feedbackType";
 import feedbackContract from "./feedback";
-import contactTypeContract from "./contactType";
 import personTypeContract from "./personType";
 import personContract from "./person";
-import contactContract from "./contact";
+import personContactContract from "./personContact";
 
 const apiContract = oc
   .errors({
@@ -32,10 +31,9 @@ const apiContract = oc
     feedbackTopicCategory: feedbackTopicCategoryContract,
     feedbackTopicCategoryTopic: feedbackTopicCategoryTopicContract,
     feedback: feedbackContract,
-    contactType: contactTypeContract,
     personType: personTypeContract,
     person: personContract,
-    contact: contactContract
+    personContact: personContactContract
   });
 
 export default apiContract;

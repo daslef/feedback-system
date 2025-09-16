@@ -49,7 +49,7 @@ async function migrate() {
     .addColumn("feedback_topic_id", "integer", (col) =>
       col.references("feedback_topic.id").onDelete("cascade").notNull(),
     )
-    .addColumn("person_contact_id", "integer", (col) =>
+    .addColumn("person_email_contact_id", "integer", (col) =>
       col.references("person_contact.id").onDelete("cascade").notNull(),
     )
     .addColumn("feedback_status_id", "integer", (col) =>
@@ -123,6 +123,9 @@ async function migrate() {
     .addColumn("person_type_id", "integer", (col) =>
       col.references("person_type.id").onDelete("set null"),
     )
+    .addColumn("contact_id", "integer", (col) => 
+      col.references("person_type.id").onDelete("cascade"),
+    )
     .execute();
 
   await db.schema
@@ -133,23 +136,12 @@ async function migrate() {
     .execute();
 
   await db.schema
-    .createTable("contact")
+    .createTable("person_contact")
     .ifNotExists()
     .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
-    .addColumn("value", "text", (col) => col.notNull())
-    .addColumn("contact_type_id", "integer", (col) =>
-      col.references("contact_type.id").onDelete("set null"),
-    )
-    .addColumn("person_id", "integer", (col) =>
-      col.notNull().references("person.id").onDelete("cascade"),
-    )
-    .execute();
-
-  await db.schema
-    .createTable("contact_type")
-    .ifNotExists()
-    .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
-    .addColumn("title", "text", (col) => col.notNull().unique())
+    .addColumn("email", "text", (col) => col.notNull().unique())
+    .addColumn("phone", "text")
+    .addColumn("social", "text")
     .execute();
 
   await db.schema

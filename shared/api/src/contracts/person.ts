@@ -1,18 +1,21 @@
 import { oc } from "@orpc/contract";
 import * as v from "valibot";
+import { ContactSchema } from './personContact'
 
 const PersonSchema = v.object({
   id: v.pipe(v.number(), v.integer(), v.minValue(1)),
   first_name: v.string(),
   last_name: v.string(),
   middle_name: v.string(),
-  person_type_id: v.pipe(v.number(), v.integer(), v.minValue(1))
+  person_type_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
+  contact_id: v.pipe(v.number(), v.integer(), v.minValue(1))
 });
 
 const GetPersonSchema = v.intersect([
   PersonSchema,
   v.object({
     person_type: v.union([v.literal("citizen"), v.literal("official"), v.literal("moderator")]),
+    contact: ContactSchema
   }),
 ]);
 

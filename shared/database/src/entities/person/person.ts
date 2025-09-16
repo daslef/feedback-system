@@ -6,6 +6,7 @@ export interface PersonTable {
   last_name: string;
   middle_name: string;
   person_type_id: number;
+  contact_id: number;
 }
 
 export type Person = Selectable<PersonTable>;

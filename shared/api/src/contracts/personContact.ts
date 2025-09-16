@@ -1,21 +1,15 @@
 import { oc } from "@orpc/contract";
 import * as v from "valibot";
 
-const ContactSchema = v.object({
+export const ContactSchema = v.object({
   id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  value: v.string(),
-  contact_type_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  person_id: v.pipe(v.number(), v.integer(), v.minValue(1))
+  email: v.string(),
+  phone: v.optional(v.string()),
+  social: v.optional(v.string())
 });
 
-const GetContactSchema = v.intersect([
-  ContactSchema,
-  v.object({
-    contact_type: v.union([v.literal("phone"), v.literal("email"), v.literal("social")]),
-  }),
-]);
 
-const GetManyContactsSchema = v.array(GetContactSchema);
+const GetManyContactsSchema = v.array(ContactSchema);
 
 const contactContract = oc.tag("Contacts").prefix("/contacts").router({
   all: oc
@@ -46,7 +40,6 @@ const contactContract = oc.tag("Contacts").prefix("/contacts").router({
             v.minValue(0),
           ),
         ),
-        person_id: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.integer(), v.minValue(1)))
       }),
     )
     .output(GetManyContactsSchema),
@@ -58,7 +51,7 @@ const contactContract = oc.tag("Contacts").prefix("/contacts").router({
     description: "Get contact information by id",
   })
     .input(v.object({ id: v.string() }))
-    .output(GetContactSchema),
+    .output(ContactSchema),
 
   create: oc
     .route({

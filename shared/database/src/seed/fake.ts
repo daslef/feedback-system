@@ -4,28 +4,46 @@ import {
   randFirstName,
   randLastName,
   randProductDescription,
+  randEmail,
+  randPhoneNumber,
+  randSocial,
 } from "@ngneat/falso";
 import type { Kysely } from "kysely";
 import type { Database } from "../interface";
 
-export async function seedPersons(db: Kysely<Database>) {
+export async function seedPersonsAndContacts(db: Kysely<Database>) {
   const personTypes = await db
     .selectFrom("person_type")
     .select(["id"])
     .execute();
+
   const personTypesIds = personTypes.map((p) => p.id);
 
-  for (let i = 0; i < 10; i++) {
-    await db
-      .insertInto("person")
-      .values({
-        first_name: randFirstName(),
-        last_name: randLastName(),
-        middle_name: randFirstName(),
-        person_type_id: rand(personTypesIds),
-      })
-      .execute();
-  }
+  await Promise.all(Array(10).map(async () => {
+    try {
+      const newPersonContact = await db
+        .insertInto("person_contact")
+        .values({
+          email: randEmail(),
+          phone: randPhoneNumber(),
+          social: randSocial().link,
+        })
+        .executeTakeFirstOrThrow();
+
+      await db
+        .insertInto("person")
+        .values({
+          first_name: randFirstName(),
+          last_name: randLastName(),
+          middle_name: randFirstName(),
+          person_type_id: rand(personTypesIds),
+          contact_id: Number(newPersonContact.insertId)
+        })
+        .execute();
+    } catch (error) {
+      console.warn(error)
+    }
+  }))
 }
 
 export async function seedFeedbacks(db: Kysely<Database>) {
@@ -50,7 +68,7 @@ export async function seedFeedbacks(db: Kysely<Database>) {
       .values({
         project_id: rand(projectIds),
         description: randProductDescription(),
-        person_contact_id: rand(personIds),
+        person_email_contact_id: rand(personIds),
         feedback_status_id: rand(statusIds),
         feedback_topic_id: rand(topicsIds),
         feedback_type_id: rand(typeIds),
