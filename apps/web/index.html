@@ -224,7 +224,7 @@
           <div class="instruction-item-description">
             <span class="instruction-item-number decorative-text-small fw-600">1</span>
             <div class="instruction-item-text medium-text fw-600">
-              Заполните свои данные (Фамилию, Имя, Отчество)
+              Выберите территорию и проект на карте или из списка
             </div>
           </div>
         </div>
@@ -232,7 +232,7 @@
           <div class="instruction-item-description">
             <span class="instruction-item-number decorative-text-small fw-600">2</span>
             <div class="instruction-item-text medium-text fw-600">
-              Выберите территорию и проект на карте или из списка
+              Вы можете оставить пожелания по улучшению территории либо отправить замечание
             </div>
           </div>
         </div>
@@ -240,7 +240,7 @@
           <div class="instruction-item-description">
             <span class="instruction-item-number decorative-text-small fw-600">3</span>
             <div class="instruction-item-text medium-text fw-600">
-              Вы можете оставить пожелания по улучшению территории либо отправить замечание
+              Предложение по улучшению территории можно заполнить в свободной форме
             </div>
           </div>
         </div>
@@ -248,7 +248,7 @@
           <div class="instruction-item-description">
             <span class="instruction-item-number decorative-text-small fw-600">4</span>
             <div class="instruction-item-text medium-text fw-600">
-              Предложение по улучшению территории можно заполнить в свободной форме
+              Для того, чтобы отправить замечание, выберите категорию и уточните проблемный элемент благоустройства
             </div>
           </div>
         </div>
@@ -256,21 +256,13 @@
           <div class="instruction-item-description">
             <span class="instruction-item-number decorative-text-small fw-600">5</span>
             <div class="instruction-item-text medium-text fw-600">
-              Для того, чтобы отправить замечание, выберите категорию и уточните проблемный элемент благоустройства
-            </div>
-          </div>
-        </div>
-        <div class="instruction-item">
-          <div class="instruction-item-description">
-            <span class="instruction-item-number decorative-text-small fw-600">6</span>
-            <div class="instruction-item-text medium-text fw-600">
               Чтобы заявка была принята к рассмотрению, прикрепите фотографии, на которых видна проблема
             </div>
           </div>
         </div>
         <div class="instruction-item">
           <div class="instruction-item-description">
-            <span class="instruction-item-number decorative-text-small fw-600">7</span>
+            <span class="instruction-item-number decorative-text-small fw-600">6</span>
             <div class="instruction-item-text medium-text fw-600">
               Чтобы иметь возможность получить уведомление о статусе вашей заявки, укажите адрес электронной почты
             </div>
@@ -285,27 +277,6 @@
       <h2>Заполните форму</h2>
       <form class="apply-form add-planting-form" data-form="addPlanting">
         <div class="info-list">
-          <div class="fio-row">
-            <div class="form-block">
-              <div class="form-block-title regular-text fw-600">Фамилия</div>
-              <div class="input-block">
-                <input type="text" name="last_name" class="object-name" placeholder="Фамилия" data-required="1" />
-              </div>
-            </div>
-            <div class="form-block">
-              <div class="form-block-title regular-text fw-600">Имя</div>
-              <div class="input-block">
-                <input type="text" name="first_name" class="object-name" placeholder="Имя" data-required="1" />
-              </div>
-            </div>
-            <div class="form-block">
-              <div class="form-block-title regular-text fw-600">Отчество</div>
-              <div class="input-block">
-                <input type="text" name="middle_name" class="object-name" placeholder="Отчество" data-required="1" />
-              </div>
-            </div>
-          </div>
-
           <div class="form-block city-map-block">
             <div class="form-block-title regular-text fw-600">Город</div>
             <div class="input-block city-map-inputs">
@@ -363,6 +334,27 @@
             <div class="input-block">
               <textarea name="explanation" class="object-name" placeholder="Ваше пожелание или замечание"
                 maxlength="1000" data-required="1" rows="6"></textarea>
+            </div>
+          </div>
+
+          <div class="fio-row">
+            <div class="form-block">
+              <div class="form-block-title regular-text fw-600">Фамилия</div>
+              <div class="input-block">
+                <input type="text" name="last_name" class="object-name" placeholder="Фамилия" data-required="1" />
+              </div>
+            </div>
+            <div class="form-block">
+              <div class="form-block-title regular-text fw-600">Имя</div>
+              <div class="input-block">
+                <input type="text" name="first_name" class="object-name" placeholder="Имя" data-required="1" />
+              </div>
+            </div>
+            <div class="form-block">
+              <div class="form-block-title regular-text fw-600">Отчество</div>
+              <div class="input-block">
+                <input type="text" name="middle_name" class="object-name" placeholder="Отчество" data-required="1" />
+              </div>
             </div>
           </div>
 
@@ -463,4 +455,5 @@
   <script type="module" src="./src/form-manager.ts"></script>
   <script type="module" src="./src/main.ts"></script>
 </body>
+
 </html>

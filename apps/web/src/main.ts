@@ -365,7 +365,7 @@ function handleRequestTypeChange() {
   ) as HTMLDivElement;
   const issueBlock = document.getElementById("issueBlock") as HTMLDivElement;
 
-  if (requestTypeSelect.value === "Замечание") {
+  if (requestTypeSelect.value === "2") {
     categoryBlock.style.display = "block";
     issueBlock.style.display = "block";
     populateCategories();
