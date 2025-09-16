@@ -1,12 +1,11 @@
 import type { Kysely } from "kysely";
 import type { Database } from "../interface";
-import projectsData from "./data/projects.json" with { type: "json" };
-import administrativeUnitsData from "./data/administrative_units.json" with {
-  type: "json",
-};
+
+import projectsData from "./data/projects_deserialized.json" with { type: "json" };
 import topicsAndCategoriesData from "./data/topics_and_categories.json" with {
   type: "json",
 };
+import towns from "./data/towns";
 
 type ProjectsDataItem = {
   title: string;
@@ -57,17 +56,7 @@ export async function seedAdministrativeUnits(db: Kysely<Database>) {
     .values(
       [...regions].map((title) => ({
         title,
-        unit_type_id: unitTypeSettlementId,
-      })),
-    )
-    .execute();
-
-  await db
-    .insertInto("administrative_unit")
-    .values(
-      administrativeUnitsData.map(({ title }) => ({
-        title,
-        unit_type_id: unitTypeTownId,
+        unit_type_id: towns.has(title) ? unitTypeTownId : unitTypeSettlementId,
       })),
     )
     .execute();
@@ -80,17 +69,6 @@ export async function seedFeedbackStatuses(db: Kysely<Database>) {
       { title: "approved" },
       { title: "declined" },
       { title: "pending" },
-    ])
-    .execute();
-}
-
-export async function seedContactTypes(db: Kysely<Database>) {
-  await db
-    .insertInto("contact_type")
-    .values([
-      { title: "phone" },
-      { title: "email" },
-      { title: "social" },
     ])
     .execute();
 }

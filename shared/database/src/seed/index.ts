@@ -13,8 +13,7 @@ async function seedDatabase() {
     "seedFeedbackTopicCategories",
     "seedFeedbackTopicCategoryTopic",
     "seedPersonTypes",
-    "seedPersons",
-    "seedContactTypes",
+    "seedPersonsAndContacts",
     "seedProjects",
     // "seedFeedbacks",
   ];
