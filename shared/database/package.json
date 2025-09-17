@@ -11,6 +11,7 @@
         ".": "./src/index.ts"
     },
     "dependencies": {
+        "@shared/schema": "workspace:*",
         "better-sqlite3": "catalog:",
         "dotenv": "catalog:",
         "kysely": "catalog:",

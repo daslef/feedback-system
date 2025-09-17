@@ -5,6 +5,7 @@ import administrativeUnitContract from "./administrativeUnit";
 import feedbackTopicCategoryContract from "./feedbackTopicCategory";
 import feedbackTopicCategoryTopicContract from "./feedbackTopicCategoryTopic";
 import feedbackTypeContract from "./feedbackType";
+import feedbackImageContract from "./feedbackImage";
 import feedbackContract from "./feedback";
 import personTypeContract from "./personType";
 import personContract from "./person";
@@ -28,6 +29,7 @@ const apiContract = oc
     project: projectContract,
     administrativeUnit: administrativeUnitContract,
     feedbackType: feedbackTypeContract,
+    feedbackImage: feedbackImageContract,
     feedbackTopicCategory: feedbackTopicCategoryContract,
     feedbackTopicCategoryTopic: feedbackTopicCategoryTopicContract,
     feedback: feedbackContract,

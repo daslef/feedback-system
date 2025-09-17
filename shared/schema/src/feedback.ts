@@ -1,5 +1,7 @@
 import type { Generated, Insertable, Updateable, Selectable } from "kysely";
 
+
+
 export interface FeedbackTable {
   id: Generated<number>;
   project_id: number;

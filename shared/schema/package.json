@@ -1,0 +1,19 @@
+{
+    "name": "@shared/schema",
+    "type": "module",
+    "scripts": {
+        "check-types": "tsc -b"
+    },
+    "exports": {
+        "./administrative_unit": "./src/administrative_unit.ts",
+        "./administrative_unit_type": "./src/administrative_unit_type.ts"
+    },
+    "dependencies": {
+        "valibot": "catalog:"
+    },
+    "devDependencies": {
+        "@shared/typescript-config": "workspace:*",
+        "typescript": "catalog:"
+    },
+    "packageManager": "pnpm@10.4.1"
+}

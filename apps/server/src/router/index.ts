@@ -3,6 +3,7 @@ import administrativeUnitRouter from "./administrativeUnit";
 import feedbackTopicCategoryRouter from "./feedbackTopicCategory";
 import feedbackTopicCategoryTopicRouter from "./feedbackTopicCategoryTopic";
 import feedbackTypeRouter from "./feedbackType";
+import feedbackImageRouter from "./feedbackImage";
 import feedbackRouter from "./feedback";
 import personTypeRouter from "./personType";
 import personContactRouter from "./personContact";
@@ -14,6 +15,7 @@ const apiRouter = {
   feedbackType: feedbackTypeRouter,
   feedbackTopicCategories: feedbackTopicCategoryRouter,
   feedbackTopicCategoryTopic: feedbackTopicCategoryTopicRouter,
+  feedbackImage: feedbackImageRouter,
   feedback: feedbackRouter,
   personType: personTypeRouter,
   personContact: personContactRouter,

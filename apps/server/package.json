@@ -12,6 +12,7 @@
         "@shared/api": "workspace:*",
         "@shared/database": "workspace:*",
         "@shared/auth": "workspace:*",
+        "@shared/upload": "workspace:*",
         "@hono/node-server": "catalog:",
         "hono": "catalog:",
         "valibot": "catalog:",
