@@ -16,7 +16,7 @@
         "@hono/node-server": "catalog:",
         "hono": "catalog:",
         "valibot": "catalog:",
-        "dotenv": "^17.2.1"
+        "dotenv": "catalog:"
     },
     "devDependencies": {
         "@shared/typescript-config": "workspace:*",

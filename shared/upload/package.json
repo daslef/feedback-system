@@ -9,12 +9,14 @@
     "check-types": "tsc -b"
   },
   "dependencies": {
+    "dotenv": "catalog:",
     "minio": "^8.0.6",
     "pino": "^9.9.5",
     "valibot": "catalog:"
   },
   "devDependencies": {
     "@shared/typescript-config": "workspace:*",
+    "pino-pretty": "^13.1.1",
     "typescript": "catalog:"
   }
 }
