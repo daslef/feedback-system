@@ -24,7 +24,7 @@ export const EditProject = () => {
       <div>{JSON.stringify(result)}</div>
       <button
         onClick={async () => {
-          await mutate({
+           mutate({
             resource: "projects",
             id: 1,
             values: {

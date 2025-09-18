@@ -89,11 +89,11 @@ class ApiClient {
   }
 
   async getProjects(): Promise<Project[]> {
-    return this.request<Project[]>("/projects");
+    return this.request<Project[]>("/projects?administrative_unit_type=town");
   }
 
   async getAdministrativeUnits(): Promise<AdministrativeUnit[]> {
-    return this.request<AdministrativeUnit[]>("/administrative_units");
+    return this.request<AdministrativeUnit[]>("/administrative_units?type=town");
   }
 
   async getFeedbackTypes(): Promise<FeedbackType[]> {

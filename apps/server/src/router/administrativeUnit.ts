@@ -4,9 +4,9 @@ const administrativeUnitRouter = {
   all: publicProcedure.administrativeUnit.all.handler(
     async ({ context, input }) => {
       // TODO pagination by limit, offset
-      const { offset, limit } = input;
+      const { offset, limit, type } = input;
 
-      const administrativeUnits = await context.db
+      const administrativeUnits = context.db
         .selectFrom("administrative_unit")
         .innerJoin(
           "administrative_unit_type",
@@ -18,9 +18,13 @@ const administrativeUnitRouter = {
           "administrative_unit.title",
           "administrative_unit_type.title as unit_type",
         ])
-        .execute();
 
-      return administrativeUnits;
+      if (type) {
+        return await administrativeUnits.where("administrative_unit_type.title", "=", type).execute()
+      }
+
+
+      return administrativeUnits.execute();
     },
   ),
 

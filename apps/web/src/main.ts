@@ -111,7 +111,7 @@ function openMapPopup() {
     setTimeout(() => {
       try {
         map.container.fitToViewport();
-      } catch {}
+      } catch { }
     }, 100);
   }
 }
@@ -130,8 +130,8 @@ function initYandexMap() {
 
   ymaps.ready(function () {
     map = new ymaps.Map("yandexMap", {
-      center: [58, 50],
-      zoom: 4,
+      center: [60.5, 30],
+      zoom: 6,
       controls: ["zoomControl", "fullscreenControl"],
     });
 
@@ -140,7 +140,7 @@ function initYandexMap() {
     window.addEventListener("resize", () => {
       try {
         map.container.fitToViewport();
-      } catch {}
+      } catch { }
     });
   });
 }
@@ -148,8 +148,8 @@ function initYandexMap() {
 async function loadCities() {
   try {
     const [citiesResponse, projectsResponse] = await Promise.all([
-      fetch("http://localhost:3000/api/administrative_units"),
-      fetch("http://localhost:3000/api/projects"),
+      fetch("http://localhost:3000/api/administrative_units?type=town"),
+      fetch("http://localhost:3000/api/projects?administrative_unit_type=town"),
     ]);
 
     const cities = await citiesResponse.json();
@@ -213,7 +213,7 @@ async function selectCity(city: any) {
   }
 
   try {
-    const response = await fetch("http://localhost:3000/api/projects");
+    const response = await fetch("http://localhost:3000/api/projects?administrative_unit_type=town");
     const projects = await response.json();
     const cityProjects = projects.filter(
       (project: any) => project.administrative_unit_id === city.id,
@@ -243,7 +243,7 @@ async function loadProjectsForCity(cityId: number) {
   projectMarkers = [];
 
   try {
-    const response = await fetch("http://localhost:3000/api/projects");
+    const response = await fetch("http://localhost:3000/api/projects?administrative_unit_type=town");
     const projects = await response.json();
 
     const cityProjects = projects.filter(
@@ -289,7 +289,7 @@ async function loadProjectsForSelect(
   callback: Function,
 ) {
   try {
-    const response = await fetch("http://localhost:3000/api/projects");
+    const response = await fetch("http://localhost:3000/api/projects?administrative_unit_type=town");
     const projects = await response.json();
 
     const projectSelect = document.getElementById(

@@ -83,7 +83,7 @@ const projectContract = oc
             ),
           ),
           administrative_unit_type: v.optional(
-            v.union([v.literal("settlement"), v.literal("town")]),
+            v.picklist(["settlement", "town"])
           ),
         }),
       )

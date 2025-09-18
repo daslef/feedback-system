@@ -2,13 +2,12 @@ import { publicProcedure, protectedProcedure } from "@shared/api";
 
 const projectRouter = {
   all: publicProcedure.project.all.handler(async ({ context, input }) => {
-    // TODO pagination by limit, offset
     const { offset, limit, administrative_unit_type } = input;
 
     let query = context.db.selectFrom("project");
 
     if (administrative_unit_type) {
-      query = query
+      return await query
         .innerJoin(
           "administrative_unit",
           "administrative_unit.id",
@@ -19,7 +18,17 @@ const projectRouter = {
           "administrative_unit_type.id",
           "administrative_unit.unit_type_id",
         )
-        .where("administrative_unit_type.title", "=", administrative_unit_type);
+        .where("administrative_unit_type.title", "=", administrative_unit_type)
+        .select([
+          "project.id",
+          "project.title",
+          "project.latitude",
+          "project.longitude",
+          "project.year_of_completion",
+          "project.administrative_unit_id",
+          "project.created_at",
+        ])
+        .execute();
     }
 
     return await query
