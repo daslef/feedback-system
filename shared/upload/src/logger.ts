@@ -1,7 +1,13 @@
 import path from "path";
 import pino from "pino";
 
-const file = path.join(import.meta.dirname, "..", "..", "logs", `logs-${process.pid}.json`);
+const file = path.join(
+  import.meta.dirname,
+  "..",
+  "..",
+  "logs",
+  `logs-${process.pid}.json`,
+);
 
 const logger = pino({
   transport: {

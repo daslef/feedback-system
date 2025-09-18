@@ -1,9 +1,8 @@
-import path from 'node:path'
+import path from "node:path";
 import * as v from "valibot";
 import { config } from "dotenv";
 
-config({ path: path.join(import.meta.dirname, '..', '.env') });
-
+config({ path: path.join(import.meta.dirname, "..", ".env") });
 
 export const envSchema = v.object({
   MINIO_ACCESS_KEY: v.pipe(v.string(), v.minLength(12)),
