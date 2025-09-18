@@ -1,10 +1,8 @@
-import type { Generated, Insertable, Updateable, Selectable } from "kysely";
+import * as v from "valibot";
 
-export interface FeedbackTopicTable {
-  id: Generated<number>;
-  title: string;
-}
+export const feedbackTopicSchema = v.object({
+  id: v.pipe(v.number(), v.integer(), v.minValue(1)),
+  title: v.pipe(v.string(), v.nonEmpty()),
+});
 
-export type FeedbackTopic = Selectable<FeedbackTopicTable>;
-export type NewFeedbackTopic = Insertable<FeedbackTopicTable>;
-export type UpdateFeedbackTopic = Updateable<FeedbackTopicTable>;
+export type FeedbackTopicTable = v.InferInput<typeof feedbackTopicSchema>;

@@ -1,12 +1,8 @@
-import { Generated, Selectable, Updateable, Insertable } from "kysely";
+// TODO: rewrite as valibot schema
 
 export interface PersonContactTable {
-  id: Generated<number>;
+  id: number;
   email: string;
   phone: string;
   social: string;
 }
-
-export type PersonContact = Selectable<PersonContactTable>;
-export type NewPersonContact = Insertable<PersonContactTable>;
-export type UpdatePersonContact = Updateable<PersonContactTable>;

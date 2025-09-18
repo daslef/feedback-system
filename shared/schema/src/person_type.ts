@@ -1,8 +1,6 @@
-import { Generated, Selectable } from "kysely";
+// TODO: rewrite as valibot schema
 
 export interface PersonTypeTable {
-  id: Generated<number>;
+  id: number;
   title: "citizen" | "official" | "moderator";
 }
-
-export type PersonType = Selectable<PersonTypeTable>;

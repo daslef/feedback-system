@@ -6,7 +6,19 @@
     },
     "exports": {
         "./administrative_unit": "./src/administrative_unit.ts",
-        "./administrative_unit_type": "./src/administrative_unit_type.ts"
+        "./administrative_unit_type": "./src/administrative_unit_type.ts",
+        "./feedback_image": "./src/feedback_image.ts",
+        "./feedback_status": "./src/feedback_status.ts",
+        "./feedback_topic_category": "./src/feedback_topic_category.ts",
+        "./feedback_topic_category_topic": "./src/feedback_topic_category_topic.ts",
+        "./feedback_topic": "./src/feedback_topic.ts",
+        "./feedback_type": "./src/feedback_type.ts",
+        "./feedback": "./src/feedback.ts",
+        "./official_responsibility": "./src/official_responsibility.ts",
+        "./person_contact": "./src/person_contact.ts",
+        "./person_type": "./src/person_type.ts",
+        "./person": "./src/person.ts",
+        "./project": "./src/project.ts"
     },
     "dependencies": {
         "valibot": "catalog:"

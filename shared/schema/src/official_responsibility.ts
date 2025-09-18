@@ -1,12 +1,7 @@
-import { Generated, Selectable, Updateable, Insertable } from "kysely";
+// TODO: rewrite as valibot schema
 
 export interface OfficialResponsibilityTable {
-  id: Generated<number>;
+  id: number;
   administrative_unit_id: number;
   official_id: number;
 }
-
-export type OfficialResponsibility = Selectable<OfficialResponsibilityTable>;
-export type NewOfficialResponsibility = Insertable<OfficialResponsibilityTable>;
-export type UpdateOfficialResponsibility =
-  Updateable<OfficialResponsibilityTable>;

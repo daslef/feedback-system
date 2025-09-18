@@ -1,18 +1,12 @@
-import type { Generated, Insertable, Updateable, Selectable } from "kysely";
-
-
+// TODO: rewrite as valibot schema
 
 export interface FeedbackTable {
-  id: Generated<number>;
+  id: number;
   project_id: number;
   description: string;
   feedback_type_id: number;
   feedback_topic_id: number;
   person_email_contact_id: number;
   feedback_status_id: number;
-  created_at: Generated<string>;
+  created_at: string;
 }
-
-export type Feedback = Selectable<FeedbackTable>;
-export type NewFeedback = Insertable<FeedbackTable>;
-export type UpdateFeedback = Updateable<FeedbackTable>;

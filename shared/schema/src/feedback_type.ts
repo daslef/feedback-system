@@ -1,9 +1,6 @@
-import type { Generated, Updateable, Selectable } from "kysely";
+// TODO: rewrite as valibot schema
 
 export interface FeedbackTypeTable {
-  id: Generated<number>;
+  id: number;
   title: "Пожелание" | "Замечание";
 }
-
-export type FeedbackType = Selectable<FeedbackTypeTable>;
-export type UpdateFeedbackType = Updateable<FeedbackTypeTable>;
