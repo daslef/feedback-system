@@ -7,10 +7,6 @@ const projectRouter = {
 
     let query = context.db.selectFrom("project");
 
-    if (offset && limit) {
-      query = query.limit(limit).offset(offset);
-    }
-
     if (administrative_unit_type) {
       query = query
         .innerJoin(
@@ -36,8 +32,36 @@ const projectRouter = {
         "project.administrative_unit_id",
         "project.created_at",
       ])
+      .limit(limit!)
+      .offset(offset!)
       .execute();
   }),
+
+  update: publicProcedure.project.update.handler(async ({ context, input }) => {
+    try {
+      await context.db
+        .updateTable("project")
+        .set(input.body)
+        .where("project.id", "=", +input.params.id)
+        .execute();
+
+      return await context.db
+        .selectFrom("project")
+        .selectAll("project")
+        .innerJoin(
+          "administrative_unit",
+          "project.administrative_unit_id",
+          "administrative_unit.id",
+        )
+        .select(["administrative_unit.title as administrative_unit"])
+        .where("project.id", "=", +input.params.id)
+        .executeTakeFirstOrThrow();
+
+    } catch {
+      throw new Error(`Error on update project with ID ${input.params.id}`);
+    }
+  }),
+
 
   one: publicProcedure.project.one.handler(async ({ context, input }) => {
     try {

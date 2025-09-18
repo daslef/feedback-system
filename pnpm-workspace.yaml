@@ -16,6 +16,9 @@ catalog:
   '@orpc/server': ^1.8.8
   '@orpc/valibot': ^1.8.8
   '@biomejs/biome': 2.2.3
+  '@refinedev/cli': ^2.16.48
+  '@refinedev/core': ^5.0.1
+  '@vitejs/plugin-react': ^5.0.2
   oxlint: ^1.12.0
   better-auth: ^1.3.9
   better-sqlite3: ^12.2.0

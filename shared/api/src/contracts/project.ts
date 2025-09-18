@@ -16,6 +16,8 @@ const ProjectSchema = v.object({
   created_at: v.pipe(v.string()),
 });
 
+const UpdateProjectSchema = v.partial(ProjectSchema);
+
 const GetManyProjectsSchema = v.array(ProjectSchema);
 const GetProjectSchema = v.intersect([
   v.omit(ProjectSchema, ["administrative_unit_id"]),
@@ -34,6 +36,22 @@ const projectContract = oc
         description: "Get full project information by id",
       })
       .input(v.object({ id: v.string() }))
+      .output(GetProjectSchema),
+
+    update: oc
+      .route({
+        method: "PATCH",
+        path: "/{id}",
+        summary: "Update a project",
+        description: "Update project information by id",
+        inputStructure: "detailed",
+      })
+      .input(
+        v.object({
+          body: UpdateProjectSchema,
+          params: v.object({ id: v.string() }),
+        }),
+      )
       .output(GetProjectSchema),
 
     all: oc
