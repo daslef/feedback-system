@@ -192,6 +192,10 @@ importers:
         version: 5.9.2
 
   apps/web:
+    dependencies:
+      '@shared/api':
+        specifier: workspace:*
+        version: link:../../shared/api
     devDependencies:
       '@shared/typescript-config':
         specifier: workspace:*

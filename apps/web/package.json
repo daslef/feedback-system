@@ -7,6 +7,9 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
+  "dependencies": {
+    "@shared/api": "workspace:*"
+  },
   "devDependencies": {
     "@shared/typescript-config": "workspace:*",
     "typescript": "catalog:",

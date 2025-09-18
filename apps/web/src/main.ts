@@ -1,3 +1,7 @@
+import { createAPIClient } from "@shared/api";
+
+const apiClient = createAPIClient({ apiPath: "/api", serverUrl: "http://localhost:3000" })
+
 function showAlert(message: string) {
   const alert = document.getElementById("customAlert") as HTMLElement;
   const messageElement = alert.querySelector(".alert-message") as HTMLElement;
@@ -148,12 +152,14 @@ function initYandexMap() {
 async function loadCities() {
   try {
     const [citiesResponse, projectsResponse] = await Promise.all([
-      fetch("http://localhost:3000/api/administrative_units?type=town"),
-      fetch("http://localhost:3000/api/projects?administrative_unit_type=town"),
+      apiClient.administrativeUnit.all({ type: "town" }),
+      apiClient.project.all({ administrative_unit_type: "town" })
+      // fetch("http://localhost:3000/api/administrative_units?type=town"),
+      // fetch("http://localhost:3000/api/projects?administrative_unit_type=town"),
     ]);
 
-    const cities = await citiesResponse.json();
-    const projects = await projectsResponse.json();
+    const cities = citiesResponse;
+    const projects = projectsResponse;
 
     const projectsByCity = projects.reduce((acc: any, project: any) => {
       if (!acc[project.administrative_unit_id]) {

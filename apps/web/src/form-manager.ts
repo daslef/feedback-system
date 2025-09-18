@@ -1,10 +1,5 @@
-import {
-  apiClient,
-  type Project,
-  type AdministrativeUnit,
-  type FeedbackTopicCategory,
-  type FeedbackType,
-} from "./api-client.js";
+import { createAPIClient } from "@shared/api";
+import * as types from './types' 
 
 class FormManager {
   private citySelect: HTMLSelectElement;
@@ -15,10 +10,11 @@ class FormManager {
   private fileList: HTMLElement;
   private form: HTMLFormElement;
   private selectedFiles: File[] = [];
-  private projects: Project[] = [];
-  private cities: AdministrativeUnit[] = [];
-  private feedbackTypes: FeedbackType[] = [];
-  private categories: FeedbackTopicCategory[] = [];
+  private projects: types.Project[] = [];
+  private cities: types.AdministrativeUnit[] = [];
+  private feedbackTypes: types.FeedbackType[] = [];
+  private categories: types.FeedbackTopicCategory[] = [];
+  private apiClient: ReturnType<typeof createAPIClient>
 
   constructor() {
     this.citySelect = document.getElementById(
@@ -34,7 +30,7 @@ class FormManager {
     this.fileInput = document.getElementById("fileInput") as HTMLInputElement;
     this.fileList = document.getElementById("fileList") as HTMLElement;
     this.form = document.querySelector(".apply-form") as HTMLFormElement;
-
+    this.apiClient = createAPIClient({ serverUrl: "http://localhost:3000", apiPath: "/api" })
     this.init();
   }
 
@@ -48,8 +44,7 @@ class FormManager {
 
   private async loadCities(): Promise<void> {
     try {
-      this.cities = await apiClient.getAdministrativeUnits();
-
+      this.cities = await this.apiClient.administrativeUnit.all({ type: "town" });
       this.citySelect.innerHTML = '<option value="">Выберите город</option>';
       this.cities.forEach((city) => {
         const option = document.createElement("option");
@@ -67,7 +62,7 @@ class FormManager {
 
   private async loadProjects(): Promise<void> {
     try {
-      this.projects = await apiClient.getProjects();
+      this.projects = await this.apiClient.project.all({ administrative_unit_type: "town" });
     } catch (error) {
       console.error("Ошибка загрузки проектов:", error);
       this.showAlert(
@@ -78,7 +73,7 @@ class FormManager {
 
   private async loadCategories(): Promise<void> {
     try {
-      this.categories = await apiClient.getFeedbackTopicCategories();
+      this.categories = await this.apiClient.feedbackTopicCategory.all()
     } catch (error) {
       console.error("Ошибка загрузки категорий:", error);
       this.showAlert(
@@ -89,7 +84,7 @@ class FormManager {
 
   private async loadTypes(): Promise<void> {
     try {
-      this.feedbackTypes = await apiClient.getFeedbackTypes();
+      this.feedbackTypes = await this.apiClient.feedbackType.all();
       this.typeSelect.innerHTML = "";
       this.feedbackTypes.forEach(({ id, title }) => {
         const feedbackTypeSelect = document.createElement("option");
