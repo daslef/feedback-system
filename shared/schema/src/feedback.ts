@@ -1,12 +1,17 @@
-// TODO: rewrite as valibot schema
+import * as v from "valibot"
 
-export interface FeedbackTable {
-  id: number;
-  project_id: number;
-  description: string;
-  feedback_type_id: number;
-  feedback_topic_id: number;
-  person_email_contact_id: number;
-  feedback_status_id: number;
-  created_at: string;
-}
+const idSchema = v.pipe(v.number(), v.integer(), v.minValue(1))
+const dateSchema = v.string()
+
+export const feedbackSchema = v.object({
+  id: idSchema,
+  project_id: idSchema,
+  description: v.string(),
+  feedback_type_id: idSchema,
+  feedback_topic_id: idSchema,
+  person_email_contact_id: idSchema,
+  feedback_status_id: idSchema,
+  created_at: dateSchema,
+})
+
+export type FeedbackTable = v.InferInput<typeof feedbackSchema>

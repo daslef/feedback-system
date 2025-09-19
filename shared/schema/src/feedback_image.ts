@@ -1,7 +1,11 @@
-// TODO: rewrite as valibot schema
+import * as v from "valibot"
 
-export interface FeedbackImageTable {
-  id: number;
-  feedback_id: number;
-  link_to_s3: string;
-}
+const idSchema = v.pipe(v.number(), v.integer(), v.minValue(1))
+
+export const feedbackImageSchema = v.object({
+  id: idSchema,
+  feedback_id: idSchema,
+  link_to_s3: v.string(),
+})
+
+export type FeedbackImageTable = v.InferInput<typeof feedbackImageSchema>
