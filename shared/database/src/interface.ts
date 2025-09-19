@@ -25,14 +25,12 @@ export interface Database {
   feedback_topic: FeedbackTopicTable & GeneratedId;
   feedback_topic_category: FeedbackTopicCategoryTable & GeneratedId;
   feedback_topic_category_topic: FeedbackTopicCategoryTopicTable & GeneratedId;
-
-  // TODO rewrite upcoming types
-  person: PersonTable;
-  person_type: PersonTypeTable;
-  person_contact: PersonContactTable;
-  feedback: FeedbackTable;
-  feedback_status: FeedbackStatusTable;
-  feedback_image: FeedbackImageTable;
-  feedback_type: FeedbackTypeTable;
-  official_responsibility: OfficialResponsibilityTable;
+  person: PersonTable & GeneratedId;
+  person_type: PersonTypeTable & GeneratedId;
+  person_contact: PersonContactTable & GeneratedId;
+  feedback: FeedbackTable & GeneratedId;
+  feedback_status: FeedbackStatusTable & GeneratedId;
+  feedback_image: FeedbackImageTable & GeneratedId;
+  feedback_type: FeedbackTypeTable & GeneratedId;
+  official_responsibility: OfficialResponsibilityTable & GeneratedId;
 }
