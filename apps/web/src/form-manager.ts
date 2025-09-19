@@ -1,5 +1,10 @@
-import { createAPIClient } from "@shared/api";
-import * as types from './types'
+import { type ApiClient } from "./api-client";
+import * as types from "./types";
+
+type FormManagerProperties = {
+  apiClient: ApiClient;
+  alertManager: types.AlertManagerInterface;
+};
 
 export default class FormManager {
   public citySelect: HTMLSelectElement;
@@ -10,16 +15,19 @@ export default class FormManager {
   private categoryContainer = document.getElementById(
     "categoryBlock",
   ) as HTMLDivElement;
-  private issueContainer = document.getElementById("issueBlock") as HTMLDivElement;
+  private issueContainer = document.getElementById(
+    "issueBlock",
+  ) as HTMLDivElement;
 
   private form: HTMLFormElement;
   private projects: types.Project[] = [];
   private cities: types.AdministrativeUnit[] = [];
   private feedbackTypes: types.FeedbackType[] = [];
   private categories: types.FeedbackTopicCategory[] = [];
-  private apiClient: ReturnType<typeof createAPIClient>;
+  private apiClient: ApiClient;
+  private alertManager: types.AlertManagerInterface;
 
-  constructor() {
+  constructor({ apiClient, alertManager }: FormManagerProperties) {
     this.citySelect = document.getElementById(
       "citySelect",
     ) as HTMLSelectElement;
@@ -29,16 +37,16 @@ export default class FormManager {
     this.requestTypeSelect = document.getElementById(
       "requestTypeSelect",
     ) as HTMLSelectElement;
-    this.categorySelect = document.getElementById("categorySelect") as HTMLSelectElement;
+    this.categorySelect = document.getElementById(
+      "categorySelect",
+    ) as HTMLSelectElement;
     this.issueSelect = document.getElementById(
       "issueSelect",
     ) as HTMLSelectElement;
 
     this.form = document.querySelector(".apply-form") as HTMLFormElement;
-    this.apiClient = createAPIClient({
-      serverUrl: "http://localhost:3000",
-      apiPath: "/api",
-    });
+    this.apiClient = apiClient;
+    this.alertManager = alertManager;
     this.init();
   }
 
@@ -63,7 +71,7 @@ export default class FormManager {
         this.citySelect.appendChild(option);
       });
     } catch {
-      this.showAlert(
+      this.alertManager.showAlert(
         "Ошибка загрузки списка городов. Попробуйте обновить страницу.",
       );
     }
@@ -71,9 +79,11 @@ export default class FormManager {
 
   private async loadProjects(): Promise<void> {
     try {
-      this.projects = await this.apiClient.project.all({ administrative_unit_type: "town" });
+      this.projects = await this.apiClient.project.all({
+        administrative_unit_type: "town",
+      });
     } catch {
-      this.showAlert(
+      this.alertManager.showAlert(
         "Ошибка загрузки списка проектов. Попробуйте обновить страницу.",
       );
     }
@@ -81,9 +91,10 @@ export default class FormManager {
 
   private async loadCategories(): Promise<void> {
     try {
-      this.categories = await this.apiClient.feedbackTopicCategory.all()
+      this.categories = await this.apiClient.feedbackTopicCategory.all();
 
-      this.categorySelect.innerHTML = '<option value="">Выберите категорию</option>';
+      this.categorySelect.innerHTML =
+        '<option value="">Выберите категорию</option>';
 
       this.categories.forEach((category) => {
         const option = document.createElement("option");
@@ -91,9 +102,8 @@ export default class FormManager {
         option.textContent = category.title;
         this.categorySelect.appendChild(option);
       });
-
     } catch {
-      this.showAlert(
+      this.alertManager.showAlert(
         "Ошибка загрузки списка категорий. Попробуйте обновить страницу.",
       );
     }
@@ -103,7 +113,10 @@ export default class FormManager {
     this.issueSelect.innerHTML = '<option value="">Выберите проблему</option>';
 
     try {
-      const issues = await this.apiClient.feedbackTopicCategoryTopic.all({ filter_by: "category", field_id: String(categoryId) })
+      const issues = await this.apiClient.feedbackTopicCategoryTopic.all({
+        filter_by: "category",
+        field_id: String(categoryId),
+      });
 
       issues.forEach((issue: any) => {
         const option = document.createElement("option");
@@ -127,7 +140,7 @@ export default class FormManager {
         this.requestTypeSelect.appendChild(feedbackTypeSelect);
       });
     } catch {
-      this.showAlert(
+      this.alertManager.showAlert(
         "Ошибка загрузки списка категорий. Попробуйте обновить страницу.",
       );
     }
@@ -143,7 +156,7 @@ export default class FormManager {
     if (!cityProjects.length) {
       this.projectSelect.innerHTML =
         '<option value="">Проекты не найдены</option>';
-      return
+      return;
     }
 
     for (const project of cityProjects) {
@@ -180,7 +193,7 @@ export default class FormManager {
     this.categorySelect.addEventListener("change", () => {
       if (this.categorySelect.value) {
         this.loadIssues(this.categorySelect.value);
-        return
+        return;
       }
 
       this.issueSelect.innerHTML =
@@ -193,20 +206,13 @@ export default class FormManager {
     });
   }
 
-  private showAlert(message: string): void {
-    const globalShowAlert = (window as any).showAlert;
-    if (typeof globalShowAlert === "function") {
-      globalShowAlert(message);
-    }
-  }
-
   private handleFormSubmit(): void {
     const formData = new FormData(this.form);
 
     const formDataObject: any = {};
     for (const [key, value] of formData.entries()) {
       if (key === "personal_data_agreement") {
-        continue
+        continue;
       }
       formDataObject[key] = value;
     }

@@ -1,16 +1,12 @@
-import { createAPIClient } from "@shared/api";
-
 import FormManager from "./form-manager";
 import MapsManager from "./maps-manager";
 import DragAndDropManager from "./dnd-manager";
 import AlertManager from "./alert-manager";
 
-document.addEventListener("DOMContentLoaded", function () {
-  const apiClient = createAPIClient({
-    apiPath: "/api",
-    serverUrl: "http://localhost:3000",
-  });
+import { apiClient } from "./api-client";
 
+
+document.addEventListener("DOMContentLoaded", function () {
   const alertManager = new AlertManager();
   const dropManager = new DragAndDropManager();
   const formManager = new FormManager({ apiClient, alertManager });

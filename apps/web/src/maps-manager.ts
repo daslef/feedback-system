@@ -1,6 +1,14 @@
 declare const ymaps: any;
 
-import { createAPIClient } from "@shared/api";
+import type { ApiClient } from "./api-client";
+import * as types from "./types";
+
+type MapsManagerProperties = {
+  apiClient: ApiClient,
+  alertManager: types.AlertManagerInterface
+}
+
+type OpenMethodProperties = { selectedTownId: string, selectedProjectId: string }
 
 
 export default class MapsManager {
@@ -12,14 +20,14 @@ export default class MapsManager {
   private mapApplySelectionElement: HTMLButtonElement;
   private mapCancelElement: HTMLButtonElement;
 
-  private apiClient: ReturnType<typeof createAPIClient>;
+  private apiClient: ApiClient;
   private alertManager: any;
 
   private map: any;
   private projects: any;
   private selectedProject: any = null;
 
-  constructor({ apiClient, alertManager }) {
+  constructor({ apiClient, alertManager }: MapsManagerProperties) {
     this.popupElement = document.getElementById("mapPopup") as HTMLElement;
     this.selectedCityElement = document.getElementById(
       "selectedCityName",
@@ -127,14 +135,14 @@ export default class MapsManager {
       "projectSelect",
     ) as HTMLSelectElement;
 
-    for (let option of citySelect.options) {
+    for (const option of citySelect.options) {
       if (option.value == this.selectedProject.administrative_unit_id) {
         citySelect.value = option.value;
         break;
       }
     }
 
-    for (let option of projectSelect.options) {
+    for (const option of projectSelect.options) {
       if (option.value == this.selectedProject.id) {
         projectSelect.value = option.value;
         break;
@@ -149,7 +157,7 @@ export default class MapsManager {
     this.close();
   }
 
-  public open({ selectedTownId, selectedProjectId }) {
+  public open({ selectedTownId, selectedProjectId }: OpenMethodProperties) {
     this.popupElement.classList.add("show");
     document.body.style.overflow = "hidden";
 

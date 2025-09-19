@@ -1,3 +1,8 @@
+export interface AlertManagerInterface {
+  showAlert: (message: string, type?: "success" | "warning") => void;
+  closeAlert: () => void
+}
+
 export interface Project {
   id: number;
   title: string;

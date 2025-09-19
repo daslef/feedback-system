@@ -1,4 +1,7 @@
-export default class AlertManager {
+import type { AlertManagerInterface } from "./types";
+
+
+export default class AlertManager implements AlertManagerInterface {
   private alertCloseButton: HTMLButtonElement;
   private alertElement: HTMLElement;
 
@@ -30,8 +33,7 @@ export default class AlertManager {
     }, 4000);
   }
 
-  closeAlert() {
+  public closeAlert() {
     this.alertElement?.classList.remove("show", "success");
   }
 }
-
