@@ -9,60 +9,9 @@
     margin: 0 auto;
   }
 
-  .form-block {
-    text-align: center;
-  }
-
-  .form-block-title {
-    text-align: center;
-  }
-
-  .input-block {
-    text-align: center;
-  }
-
   .btn {
     display: block;
     margin: 0 auto;
-    text-align: center;
-  }
-
-  .btn span,
-  .btn::before,
-  .btn::after {
-    text-align: center;
-  }
-
-  select {
-    text-align: center;
-  }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  textarea {
-    text-align: center;
-  }
-
-  input::placeholder,
-  textarea::placeholder {
-    text-align: center;
-  }
-
-  .checkbox-block {
-    text-align: center;
-  }
-
-  .checkbox-block label {
-    justify-content: center;
-    text-align: center;
-  }
-
-  .drag-drop-area {
-    text-align: center;
-  }
-
-  .drag-drop-content {
     text-align: center;
   }
 }

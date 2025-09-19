@@ -1,16 +1,4 @@
-.wd-33 {
-  width: 33.333%;
-  display: inline-block;
-  vertical-align: top;
-  padding-right: 15px;
-  box-sizing: border-box;
-}
-
-.wd-33:last-child {
-  padding-right: 0;
-}
-
-.planting h2 {
+h2 {
   margin-bottom: 30px;
 }
 
@@ -197,11 +185,6 @@ select:disabled {
 }
 
 @media (max-width: 768px) {
-  .wd-33 {
-    width: 100%;
-    padding-right: 0;
-  }
-
   .fio-row {
     max-width: 100%;
     margin-left: 0;

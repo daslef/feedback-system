@@ -1,15 +1,18 @@
 import { createAPIClient } from "@shared/api";
-import * as types from "./types";
+import * as types from './types'
 
-class FormManager {
-  private citySelect: HTMLSelectElement;
-  private projectSelect: HTMLSelectElement;
-  private typeSelect: HTMLSelectElement;
-  private dragDropArea: HTMLElement;
-  private fileInput: HTMLInputElement;
-  private fileList: HTMLElement;
+export default class FormManager {
+  public citySelect: HTMLSelectElement;
+  public projectSelect: HTMLSelectElement;
+  private requestTypeSelect: HTMLSelectElement;
+  private categorySelect: HTMLSelectElement;
+  private issueSelect: HTMLSelectElement;
+  private categoryContainer = document.getElementById(
+    "categoryBlock",
+  ) as HTMLDivElement;
+  private issueContainer = document.getElementById("issueBlock") as HTMLDivElement;
+
   private form: HTMLFormElement;
-  private selectedFiles: File[] = [];
   private projects: types.Project[] = [];
   private cities: types.AdministrativeUnit[] = [];
   private feedbackTypes: types.FeedbackType[] = [];
@@ -23,12 +26,14 @@ class FormManager {
     this.projectSelect = document.getElementById(
       "projectSelect",
     ) as HTMLSelectElement;
-    this.typeSelect = document.getElementById(
+    this.requestTypeSelect = document.getElementById(
       "requestTypeSelect",
     ) as HTMLSelectElement;
-    this.dragDropArea = document.getElementById("dragDropArea") as HTMLElement;
-    this.fileInput = document.getElementById("fileInput") as HTMLInputElement;
-    this.fileList = document.getElementById("fileList") as HTMLElement;
+    this.categorySelect = document.getElementById("categorySelect") as HTMLSelectElement;
+    this.issueSelect = document.getElementById(
+      "issueSelect",
+    ) as HTMLSelectElement;
+
     this.form = document.querySelector(".apply-form") as HTMLFormElement;
     this.apiClient = createAPIClient({
       serverUrl: "http://localhost:3000",
@@ -57,8 +62,7 @@ class FormManager {
         option.textContent = city.title;
         this.citySelect.appendChild(option);
       });
-    } catch (error) {
-      console.error("Ошибка загрузки городов:", error);
+    } catch {
       this.showAlert(
         "Ошибка загрузки списка городов. Попробуйте обновить страницу.",
       );
@@ -67,11 +71,8 @@ class FormManager {
 
   private async loadProjects(): Promise<void> {
     try {
-      this.projects = await this.apiClient.project.all({
-        administrative_unit_type: "town",
-      });
-    } catch (error) {
-      console.error("Ошибка загрузки проектов:", error);
+      this.projects = await this.apiClient.project.all({ administrative_unit_type: "town" });
+    } catch {
       this.showAlert(
         "Ошибка загрузки списка проектов. Попробуйте обновить страницу.",
       );
@@ -80,27 +81,52 @@ class FormManager {
 
   private async loadCategories(): Promise<void> {
     try {
-      this.categories = await this.apiClient.feedbackTopicCategory.all();
-    } catch (error) {
-      console.error("Ошибка загрузки категорий:", error);
+      this.categories = await this.apiClient.feedbackTopicCategory.all()
+
+      this.categorySelect.innerHTML = '<option value="">Выберите категорию</option>';
+
+      this.categories.forEach((category) => {
+        const option = document.createElement("option");
+        option.value = category.id.toString();
+        option.textContent = category.title;
+        this.categorySelect.appendChild(option);
+      });
+
+    } catch {
       this.showAlert(
         "Ошибка загрузки списка категорий. Попробуйте обновить страницу.",
       );
     }
   }
 
+  private async loadIssues(categoryId: number | string) {
+    this.issueSelect.innerHTML = '<option value="">Выберите проблему</option>';
+
+    try {
+      const issues = await this.apiClient.feedbackTopicCategoryTopic.all({ filter_by: "category", field_id: String(categoryId) })
+
+      issues.forEach((issue: any) => {
+        const option = document.createElement("option");
+        option.value = issue.id.toString();
+        option.textContent = issue.feedback_topic;
+        this.issueSelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Ошибка загрузки тем для категории:", error);
+    }
+  }
+
   private async loadTypes(): Promise<void> {
     try {
       this.feedbackTypes = await this.apiClient.feedbackType.all();
-      this.typeSelect.innerHTML = "";
+      this.requestTypeSelect.innerHTML = "";
       this.feedbackTypes.forEach(({ id, title }) => {
         const feedbackTypeSelect = document.createElement("option");
         feedbackTypeSelect.textContent = title;
         feedbackTypeSelect.value = String(id);
-        this.typeSelect.appendChild(feedbackTypeSelect);
+        this.requestTypeSelect.appendChild(feedbackTypeSelect);
       });
-    } catch (error) {
-      console.error("Ошибка загрузки категорий:", error);
+    } catch {
       this.showAlert(
         "Ошибка загрузки списка категорий. Попробуйте обновить страницу.",
       );
@@ -114,16 +140,17 @@ class FormManager {
       (project) => project.administrative_unit_id.toString() === cityId,
     );
 
-    if (cityProjects.length > 0) {
-      cityProjects.forEach((project) => {
-        const option = document.createElement("option");
-        option.value = project.id.toString();
-        option.textContent = project.title;
-        this.projectSelect.appendChild(option);
-      });
-    } else {
+    if (!cityProjects.length) {
       this.projectSelect.innerHTML =
         '<option value="">Проекты не найдены</option>';
+      return
+    }
+
+    for (const project of cityProjects) {
+      const option = document.createElement("option");
+      option.value = project.id.toString();
+      option.textContent = project.title;
+      this.projectSelect.appendChild(option);
     }
   }
 
@@ -138,19 +165,27 @@ class FormManager {
       }
     });
 
-    const selectOnMapBtn = document.getElementById("selectOnMap");
-    if (selectOnMapBtn) {
-      selectOnMapBtn.addEventListener("click", () => {
-        const w: any = window as any;
-        if (typeof w.openMapPopup === "function") {
-          w.openMapPopup();
-        } else {
-          console.error("Функция openMapPopup не найдена");
-          alert("Карта временно недоступна. Попробуйте обновить страницу.");
-        }
-      });
-    }
-    this.setupDragAndDrop();
+    this.requestTypeSelect.addEventListener("change", () => {
+      if (this.requestTypeSelect.value === "2") {
+        this.categoryContainer.style.display = "block";
+        this.issueContainer.style.display = "block";
+      } else {
+        this.categoryContainer.style.display = "none";
+        this.issueContainer.style.display = "none";
+        this.categorySelect.value = "";
+        this.issueSelect.value = "";
+      }
+    });
+
+    this.categorySelect.addEventListener("change", () => {
+      if (this.categorySelect.value) {
+        this.loadIssues(this.categorySelect.value);
+        return
+      }
+
+      this.issueSelect.innerHTML =
+        '<option value="">Сначала выберите категорию</option>';
+    });
 
     this.form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -158,130 +193,10 @@ class FormManager {
     });
   }
 
-  private setupDragAndDrop(): void {
-    this.dragDropArea.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      this.dragDropArea.classList.add("dragover");
-    });
-
-    this.dragDropArea.addEventListener("dragleave", () => {
-      this.dragDropArea.classList.remove("dragover");
-    });
-
-    this.dragDropArea.addEventListener("drop", (e) => {
-      e.preventDefault();
-      this.dragDropArea.classList.remove("dragover");
-
-      const files = Array.from(e.dataTransfer?.files || []);
-      this.handleFiles(files);
-    });
-
-    this.dragDropArea.addEventListener("click", () => {
-      this.fileInput.click();
-    });
-
-    this.fileInput.addEventListener("change", (e) => {
-      const target = e.target as HTMLInputElement;
-      const files = Array.from(target.files || []);
-      this.handleFiles(files);
-    });
-  }
-
-  private handleFiles(files: File[]): void {
-    const allowedImageTypes = [
-      "image/jpeg",
-      "image/jpg",
-      "image/png",
-      "image/gif",
-      "image/webp",
-      "image/bmp",
-      "image/tiff",
-    ];
-
-    const invalidFiles: string[] = [];
-
-    files.forEach((file) => {
-      const isValidImageType = allowedImageTypes.includes(
-        file.type.toLowerCase(),
-      );
-      const fileExtension = file.name.toLowerCase().split(".").pop();
-      const allowedExtensions = [
-        "jpg",
-        "jpeg",
-        "png",
-        "gif",
-        "webp",
-        "bmp",
-        "tiff",
-      ];
-      const isValidExtension =
-        fileExtension && allowedExtensions.includes(fileExtension);
-
-      if (!isValidImageType && !isValidExtension) {
-        invalidFiles.push(file.name);
-      } else if (
-        !this.selectedFiles.find(
-          (f) => f.name === file.name && f.size === file.size,
-        )
-      ) {
-        this.selectedFiles.push(file);
-      }
-    });
-
-    if (invalidFiles.length > 0) {
-      const message = `Неподдерживаемый формат файлов: ${invalidFiles.join(
-        ", ",
-      )}. Пожалуйста, загружайте только изображения (JPG, PNG, GIF, WebP, BMP, TIFF).`;
-      this.showAlert(message);
-    }
-
-    this.updateFileList();
-  }
-
-  private updateFileList(): void {
-    this.fileList.innerHTML = "";
-
-    const dragDropContent = this.dragDropArea.querySelector(
-      ".drag-drop-content",
-    ) as HTMLElement;
-
-    if (this.selectedFiles.length > 0) {
-      if (dragDropContent) {
-        dragDropContent.style.display = "none";
-      }
-    } else {
-      if (dragDropContent) {
-        dragDropContent.style.display = "block";
-      }
-    }
-    this.selectedFiles.forEach((file, index) => {
-      const fileItem = document.createElement("div");
-      fileItem.className = "file-item";
-
-      fileItem.innerHTML = `
-        <span class="file-name">${file.name}</span>
-        <button type="button" class="file-remove" data-index="${index}">×</button>
-      `;
-
-      this.fileList.appendChild(fileItem);
-    });
-
-    this.fileList.querySelectorAll(".file-remove").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        const target = e.target as HTMLElement;
-        const index = parseInt(target.getAttribute("data-index") || "0");
-        this.selectedFiles.splice(index, 1);
-        this.updateFileList();
-      });
-    });
-  }
-
   private showAlert(message: string): void {
     const globalShowAlert = (window as any).showAlert;
     if (typeof globalShowAlert === "function") {
       globalShowAlert(message);
-    } else {
-      alert(message);
     }
   }
 
@@ -291,10 +206,9 @@ class FormManager {
     const formDataObject: any = {};
     for (const [key, value] of formData.entries()) {
       if (key === "personal_data_agreement") {
-        formDataObject[key] = true;
-      } else {
-        formDataObject[key] = value;
+        continue
       }
+      formDataObject[key] = value;
     }
 
     formDataObject.files = this.selectedFiles;
@@ -307,7 +221,3 @@ class FormManager {
     console.log("Данные формы:", formDataObject);
   }
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  new FormManager();
-});
