@@ -1,5 +1,6 @@
 import { oc } from "@orpc/contract";
 import * as v from "valibot";
+import { baseGetAll } from "./_base";
 
 const ProjectSchema = v.object({
   id: v.pipe(v.number(), v.integer(), v.minValue(1)),
@@ -19,9 +20,13 @@ const ProjectSchema = v.object({
 const UpdateProjectSchema = v.partial(ProjectSchema);
 
 const GetManyProjectsSchema = v.array(ProjectSchema);
+
 const GetProjectSchema = v.intersect([
-  v.omit(ProjectSchema, ["administrative_unit_id"]),
-  v.object({ administrative_unit: v.string() }),
+  v.object({
+    administrative_unit: v.string(),
+    administrative_unit_type: v.string(),
+  }),
+  v.omit(ProjectSchema, ["created_at"]),
 ]);
 
 const projectContract = oc
@@ -35,7 +40,7 @@ const projectContract = oc
         summary: "Get a project",
         description: "Get full project information by id",
       })
-      .input(v.object({ id: v.string() }))
+      .input(v.object({ id: v.union([v.string(), v.number()]) }))
       .output(GetProjectSchema),
 
     update: oc
@@ -61,32 +66,7 @@ const projectContract = oc
         summary: "List all projects",
         description: "Get brief information for all projects",
       })
-      .input(
-        v.object({
-          limit: v.optional(
-            v.pipe(
-              v.string(),
-              v.transform(Number),
-              v.number(),
-              v.integer(),
-              v.minValue(12),
-              v.maxValue(24),
-            ),
-          ),
-          offset: v.optional(
-            v.pipe(
-              v.string(),
-              v.transform(Number),
-              v.number(),
-              v.integer(),
-              v.minValue(0),
-            ),
-          ),
-          administrative_unit_type: v.optional(
-            v.picklist(["settlement", "town"])
-          ),
-        }),
-      )
+      .input(baseGetAll)
       .output(GetManyProjectsSchema),
 
     create: oc

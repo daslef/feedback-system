@@ -90,42 +90,39 @@ export async function seedFeedbackTopics(db: Kysely<Database>) {
   );
 
   await db
-    .insertInto("feedback_topic")
+    .insertInto("topic")
     .values([...feedbackTopics].map((topic) => ({ title: topic })))
     .execute();
 }
 
 export async function seedFeedbackTopicCategories(db: Kysely<Database>) {
-  const feedbackTopicCategories = (
+  const topicCategories = (
     topicsAndCategoriesData as TopicsAndCategoriesDataItem[]
   ).map(({ title }) => ({ title }));
 
-  await db
-    .insertInto("feedback_topic_category")
-    .values(feedbackTopicCategories)
-    .execute();
+  await db.insertInto("topic_category").values(topicCategories).execute();
 }
 
 export async function seedFeedbackTopicCategoryTopic(db: Kysely<Database>) {
   for (const { title, items } of topicsAndCategoriesData) {
-    const { id: feedbackTopicCategoryId } = await db
-      .selectFrom("feedback_topic_category")
+    const { id: topicCategoryId } = await db
+      .selectFrom("topic_category")
       .select("id")
       .where("title", "=", title)
       .executeTakeFirstOrThrow();
 
     for (const topic of items) {
-      const { id: feedbackTopicId } = await db
-        .selectFrom("feedback_topic")
+      const { id: topicId } = await db
+        .selectFrom("topic")
         .select("id")
         .where("title", "=", topic)
         .executeTakeFirstOrThrow();
 
       await db
-        .insertInto("feedback_topic_category_topic")
+        .insertInto("topic_category_topic")
         .values({
-          feedback_topic_id: feedbackTopicId,
-          feedback_topic_category_id: feedbackTopicCategoryId,
+          topic_id: topicId,
+          topic_category_id: topicCategoryId,
         })
         .execute();
     }

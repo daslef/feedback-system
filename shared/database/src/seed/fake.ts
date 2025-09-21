@@ -56,7 +56,7 @@ export async function seedFeedbacks(db: Kysely<Database>) {
     .select(["id"])
     .execute();
   const types = await db.selectFrom("feedback_type").select(["id"]).execute();
-  const topics = await db.selectFrom("feedback_topic").select(["id"]).execute();
+  const topics = await db.selectFrom("topic").select(["id"]).execute();
 
   const projectIds = projects.map((p) => p.id);
   const personIds = persons.map((p) => p.id);
@@ -72,7 +72,7 @@ export async function seedFeedbacks(db: Kysely<Database>) {
         description: randProductDescription(),
         person_email_contact_id: rand(personIds),
         feedback_status_id: rand(statusIds),
-        feedback_topic_id: rand(topicsIds),
+        topic_id: rand(topicsIds),
         feedback_type_id: rand(typeIds),
       })
       .execute();

@@ -2,8 +2,9 @@ import { oc } from "@orpc/contract";
 
 import projectContract from "./project";
 import administrativeUnitContract from "./administrativeUnit";
-import feedbackTopicCategoryContract from "./feedbackTopicCategory";
-import feedbackTopicCategoryTopicContract from "./feedbackTopicCategoryTopic";
+import topicContract from "./topic";
+import topicCategoryContract from "./topicCategory";
+import topicCategoryTopicContract from "./topicCategoryTopic";
 import feedbackTypeContract from "./feedbackType";
 import feedbackImageContract from "./feedbackImage";
 import feedbackContract from "./feedback";
@@ -30,8 +31,9 @@ const apiContract = oc
     administrativeUnit: administrativeUnitContract,
     feedbackType: feedbackTypeContract,
     feedbackImage: feedbackImageContract,
-    feedbackTopicCategory: feedbackTopicCategoryContract,
-    feedbackTopicCategoryTopic: feedbackTopicCategoryTopicContract,
+    topic: topicContract,
+    topicCategory: topicCategoryContract,
+    topicCategoryTopic: topicCategoryTopicContract,
     feedback: feedbackContract,
     personType: personTypeContract,
     person: personContract,

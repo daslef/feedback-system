@@ -1,7 +1,8 @@
 import projectRouter from "./project";
 import administrativeUnitRouter from "./administrativeUnit";
-import feedbackTopicCategoryRouter from "./feedbackTopicCategory";
-import feedbackTopicCategoryTopicRouter from "./feedbackTopicCategoryTopic";
+import topicRouter from "./topic";
+import topicCategoryRouter from "./topicCategory";
+import topicCategoryTopicRouter from "./topicCategoryTopic";
 import feedbackTypeRouter from "./feedbackType";
 import feedbackImageRouter from "./feedbackImage";
 import feedbackRouter from "./feedback";
@@ -13,8 +14,9 @@ const apiRouter = {
   projects: projectRouter,
   administrativeUnits: administrativeUnitRouter,
   feedbackType: feedbackTypeRouter,
-  feedbackTopicCategories: feedbackTopicCategoryRouter,
-  feedbackTopicCategoryTopic: feedbackTopicCategoryTopicRouter,
+  topic: topicRouter,
+  topicCategories: topicCategoryRouter,
+  topicCategoryTopic: topicCategoryTopicRouter,
   feedbackImage: feedbackImageRouter,
   feedback: feedbackRouter,
   personType: personTypeRouter,

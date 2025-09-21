@@ -35,15 +35,15 @@ export interface FeedbackType {
 
 export interface TopicCategoryTopic {
   id: number;
-  feedback_topic: string;
-  feedback_topic_category: string;
+  topic: string;
+  topic_category: string;
 }
 
 export interface FeedbackIn {
   project_id: number;
   description: string;
   feedback_type_id: number;
-  feedback_topic_id: number;
+  topic_id: number;
   last_name: string;
   first_name: string;
   middle_name: string;

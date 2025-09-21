@@ -8,9 +8,9 @@ import { type FeedbackTable } from "@shared/schema/feedback";
 import { type FeedbackStatusTable } from "@shared/schema/feedback_status";
 import { FeedbackImageTable } from "@shared/schema/feedback_image";
 import { type FeedbackTypeTable } from "@shared/schema/feedback_type";
-import { type FeedbackTopicTable } from "@shared/schema/feedback_topic";
-import { type FeedbackTopicCategoryTable } from "@shared/schema/feedback_topic_category";
-import { type FeedbackTopicCategoryTopicTable } from "@shared/schema/feedback_topic_category_topic";
+import { type TopicTable } from "@shared/schema/topic";
+import { type TopicCategoryTable } from "@shared/schema/topic_category";
+import { type TopicCategoryTopicTable } from "@shared/schema/topic_category_topic";
 import { type OfficialResponsibilityTable } from "@shared/schema/official_responsibility";
 import { type ProjectTable } from "@shared/schema/project";
 
@@ -18,17 +18,21 @@ type GeneratedId = {
   id: Generated<number>;
 };
 
+type GeneratedTime = {
+  created_at: Generated<string>;
+};
+
 export interface Database {
   administrative_unit: AdministrativeUnitTable & GeneratedId;
   administrative_unit_type: AdministrativeUnitTypeTable & GeneratedId;
   project: ProjectTable & GeneratedId;
-  feedback_topic: FeedbackTopicTable & GeneratedId;
-  feedback_topic_category: FeedbackTopicCategoryTable & GeneratedId;
-  feedback_topic_category_topic: FeedbackTopicCategoryTopicTable & GeneratedId;
+  topic: TopicTable & GeneratedId;
+  topic_category: TopicCategoryTable & GeneratedId;
+  topic_category_topic: TopicCategoryTopicTable & GeneratedId;
   person: PersonTable & GeneratedId;
   person_type: PersonTypeTable & GeneratedId;
   person_contact: PersonContactTable & GeneratedId;
-  feedback: FeedbackTable & GeneratedId;
+  feedback: FeedbackTable & GeneratedId & GeneratedTime;
   feedback_status: FeedbackStatusTable & GeneratedId;
   feedback_image: FeedbackImageTable & GeneratedId;
   feedback_type: FeedbackTypeTable & GeneratedId;

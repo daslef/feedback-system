@@ -1,10 +1,12 @@
-import { useOne } from "@refinedev/core";
+import { useList } from "@refinedev/core";
 
-export const ShowProject = () => {
+export const ListTopicCategories = () => {
   const {
     result,
     query: { isLoading },
-  } = useOne({ resource: "projects", id: 729 });
+  } = useList({
+    resource: "topic_categories",
+  });
 
   if (isLoading) {
     return <div>Loading...</div>;

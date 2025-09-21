@@ -1,16 +1,14 @@
 import { oc } from "@orpc/contract";
 import * as v from "valibot";
 
-const FeedbackTopicCategorySchema = v.object({
+const TopicCategorySchema = v.object({
   id: v.pipe(v.number(), v.integer(), v.minValue(1)),
   title: v.string(),
 });
 
-const GetManyFeedbackTopicCategoriesSchema = v.array(
-  FeedbackTopicCategorySchema,
-);
+const GetManyTopicCategoriesSchema = v.array(TopicCategorySchema);
 
-const feedbackTopicCategoryContract = oc
+const topicCategoryContract = oc
   .tag("Categories & Topics")
   .prefix("/topic_categories")
   .router({
@@ -18,10 +16,10 @@ const feedbackTopicCategoryContract = oc
       .route({
         method: "GET",
         path: "/",
-        summary: "List all topic categories",
+        summary: "List topic categories",
         description: "Get information for all feedback topic categories",
       })
-      .output(GetManyFeedbackTopicCategoriesSchema),
+      .output(GetManyTopicCategoriesSchema),
 
     create: oc
       .route({
@@ -30,8 +28,8 @@ const feedbackTopicCategoryContract = oc
         summary: "New topic category",
         description: "Create a new feedback topic category",
       })
-      .input(v.omit(FeedbackTopicCategorySchema, ["id"]))
-      .output(FeedbackTopicCategorySchema),
+      .input(v.omit(TopicCategorySchema, ["id"]))
+      .output(TopicCategorySchema),
   });
 
-export default feedbackTopicCategoryContract;
+export default topicCategoryContract;

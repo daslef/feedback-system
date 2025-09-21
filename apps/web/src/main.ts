@@ -444,7 +444,7 @@ async function populateIssues(categoryId: number | string) {
     issues.forEach((issue: any) => {
       const option = document.createElement("option");
       option.value = issue.id.toString();
-      option.textContent = issue.feedback_topic;
+      option.textContent = issue.topic;
       select.appendChild(option);
     });
   } catch (error) {

@@ -8,8 +8,8 @@ const GetFeedbackSchema = v.object({
   description: v.string(),
   feedback_type_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
   feedback_type: v.string(),
-  feedback_topic_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  feedback_topic: v.string(),
+  topic_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
+  topic: v.string(),
   person_email_contact_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
   feedback_status_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
   feedback_status: v.union([
@@ -24,7 +24,7 @@ const CreateFeedbackSchema = v.object({
   project_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
   description: v.string(),
   feedback_type_id: v.union([v.literal(1), v.literal(2)]),
-  feedback_topic_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
+  topic_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
   person_email_contact_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
 });
 

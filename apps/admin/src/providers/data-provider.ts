@@ -38,6 +38,21 @@ export const dataProvider: DataProvider = {
       params.append("limit", String(pagination.pageSize));
     }
 
+    if (sorters && sorters.length > 0) {
+      for (const sorter of sorters) {
+        params.append("sort", `${sorter.field}.${sorter.order}`);
+      }
+    }
+
+    if (filters && filters.length > 0) {
+      for (const filter of filters) {
+        if ("field" in filter && filter.operator === "eq") {
+          // supports "eq" operator by simply appending the field name and value to the query string.
+          params.append("filter", `${filter.field}[eq]${filter.value}`);
+        }
+      }
+    }
+
     const response = await fetch(`${API_URL}/${resource}?${params.toString()}`);
 
     if (response.status < 200 || response.status > 299) throw response;
@@ -48,8 +63,21 @@ export const dataProvider: DataProvider = {
       data,
       total: 0, // We'll cover this in the next steps.
     };
-  }, create: () => {
-    throw new Error("Not implemented");
+  },
+  create: async ({ resource, variables }) => {
+    const response = await fetch(`${API_URL}/${resource}`, {
+      method: "POST",
+      body: JSON.stringify(variables),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status < 200 || response.status > 299) throw response;
+
+    const data = await response.json();
+
+    return { data };
   },
   deleteOne: () => {
     throw new Error("Not implemented");

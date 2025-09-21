@@ -46,8 +46,8 @@ async function migrate() {
     .addColumn("feedback_type_id", "integer", (col) =>
       col.references("feedback_type.id").notNull(),
     )
-    .addColumn("feedback_topic_id", "integer", (col) =>
-      col.references("feedback_topic.id").onDelete("cascade").notNull(),
+    .addColumn("topic_id", "integer", (col) =>
+      col.references("topic.id").onDelete("cascade").notNull(),
     )
     .addColumn("person_email_contact_id", "integer", (col) =>
       col.references("person_contact.id").onDelete("cascade").notNull(),
@@ -61,31 +61,28 @@ async function migrate() {
     .execute();
 
   await db.schema
-    .createTable("feedback_topic")
+    .createTable("topic")
     .ifNotExists()
     .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
     .addColumn("title", "text", (col) => col.notNull().unique())
     .execute();
 
   await db.schema
-    .createTable("feedback_topic_category")
+    .createTable("topic_category")
     .ifNotExists()
     .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
     .addColumn("title", "text", (col) => col.notNull().unique())
     .execute();
 
   await db.schema
-    .createTable("feedback_topic_category_topic")
+    .createTable("topic_category_topic")
     .ifNotExists()
     .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
-    .addColumn("feedback_topic_id", "integer", (col) =>
-      col.references("feedback_topic.id").notNull().onDelete("cascade"),
+    .addColumn("topic_id", "integer", (col) =>
+      col.references("topic.id").notNull().onDelete("cascade"),
     )
-    .addColumn("feedback_topic_category_id", "integer", (col) =>
-      col
-        .references("feedback_topic_category.id")
-        .notNull()
-        .onDelete("cascade"),
+    .addColumn("topic_category_id", "integer", (col) =>
+      col.references("topic_category.id").notNull().onDelete("cascade"),
     )
     .execute();
 

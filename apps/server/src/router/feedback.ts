@@ -7,9 +7,9 @@ function prepareBaseQuery(databaseInstance: typeof db) {
     .innerJoin("project", "feedback.project_id", "project.id")
     .innerJoin("feedback_type", "feedback.feedback_type_id", "feedback_type.id")
     .innerJoin(
-      "feedback_topic",
-      "feedback.feedback_topic_id",
-      "feedback_topic.id",
+      "topic",
+      "feedback.topic_id",
+      "topic.id",
     )
     .innerJoin(
       "feedback_status",
@@ -23,8 +23,8 @@ function prepareBaseQuery(databaseInstance: typeof db) {
       "feedback.description",
       "feedback.feedback_type_id",
       "feedback_type.title as feedback_type",
-      "feedback.feedback_topic_id",
-      "feedback_topic.title as feedback_topic",
+      "feedback.topic_id",
+      "topic.title as topic",
       "feedback.person_email_contact_id",
       "feedback.feedback_status_id",
       "feedback_status.title as feedback_status",
