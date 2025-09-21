@@ -16,7 +16,6 @@ export default class MapsManager {
   private popupElement: HTMLElement;
   private selectedCityElement: HTMLElement;
   private selectedProjectElement: HTMLElement;
-  private mapPopupOverlayElement: HTMLDivElement;
   private mapPopupCloseElement: HTMLButtonElement;
   private mapApplySelectionElement: HTMLButtonElement;
   private mapCancelElement: HTMLButtonElement;
@@ -56,7 +55,12 @@ export default class MapsManager {
       this.map = new ymaps.Map("yandexMap", {
         center: [60.5, 30],
         zoom: 6,
-        controls: ["zoomControl", "fullscreenControl"],
+        controls: [
+          "zoomControl",
+          "fullscreenControl",
+          "searchControl",
+          "geolocationControl",
+        ],
       });
 
       this.setupEventListeners();
@@ -94,30 +98,40 @@ export default class MapsManager {
     )!;
 
     this.selectedCityElement.textContent = project.administrative_unit;
-    this.selectedProjectElement.textContent = project.title;
+    this.selectedProjectElement.textContent = `${project.title} (${project.year_of_completion})`;
     this.map.setCenter([project.latitude, project.longitude], 15);
   }
 
   private async loadProjects() {
     this.state.projects.forEach((project: any) => {
       const coords = [project.latitude, project.longitude];
-      const marker = new ymaps.Placemark(coords, {
-        preset: "islands#blueDotIcon",
-        iconColor: "#48c5df",
-      });
+      const marker = new ymaps.Placemark(
+        coords,
+        { draggable: false },
+        {
+          iconLayout: "default#image",
+          iconImageHref: "/icons/map/02-1.svg",
+          iconImageSize: [20, 20],
+          iconImageOffset: [-10, -10],
+        },
+      );
 
-      marker.events.add("click", () => {
-        this.selectProject(project);
+      marker.events.add("click", (e: any) => {
+        // marker.getMap().geoObjects.forEach((currentMarker) => {
+        //   currentMarker.options.set(
+        //     "iconImageHref",
+        //     currentMarker === e.originalEvent.target
+        //       ? "/icons/map/04-1.svg"
+        //       : "/icons/map/02-1.svg",
+        //   );
+        // });
+        this.selectedProject = project;
+        this.selectedProjectElement.textContent = `${project.title} (${project.year_of_completion})`;
+        this.selectedCityElement.textContent = project.administrative_unit;
       });
 
       this.map.geoObjects.add(marker);
     });
-  }
-
-  private selectProject(project: any) {
-    this.selectedProject = project;
-    this.selectedProjectElement.textContent = project.title;
-    this.selectedCityElement.textContent = project.administrative_unit;
   }
 
   private applyMapSelection() {
