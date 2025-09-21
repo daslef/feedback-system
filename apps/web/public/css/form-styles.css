@@ -31,7 +31,6 @@ h2 {
 }
 
 .fio-row .form-block .form-block-title {
-  font-size: 1.8rem;
   line-height: 2.4rem;
   margin-bottom: 8px;
 }
@@ -200,7 +199,7 @@ select:disabled {
   }
 
   .city-map-inputs {
-    flex-direction: column;
+    /* flex-direction: column; */
     gap: 15px;
   }
 
@@ -208,10 +207,9 @@ select:disabled {
     width: 100%;
   }
 
-  .map-button {
-    width: 100%;
-    max-width: 250px;
-    margin: 0 auto;
+  #selectOnMap {
+    width: 180px;
+    padding: initial;
   }
 
   .apply-form .info-list {

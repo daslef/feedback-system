@@ -1,9 +1,10 @@
-import { type ApiClient } from "./api-client";
-import * as types from "./types";
+import DragAndDropManager from "./dnd-manager";
+import AlertManager from "./alert-manager";
+
+import type State from "./state";
 
 type FormManagerProperties = {
-  apiClient: ApiClient;
-  alertManager: types.AlertManagerInterface;
+  state: State;
 };
 
 export default class FormManager {
@@ -19,15 +20,11 @@ export default class FormManager {
     "issueBlock",
   ) as HTMLDivElement;
 
+  private dragAndDrop: DragAndDropManager;
   private form: HTMLFormElement;
-  private projects: types.Project[] = [];
-  private cities: types.AdministrativeUnit[] = [];
-  private feedbackTypes: types.FeedbackType[] = [];
-  private categories: types.FeedbackTopicCategory[] = [];
-  private apiClient: ApiClient;
-  private alertManager: types.AlertManagerInterface;
+  private state: State;
 
-  constructor({ apiClient, alertManager }: FormManagerProperties) {
+  constructor({ state }: FormManagerProperties) {
     this.citySelect = document.getElementById(
       "citySelect",
     ) as HTMLSelectElement;
@@ -45,111 +42,67 @@ export default class FormManager {
     ) as HTMLSelectElement;
 
     this.form = document.querySelector(".apply-form") as HTMLFormElement;
-    this.apiClient = apiClient;
-    this.alertManager = alertManager;
+    this.dragAndDrop = new DragAndDropManager();
+    this.state = state;
     this.init();
   }
 
   private async init(): Promise<void> {
-    await this.loadCities();
-    await this.loadProjects();
-    await this.loadCategories();
+    await this.renderCities();
+    await this.renderCategories();
     await this.loadTypes();
     this.setupEventListeners();
   }
 
-  private async loadCities(): Promise<void> {
-    try {
-      this.cities = await this.apiClient.administrativeUnit.all({
-        type: "town",
-      });
-      this.citySelect.innerHTML = '<option value="">Выберите город</option>';
-      this.cities.forEach((city) => {
-        const option = document.createElement("option");
-        option.value = city.id.toString();
-        option.textContent = city.title;
-        this.citySelect.appendChild(option);
-      });
-    } catch {
-      this.alertManager.showAlert(
-        "Ошибка загрузки списка городов. Попробуйте обновить страницу.",
-      );
-    }
+  private async renderCities(): Promise<void> {
+    this.citySelect.innerHTML = '<option value="">Выберите город</option>';
+    this.state.cities.forEach((city) => {
+      const option = document.createElement("option");
+      option.value = city.id.toString();
+      option.textContent = city.title;
+      this.citySelect.appendChild(option);
+    });
   }
 
-  private async loadProjects(): Promise<void> {
-    try {
-      this.projects = await this.apiClient.project.all({
-        administrative_unit_type: "town",
-      });
-    } catch {
-      this.alertManager.showAlert(
-        "Ошибка загрузки списка проектов. Попробуйте обновить страницу.",
-      );
-    }
+  private async renderCategories(): Promise<void> {
+    this.categorySelect.innerHTML =
+      '<option value="">Выберите категорию</option>';
+
+    this.state.categories.forEach((category) => {
+      const option = document.createElement("option");
+      option.value = category.id.toString();
+      option.textContent = category.title;
+      this.categorySelect.appendChild(option);
+    });
   }
 
-  private async loadCategories(): Promise<void> {
-    try {
-      this.categories = await this.apiClient.feedbackTopicCategory.all();
-
-      this.categorySelect.innerHTML =
-        '<option value="">Выберите категорию</option>';
-
-      this.categories.forEach((category) => {
-        const option = document.createElement("option");
-        option.value = category.id.toString();
-        option.textContent = category.title;
-        this.categorySelect.appendChild(option);
-      });
-    } catch {
-      this.alertManager.showAlert(
-        "Ошибка загрузки списка категорий. Попробуйте обновить страницу.",
-      );
-    }
-  }
-
-  private async loadIssues(categoryId: number | string) {
+  private async renderIssues(categoryId: number | string) {
     this.issueSelect.innerHTML = '<option value="">Выберите проблему</option>';
 
-    try {
-      const issues = await this.apiClient.feedbackTopicCategoryTopic.all({
-        filter_by: "category",
-        field_id: String(categoryId),
-      });
+    const issues = await this.state.loadIssues(categoryId);
 
-      issues.forEach((issue: any) => {
-        const option = document.createElement("option");
-        option.value = issue.id.toString();
-        option.textContent = issue.feedback_topic;
-        this.issueSelect.appendChild(option);
-      });
-    } catch (error) {
-      console.error("Ошибка загрузки тем для категории:", error);
-    }
+    issues.forEach((issue: any) => {
+      const option = document.createElement("option");
+      option.value = issue.id.toString();
+      option.textContent = issue.feedback_topic;
+      this.issueSelect.appendChild(option);
+    });
   }
 
   private async loadTypes(): Promise<void> {
-    try {
-      this.feedbackTypes = await this.apiClient.feedbackType.all();
-      this.requestTypeSelect.innerHTML = "";
-      this.feedbackTypes.forEach(({ id, title }) => {
-        const feedbackTypeSelect = document.createElement("option");
-        feedbackTypeSelect.textContent = title;
-        feedbackTypeSelect.value = String(id);
-        this.requestTypeSelect.appendChild(feedbackTypeSelect);
-      });
-    } catch {
-      this.alertManager.showAlert(
-        "Ошибка загрузки списка категорий. Попробуйте обновить страницу.",
-      );
-    }
+    this.requestTypeSelect.innerHTML = "";
+    this.state.feedbackTypes.forEach(({ id, title }) => {
+      const feedbackTypeSelect = document.createElement("option");
+      feedbackTypeSelect.textContent = title;
+      feedbackTypeSelect.value = String(id);
+      this.requestTypeSelect.appendChild(feedbackTypeSelect);
+    });
   }
 
-  private loadProjectsForCity(cityId: string): void {
+  private renderProjectsForCity(cityId: string): void {
     this.projectSelect.innerHTML = '<option value="">Выберите проект</option>';
 
-    const cityProjects = this.projects.filter(
+    const cityProjects = this.state.projects.filter(
       (project) => project.administrative_unit_id.toString() === cityId,
     );
 
@@ -168,10 +121,10 @@ export default class FormManager {
   }
 
   private setupEventListeners(): void {
-    this.citySelect.addEventListener("change", (e) => {
+    this.citySelect.addEventListener("input", (e) => {
       const target = e.target as HTMLSelectElement;
       if (target.value) {
-        this.loadProjectsForCity(target.value);
+        this.renderProjectsForCity(target.value);
       } else {
         this.projectSelect.innerHTML =
           '<option value="">Сначала выберите город</option>';
@@ -192,7 +145,7 @@ export default class FormManager {
 
     this.categorySelect.addEventListener("change", () => {
       if (this.categorySelect.value) {
-        this.loadIssues(this.categorySelect.value);
+        this.renderIssues(this.categorySelect.value);
         return;
       }
 
@@ -217,7 +170,7 @@ export default class FormManager {
       formDataObject[key] = value;
     }
 
-    formDataObject.files = this.selectedFiles;
+    // formDataObject.files = this.selectedFiles;
     // .map((file) => ({
     //   name: file.name,
     //   size: file.size,

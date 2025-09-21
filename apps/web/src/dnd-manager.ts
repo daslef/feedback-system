@@ -1,5 +1,3 @@
-// import * as types from './types'
-
 export default class DragAndDropManager {
   private dragDropArea: HTMLElement;
   private dragDropContent: HTMLElement;
@@ -62,12 +60,7 @@ export default class DragAndDropManager {
         file.type.toLowerCase(),
       );
       const fileExtension = file.name.toLowerCase().split(".").pop();
-      const allowedExtensions = [
-        "jpg",
-        "jpeg",
-        "png",
-        "webp",
-      ];
+      const allowedExtensions = ["jpg", "jpeg", "png", "webp"];
 
       const isValidExtension =
         fileExtension && allowedExtensions.includes(fileExtension);
@@ -87,7 +80,7 @@ export default class DragAndDropManager {
       const message = `Неподдерживаемый формат файлов: ${invalidFiles.join(
         ", ",
       )}. Пожалуйста, загружайте только изображения (JPG, PNG, WebP).`;
-      this.showAlert(message);
+      // this.showAlert(message);
     }
 
     this.updateFileList();
@@ -96,7 +89,9 @@ export default class DragAndDropManager {
   private updateFileList(): void {
     this.fileList.innerHTML = "";
 
-    this.dragDropContent.style.display = this.selectedFiles.length ? "none" : "block"
+    this.dragDropContent.style.display = this.selectedFiles.length
+      ? "none"
+      : "block";
 
     this.selectedFiles.forEach((file, index) => {
       const fileItem = document.createElement("div");

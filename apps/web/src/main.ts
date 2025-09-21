@@ -1,16 +1,14 @@
+import State from "./state";
 import FormManager from "./form-manager";
 import MapsManager from "./maps-manager";
-import DragAndDropManager from "./dnd-manager";
-import AlertManager from "./alert-manager";
 
-import { apiClient } from "./api-client";
+const state = new State();
 
+document.addEventListener("DOMContentLoaded", async function () {
+  await state.init();
 
-document.addEventListener("DOMContentLoaded", function () {
-  const alertManager = new AlertManager();
-  const dropManager = new DragAndDropManager();
-  const formManager = new FormManager({ apiClient, alertManager });
-  const mapsManager = new MapsManager({ apiClient, alertManager });
+  const formManager = new FormManager({ state });
+  const mapsManager = new MapsManager({ state });
 
   const selectOnMapButton = document.getElementById(
     "selectOnMap",

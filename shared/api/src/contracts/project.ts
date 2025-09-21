@@ -19,8 +19,6 @@ const ProjectSchema = v.object({
 
 const UpdateProjectSchema = v.partial(ProjectSchema);
 
-const GetManyProjectsSchema = v.array(ProjectSchema);
-
 const GetProjectSchema = v.intersect([
   v.object({
     administrative_unit: v.string(),
@@ -28,6 +26,8 @@ const GetProjectSchema = v.intersect([
   }),
   v.omit(ProjectSchema, ["created_at"]),
 ]);
+
+const GetManyProjectsSchema = v.array(GetProjectSchema);
 
 const projectContract = oc
   .tag("Projects")

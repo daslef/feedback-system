@@ -1,15 +1,16 @@
 declare const ymaps: any;
 
-import type { ApiClient } from "./api-client";
+import type State from "./state";
 import * as types from "./types";
 
 type MapsManagerProperties = {
-  apiClient: ApiClient,
-  alertManager: types.AlertManagerInterface
-}
+  state: State;
+};
 
-type OpenMethodProperties = { selectedTownId: string, selectedProjectId: string }
-
+type OpenMethodProperties = {
+  selectedTownId: string | null;
+  selectedProjectId: string | null;
+};
 
 export default class MapsManager {
   private popupElement: HTMLElement;
@@ -20,21 +21,18 @@ export default class MapsManager {
   private mapApplySelectionElement: HTMLButtonElement;
   private mapCancelElement: HTMLButtonElement;
 
-  private apiClient: ApiClient;
-  private alertManager: any;
-
+  private state: State;
   private map: any;
-  private projects: any;
-  private selectedProject: any = null;
+  private selectedProject: types.Project | null = null;
 
-  constructor({ apiClient, alertManager }: MapsManagerProperties) {
+  constructor({ state }: MapsManagerProperties) {
     this.popupElement = document.getElementById("mapPopup") as HTMLElement;
     this.selectedCityElement = document.getElementById(
       "selectedCityName",
     ) as HTMLElement;
     this.selectedProjectElement = document.getElementById(
       "selectedProjectName",
-    ) as HTMLElement;
+    ) as HTMLSpanElement;
     this.mapPopupOverlayElement = document.querySelector(
       ".map-popup-overlay",
     ) as HTMLDivElement;
@@ -44,11 +42,11 @@ export default class MapsManager {
 
     const [mapApplySelectionElement, mapCancelElement] =
       document.querySelectorAll(".map-popup-footer > button");
-    this.mapApplySelectionElement = mapApplySelectionElement as HTMLButtonElement;
+    this.mapApplySelectionElement =
+      mapApplySelectionElement as HTMLButtonElement;
     this.mapCancelElement = mapCancelElement as HTMLButtonElement;
 
-    this.apiClient = apiClient
-    this.alertManager = alertManager
+    this.state = state;
 
     this.init();
   }
@@ -61,98 +59,85 @@ export default class MapsManager {
         controls: ["zoomControl", "fullscreenControl"],
       });
 
-      this.setupEventListeners()
-      this.loadProjects()
+      this.setupEventListeners();
+      this.loadProjects();
     });
   }
 
-  private async zoomToTown(townId: any) {
-    const townProjects = this.projects.filter(
-      (project: any) => project.administrative_unit_id === +townId,
+  private async zoomToTown(townId: string) {
+    const townProjects = this.state.projects.filter(
+      (project: types.Project) =>
+        project.administrative_unit_id === Number(townId),
     );
 
     this.selectedProjectElement.textContent = "Не выбран";
 
     const avgLat =
-      townProjects.reduce((sum: number, p: any) => sum + p.latitude, 0) /
-      townProjects.length;
+      townProjects.reduce(
+        (sum: number, p: types.Project) => sum + p.latitude,
+        0,
+      ) / townProjects.length;
+
     const avgLng =
-      townProjects.reduce((sum: number, p: any) => sum + p.longitude, 0) /
-      townProjects.length;
+      townProjects.reduce(
+        (sum: number, p: types.Project) => sum + p.longitude,
+        0,
+      ) / townProjects.length;
 
     const coords = [avgLat, avgLng];
     this.map.setCenter(coords, 12);
   }
 
-  private async zoomToProject(projectId: any) {
-    const project = this.projects.find(project => project.id === +projectId)
+  private async zoomToProject(projectId: string) {
+    const project = this.state.projects.find(
+      (project) => project.id === Number(projectId),
+    )!;
+
+    this.selectedCityElement.textContent = project.administrative_unit;
     this.selectedProjectElement.textContent = project.title;
     this.map.setCenter([project.latitude, project.longitude], 15);
   }
 
   private async loadProjects() {
-    try {
-      this.projects = await this.apiClient.project.all({
-        administrative_unit_type: "town",
+    this.state.projects.forEach((project: any) => {
+      const coords = [project.latitude, project.longitude];
+      const marker = new ymaps.Placemark(coords, {
+        preset: "islands#blueDotIcon",
+        iconColor: "#48c5df",
       });
 
-      this.projects.forEach((project: any) => {
-        const coords = [project.latitude, project.longitude];
-        const marker = new ymaps.Placemark(
-          coords,
-          {
-            preset: "islands#blueDotIcon",
-            iconColor: "#48c5df",
-          },
-        );
-
-        marker.events.add("click", () => {
-          this.selectProject(project);
-        });
-
-        this.map.geoObjects.add(marker);
+      marker.events.add("click", () => {
+        this.selectProject(project);
       });
-    } catch (error) {
-      console.error("Ошибка загрузки проектов:", error);
-    }
+
+      this.map.geoObjects.add(marker);
+    });
   }
 
   private selectProject(project: any) {
     this.selectedProject = project;
-    (
-      document.getElementById("selectedProjectName") as HTMLSpanElement
-    ).textContent = project.title;
+    this.selectedProjectElement.textContent = project.title;
+    this.selectedCityElement.textContent = project.administrative_unit;
   }
 
   private applyMapSelection() {
     if (!this.selectedProject) {
-      this.alertManager.showAlert("Пожалуйста, выберите город и проект на карте");
       return;
     }
 
-    const citySelect = document.getElementById("citySelect") as HTMLSelectElement;
+    const citySelect = document.getElementById(
+      "citySelect",
+    ) as HTMLSelectElement;
+
     const projectSelect = document.getElementById(
       "projectSelect",
     ) as HTMLSelectElement;
 
-    for (const option of citySelect.options) {
-      if (option.value == this.selectedProject.administrative_unit_id) {
-        citySelect.value = option.value;
-        break;
-      }
-    }
+    citySelect.value = String(this.selectedProject.administrative_unit_id);
+    citySelect.dispatchEvent(new Event("input"));
 
-    for (const option of projectSelect.options) {
-      if (option.value == this.selectedProject.id) {
-        projectSelect.value = option.value;
-        break;
-      }
-    }
-
-    this.alertManager.showAlert(
-      `Выбран город: ${this.selectedProject.administrative_unit_id}, проект: ${this.selectedProject.title}`,
-      "success"
-    );
+    projectSelect.value = String(this.selectedProject.id);
+    projectSelect.dispatchEvent(new Event("input"));
 
     this.close();
   }
@@ -165,11 +150,10 @@ export default class MapsManager {
       this.map.container.fitToViewport();
     }, 100);
 
-
     if (selectedProjectId) {
-      this.zoomToProject(selectedProjectId)
+      this.zoomToProject(selectedProjectId);
     } else if (selectedTownId) {
-      this.zoomToTown(selectedTownId)
+      this.zoomToTown(+selectedTownId);
     }
   }
 
@@ -179,7 +163,9 @@ export default class MapsManager {
   }
 
   private setupEventListeners() {
-    this.mapApplySelectionElement.addEventListener("click", () => this.applyMapSelection());
+    this.mapApplySelectionElement.addEventListener("click", () =>
+      this.applyMapSelection(),
+    );
     this.mapPopupCloseElement.addEventListener("click", () => this.close());
     this.mapCancelElement?.addEventListener("click", () => this.close());
 
