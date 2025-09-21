@@ -1,4 +1,4 @@
-import { Generated } from "kysely";
+import { type Generated } from "kysely";
 import { type AdministrativeUnitTable } from "@shared/schema/administrative_unit";
 import { type AdministrativeUnitTypeTable } from "@shared/schema/administrative_unit_type";
 import { type PersonTable } from "@shared/schema/person";
@@ -6,7 +6,7 @@ import { type PersonTypeTable } from "@shared/schema/person_type";
 import { type PersonContactTable } from "@shared/schema/person_contact";
 import { type FeedbackTable } from "@shared/schema/feedback";
 import { type FeedbackStatusTable } from "@shared/schema/feedback_status";
-import { FeedbackImageTable } from "@shared/schema/feedback_image";
+import { type FeedbackImageTable } from "@shared/schema/feedback_image";
 import { type FeedbackTypeTable } from "@shared/schema/feedback_type";
 import { type TopicTable } from "@shared/schema/topic";
 import { type TopicCategoryTable } from "@shared/schema/topic_category";
@@ -25,7 +25,7 @@ type GeneratedTime = {
 export interface Database {
   administrative_unit: AdministrativeUnitTable & GeneratedId;
   administrative_unit_type: AdministrativeUnitTypeTable & GeneratedId;
-  project: ProjectTable & GeneratedId;
+  project: ProjectTable & GeneratedId & GeneratedTime;
   topic: TopicTable & GeneratedId;
   topic_category: TopicCategoryTable & GeneratedId;
   topic_category_topic: TopicCategoryTopicTable & GeneratedId;

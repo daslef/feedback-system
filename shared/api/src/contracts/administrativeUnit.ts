@@ -48,7 +48,7 @@ const administrativeUnitContract = oc
               v.minValue(0),
             ),
           ),
-          type: v.optional(v.picklist(["town", "settlement"]))
+          type: v.optional(v.picklist(["town", "settlement"])),
         }),
       )
       .output(GetManyAdministrativeUnitsSchema),

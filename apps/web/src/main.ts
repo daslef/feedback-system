@@ -1,6 +1,9 @@
 import { createAPIClient } from "@shared/api";
 
-const apiClient = createAPIClient({ apiPath: "/api", serverUrl: "http://localhost:3000" })
+const apiClient = createAPIClient({
+  apiPath: "/api",
+  serverUrl: "http://localhost:3000",
+});
 
 function showAlert(message: string) {
   const alert = document.getElementById("customAlert") as HTMLElement;
@@ -115,7 +118,7 @@ function openMapPopup() {
     setTimeout(() => {
       try {
         map.container.fitToViewport();
-      } catch { }
+      } catch {}
     }, 100);
   }
 }
@@ -144,7 +147,7 @@ function initYandexMap() {
     window.addEventListener("resize", () => {
       try {
         map.container.fitToViewport();
-      } catch { }
+      } catch {}
     });
   });
 }
@@ -153,7 +156,7 @@ async function loadCities() {
   try {
     const [citiesResponse, projectsResponse] = await Promise.all([
       apiClient.administrativeUnit.all({ type: "town" }),
-      apiClient.project.all({ administrative_unit_type: "town" })
+      apiClient.project.all({ administrative_unit_type: "town" }),
       // fetch("http://localhost:3000/api/administrative_units?type=town"),
       // fetch("http://localhost:3000/api/projects?administrative_unit_type=town"),
     ]);
@@ -219,7 +222,9 @@ async function selectCity(city: any) {
   }
 
   try {
-    const response = await fetch("http://localhost:3000/api/projects?administrative_unit_type=town");
+    const response = await fetch(
+      "http://localhost:3000/api/projects?administrative_unit_type=town",
+    );
     const projects = await response.json();
     const cityProjects = projects.filter(
       (project: any) => project.administrative_unit_id === city.id,
@@ -249,7 +254,9 @@ async function loadProjectsForCity(cityId: number) {
   projectMarkers = [];
 
   try {
-    const response = await fetch("http://localhost:3000/api/projects?administrative_unit_type=town");
+    const response = await fetch(
+      "http://localhost:3000/api/projects?administrative_unit_type=town",
+    );
     const projects = await response.json();
 
     const cityProjects = projects.filter(
@@ -295,7 +302,9 @@ async function loadProjectsForSelect(
   callback: Function,
 ) {
   try {
-    const response = await fetch("http://localhost:3000/api/projects?administrative_unit_type=town");
+    const response = await fetch(
+      "http://localhost:3000/api/projects?administrative_unit_type=town",
+    );
     const projects = await response.json();
 
     const projectSelect = document.getElementById(

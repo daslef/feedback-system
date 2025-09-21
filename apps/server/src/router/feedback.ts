@@ -6,11 +6,7 @@ function prepareBaseQuery(databaseInstance: typeof db) {
     .selectFrom("feedback")
     .innerJoin("project", "feedback.project_id", "project.id")
     .innerJoin("feedback_type", "feedback.feedback_type_id", "feedback_type.id")
-    .innerJoin(
-      "topic",
-      "feedback.topic_id",
-      "topic.id",
-    )
+    .innerJoin("topic", "feedback.topic_id", "topic.id")
     .innerJoin(
       "feedback_status",
       "feedback.feedback_status_id",

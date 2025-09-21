@@ -14,16 +14,30 @@ import personContactContract from "./personContact";
 
 const apiContract = oc
   .errors({
+    NOT_FOUND: {
+      status: 404,
+      message: "Ресурс не найден",
+    },
     INPUT_VALIDATION_FAILED: {
       status: 422,
+      message: "Некорректная схема входных данных",
+    },
+    METHOD_NOT_SUPPORTED: {
+      message: "Ресурс не поддерживает данный метод",
+    },
+    INTERNAL_SERVER_ERROR: {
+      message: "Внутренняя ошибка сервера",
+    },
+    CONFLICT: {
+      message: "Ошибка обновления ресурса",
     },
     UNAUTHORIZED: {
       status: 401,
-      message: "Missing user session. Please log in!",
+      message: "Не найдена пользовательская сессия",
     },
     FORBIDDEN: {
       status: 403,
-      message: "You do not have enough permission to perform this action.",
+      message: "Отсутствуют права для выполнения действия",
     },
   })
   .router({

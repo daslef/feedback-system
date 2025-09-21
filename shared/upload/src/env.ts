@@ -19,4 +19,4 @@ export const envSchema = v.object({
 });
 
 export const env = v.parse(envSchema, process.env);
-export type Env = v.InferInput<typeof envSchema>;
+export type Env = v.InferOutput<typeof envSchema>;

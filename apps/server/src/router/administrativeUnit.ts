@@ -17,12 +17,13 @@ const administrativeUnitRouter = {
           "administrative_unit.id",
           "administrative_unit.title",
           "administrative_unit_type.title as unit_type",
-        ])
+        ]);
 
       if (type) {
-        return await administrativeUnits.where("administrative_unit_type.title", "=", type).execute()
+        return await administrativeUnits
+          .where("administrative_unit_type.title", "=", type)
+          .execute();
       }
-
 
       return administrativeUnits.execute();
     },

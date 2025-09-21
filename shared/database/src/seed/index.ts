@@ -16,10 +16,11 @@ async function seedDatabase() {
     "seedPersonsAndContacts",
     "seedProjects",
     // "seedFeedbacks",
-  ];
+  ] as const;
 
   for await (const seedFunctionName of seedFunctionIdentifiers) {
     try {
+      // @ts-ignore
       const seedFunction = real[seedFunctionName] ?? fake[seedFunctionName];
       await seedFunction(db);
     } catch (error) {
