@@ -34,34 +34,38 @@ const personRouter = {
     return personsExtended;
   }),
 
-  one: publicProcedure.person.one.handler(async ({ context, input }) => {
-    try {
-      const person = await context.db
-        .selectFrom("person")
-        .selectAll()
-        .innerJoin("person_type", "person.person_type_id", "person_type.id")
-        .where("person.id", "=", +input.id)
-        .select("person_type.title as person_type")
-        .executeTakeFirstOrThrow();
+  one: publicProcedure.person.one.handler(
+    async ({ context, input, errors }) => {
+      try {
+        const person = await context.db
+          .selectFrom("person")
+          .selectAll()
+          .innerJoin("person_type", "person.person_type_id", "person_type.id")
+          .where("person.id", "=", +input.id)
+          .select("person_type.title as person_type")
+          .executeTakeFirstOrThrow();
 
-      const personContact = await context.db
-        .selectFrom("person_contact")
-        .selectAll()
-        .where("person_contact.id", "=", person.contact_id)
-        .executeTakeFirstOrThrow();
+        const personContact = await context.db
+          .selectFrom("person_contact")
+          .selectAll()
+          .where("person_contact.id", "=", person.contact_id)
+          .executeTakeFirstOrThrow();
 
-      return {
-        ...person,
-        contact: personContact,
-      };
-    } catch (error) {
-      console.log(error);
-      throw new Error(`No such person with ID ${input.id}`);
-    }
-  }),
+        return {
+          ...person,
+          contact: personContact,
+        };
+      } catch (error) {
+        console.error(error);
+        throw errors.NOT_FOUND({
+          message: `Персона с ID ${input.id} не найдена`,
+        });
+      }
+    },
+  ),
 
   create: protectedProcedure.person.create.handler(
-    async ({ context, input }) => {
+    async ({ context, input, errors }) => {
       try {
         const { insertId } = await context.db
           .insertInto("person")
@@ -82,8 +86,9 @@ const personRouter = {
           ...person,
           contact: personContact,
         };
-      } catch {
-        throw new Error("Error on create new person");
+      } catch (error) {
+        console.error(error);
+        throw errors.CONFLICT({ message: "Ошибка при создании новой персоны" });
       }
     },
   ),

@@ -40,7 +40,14 @@ const projectContract = oc
         summary: "Get a project",
         description: "Get full project information by id",
       })
-      .input(v.object({ id: v.union([v.string(), v.number()]) }))
+      .input(
+        v.object({
+          id: v.union([
+            v.pipe(v.string(), v.transform(Number), v.number(), v.integer()),
+            v.pipe(v.number(), v.integer()),
+          ]),
+        }),
+      )
       .output(GetProjectSchema),
 
     update: oc
@@ -65,6 +72,41 @@ const projectContract = oc
         path: "/",
         summary: "List all projects",
         description: "Get brief information for all projects",
+        spec: (spec) => ({
+          ...spec,
+          parameters: [
+            ...(spec.parameters || []),
+            {
+              name: "sort",
+              in: "query",
+              examples: {
+                "one sorting": {
+                  description: "One sorting rule",
+                  value: "year_of_completion.desc",
+                },
+                "multiple sortings": {
+                  description: "Multiple sorting rules",
+                  value: "year_of_completion.desc&title.asc",
+                },
+              },
+            },
+            {
+              name: "filter",
+              in: "query",
+              examples: {
+                "one filter": {
+                  description: "One filter rule",
+                  value: "year_of_completion[eq]2023",
+                },
+                "multiple filters": {
+                  description: "One filter rule",
+                  value:
+                    "year_of_completion[eq]2023&administrative_unit_type[ne]town",
+                },
+              },
+            },
+          ],
+        }),
       })
       .input(baseGetAll)
       .output(GetManyProjectsSchema),
