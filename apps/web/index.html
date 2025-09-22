@@ -29,7 +29,6 @@
 
   <meta name="keywords" content="" />
 
-  <link rel="stylesheet" href="/css/vendor.css" />
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/form-styles.css" />
   <link rel="stylesheet" href="/css/responsive.css" />
@@ -43,42 +42,42 @@
 </head>
 
 <body class="projects-page">
-  <div id="customAlert" class="custom-alert">
+  <section id="customAlert" class="custom-alert">
     <div class="alert-content">
       <span class="alert-icon">⚠️</span>
       <span class="alert-message"></span>
       <button class="alert-close">×</button>
     </div>
-  </div>
+  </section>
   <div id="mapPopup" class="map-popup">
     <div class="map-popup-overlay"></div>
-    <div class="map-popup-content">
-      <div class="map-popup-header">
-        <h3>Выберите город и проект на карте</h3>
+    <article class="map-popup-content">
+      <header class="map-popup-header">
+        <h3>Выберите проект на карте</h3>
         <button class="map-popup-close">×</button>
-      </div>
+      </header>
       <div class="map-popup-body">
         <div id="yandexMap" class="yandex-map"></div>
         <div class="map-selection-info">
-          <div class="selected-city">
-            <strong>Выбранный город:</strong>
-            <span id="selectedCityName">Не выбран</span>
-          </div>
           <div class="selected-project">
-            <strong>Выбранный проект:</strong>
+            <strong>Проект:</strong>
             <span id="selectedProjectName">Не выбран</span>
+          </div>
+          <div class="selected-city">
+            <strong>Город:</strong>
+            <span id="selectedCityName">Не выбран</span>
           </div>
         </div>
       </div>
-      <div class="map-popup-footer">
+      <footer class="map-popup-footer">
         <button class="btn btn-regular btn-green">
           Применить выбор
         </button>
         <button class="btn btn-regular btn-white">
           Отмена
         </button>
-      </div>
-    </div>
+      </footer>
+    </article>
   </div>
 
   <div class="top-logos">
@@ -198,7 +197,7 @@
             </div>
           </div>
           <div class="mobile-nav-policy">
-            <p>2022, Региональный проект "вМесте47.рф"</p>
+            <p>2025, Региональный проект "вМесте47.рф"</p>
           </div>
         </div>
       </nav>
@@ -275,27 +274,29 @@
   <section class="planting" id="planting">
     <div class="container">
       <h2>Заполните форму</h2>
-      <form class="apply-form add-planting-form" data-form="addPlanting">
+      <form class="apply-form add-planting-form">
         <div class="info-list">
           <div class="form-block city-map-block">
-            <div class="form-block-title regular-text fw-600">Город</div>
-            <div class="input-block city-map-inputs">
-              <select name="city" class="object-settlement city-select" data-required="1" id="citySelect">
-                <option value="">Выберите город</option>
+            <div class="form-block-title regular-text fw-600">Город<span class="form-block-required">*</span></div>
+            <div class="form-block city-map-inputs">
+              <select name="city" class="object-settlement city-select" id="citySelect" required>
+                <option value="" disabled selected hidden>Выберите город</option>
               </select>
               <button type="button" class="btn btn-regular btn-green map-button" id="selectOnMap">
                 Выбрать на карте
               </button>
             </div>
+            <span class="form-block-error">Заполните поле</span>
           </div>
 
           <div class="form-block">
-            <div class="form-block-title regular-text">Проект</div>
+            <div class="form-block-title regular-text fw-600">Проект<span class="form-block-required">*</span></div>
             <div class="input-block">
-              <select name="project" class="object-location" data-required="1" id="projectSelect">
-                <option value="">Сначала выберите город</option>
+              <select name="project" class="object-location" id="projectSelect" required>
+                <option value="" disabled selected hidden>Сначала выберите город</option>
               </select>
             </div>
+            <span class="form-block-error">Заполните поле</span>
           </div>
 
           <div class="form-block">
@@ -303,17 +304,18 @@
               Тип запроса
             </div>
             <div class="input-block">
-              <select name="request_type" class="object-location" data-required="1" id="requestTypeSelect">
-                <option value="">Загрузка...</option>
+              <select name="request_type" class="object-location" id="requestTypeSelect" required>
+                <option value="" disabled selected hidden>Загрузка...</option>
               </select>
             </div>
+            <span class="form-block-error">Заполните поле</span>
           </div>
 
           <div class="form-block" id="categoryBlock" style="display: none">
             <div class="form-block-title regular-text fw-600">Категория</div>
             <div class="input-block">
-              <select name="category" class="object-location" id="categorySelect" data-required="1">
-                <option value="">Выберите категорию</option>
+              <select name="category" class="object-location" id="categorySelect">
+                <option value="" disabled selected hidden>Выберите категорию</option>
               </select>
             </div>
           </div>
@@ -321,48 +323,48 @@
           <div class="form-block" id="issueBlock" style="display: none">
             <div class="form-block-title regular-text fw-600">Проблема</div>
             <div class="input-block">
-              <select name="issue" class="object-location" id="issueSelect" data-required="1">
-                <option value="">Сначала выберите категорию</option>
+              <select name="issue" class="object-location" id="issueSelect">
+                <option value="" disabled selected hidden>Сначала выберите категорию</option>
               </select>
             </div>
           </div>
 
           <div class="form-block">
             <div class="form-block-title regular-text fw-600">
-              Текстовое пояснение
+              Текстовое пояснение<span class="form-block-required">*</span>
             </div>
             <div class="input-block">
               <textarea name="explanation" class="object-name" placeholder="Ваше пожелание или замечание"
-                maxlength="1000" data-required="1" rows="6"></textarea>
+                maxlength="1000" rows="6" required></textarea>
             </div>
           </div>
 
           <div class="fio-row">
             <div class="form-block">
-              <div class="form-block-title regular-text fw-600">Фамилия</div>
+              <div class="form-block-title regular-text fw-600">Фамилия<span class="form-block-required">*</span></div>
               <div class="input-block">
-                <input type="text" name="last_name" class="object-name" placeholder="Фамилия" data-required="1" />
+                <input type="text" name="last_name" class="object-name" placeholder="Фамилия" required/>
               </div>
             </div>
             <div class="form-block">
-              <div class="form-block-title regular-text fw-600">Имя</div>
+              <div class="form-block-title regular-text fw-600">Имя<span class="form-block-required">*</span></div>
               <div class="input-block">
-                <input type="text" name="first_name" class="object-name" placeholder="Имя" data-required="1" />
+                <input type="text" name="first_name" class="object-name" placeholder="Имя" required/>
               </div>
             </div>
             <div class="form-block">
               <div class="form-block-title regular-text fw-600">Отчество</div>
               <div class="input-block">
-                <input type="text" name="middle_name" class="object-name" placeholder="Отчество" data-required="1" />
+                <input type="text" name="middle_name" class="object-name" placeholder="Отчество" required />
               </div>
             </div>
           </div>
 
           <div style="display: flex; gap: 2rem;">
             <div class="form-block" style="flex: 1;">
-              <div class="form-block-title regular-text fw-600">Email</div>
+              <div class="form-block-title regular-text fw-600">Email<span class="form-block-required">*</span></div>
               <div class="input-block">
-                <input type="email" name="email" class="object-name" placeholder="Email" data-required="1" />
+                <input type="email" name="email" class="object-name" placeholder="Email" required />
               </div>
             </div>
 
@@ -374,12 +376,12 @@
             </div>
           </div>
 
-          <div class="form-block">
+          <section class="form-block">
             <div class="form-block-title regular-text fw-600">
-              Фотографии
+              Фотографии<span class="form-block-required">*</span>
             </div>
             <div class="input-block">
-              <div class="drag-drop-area" id="dragDropArea" data-required="1">
+              <div class="drag-drop-area" id="dragDropArea" >
                 <div class="drag-drop-content">
                   <p>
                     Перетащите или
@@ -390,9 +392,9 @@
                 <div class="file-list" id="fileList"></div>
               </div>
             </div>
-          </div>
+          </section>
 
-          <div class="form-block">
+          <section class="form-block">
             <div class="checkbox-block">
               <div class="custom-checkbox">
                 <label>
@@ -404,7 +406,7 @@
                 </label>
               </div>
             </div>
-          </div>
+          </section>
         </div>
 
         <div class="form-footer">
@@ -452,7 +454,6 @@
     </div>
   </footer>
 
-  <script type="module" src="./src/form-manager.ts"></script>
   <script type="module" src="./src/main.ts"></script>
 </body>
 

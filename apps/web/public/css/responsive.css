@@ -9,60 +9,9 @@
     margin: 0 auto;
   }
 
-  .form-block {
-    text-align: center;
-  }
-
-  .form-block-title {
-    text-align: center;
-  }
-
-  .input-block {
-    text-align: center;
-  }
-
   .btn {
     display: block;
     margin: 0 auto;
-    text-align: center;
-  }
-
-  .btn span,
-  .btn::before,
-  .btn::after {
-    text-align: center;
-  }
-
-  select {
-    text-align: center;
-  }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  textarea {
-    text-align: center;
-  }
-
-  input::placeholder,
-  textarea::placeholder {
-    text-align: center;
-  }
-
-  .checkbox-block {
-    text-align: center;
-  }
-
-  .checkbox-block label {
-    justify-content: center;
-    text-align: center;
-  }
-
-  .drag-drop-area {
-    text-align: center;
-  }
-
-  .drag-drop-content {
     text-align: center;
   }
 }
@@ -80,17 +29,17 @@
   }
 
   .form-block {
-    text-align: center;
+    /* text-align: center; */
     margin-bottom: 25px;
   }
 
   .form-block-title {
-    text-align: center;
+    /* text-align: center; */
     margin-bottom: 8px;
   }
 
   .input-block {
-    text-align: center;
+    /* text-align: center; */
   }
 
   .btn {
@@ -108,29 +57,11 @@
   }
 
   select {
-    text-align: center;
     width: 100%;
-  }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  textarea {
-    text-align: center;
-  }
-
-  input::placeholder,
-  textarea::placeholder {
-    text-align: center;
-  }
-
-  .checkbox-block {
-    text-align: center;
   }
 
   .checkbox-block label {
     justify-content: center;
-    text-align: center;
   }
 
   .drag-drop-area {
@@ -179,18 +110,15 @@
   textarea {
     font-size: 1.6rem;
     padding: 8px 12px;
-    text-align: center;
   }
 
   select {
     font-size: 1.6rem;
     padding: 8px 12px;
-    text-align: center;
   }
 
   .form-block-title {
     font-size: 1.6rem;
-    text-align: center;
   }
 
   .submit-apply {
@@ -218,10 +146,6 @@
 }
 
 @media screen and (max-width: 768px) {
-  .planting .apply-form * {
-    text-align: center;
-  }
-
   .file-list,
   .file-item,
   .file-name {

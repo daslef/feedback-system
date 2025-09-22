@@ -1,16 +1,4 @@
-.wd-33 {
-  width: 33.333%;
-  display: inline-block;
-  vertical-align: top;
-  padding-right: 15px;
-  box-sizing: border-box;
-}
-
-.wd-33:last-child {
-  padding-right: 0;
-}
-
-.planting h2 {
+h2 {
   margin-bottom: 30px;
 }
 
@@ -43,7 +31,6 @@
 }
 
 .fio-row .form-block .form-block-title {
-  font-size: 1.8rem;
   line-height: 2.4rem;
   margin-bottom: 8px;
 }
@@ -113,7 +100,26 @@ select option {
 
 select:disabled {
   opacity: 0.4;
-  cursor: not-allowed;
+  cursor: default;
+}
+
+.form-block-error {
+  display: inline-block;
+  visibility: hidden;
+  margin-top: 6px;
+  color: #d82335;
+  font-weight: 500;
+}
+
+.form-block:has(textarea:not(:placeholder-shown):invalid) .form-block-error,
+.form-block:has(input:not(:placeholder-shown):invalid) .form-block-error,
+.form-block:has(select:user-invalid) .form-block-error {
+  visibility: visible;
+}
+
+.form-block-required {
+  color: #18a763;
+  margin-left: 3px;
 }
 
 .drag-drop-area {
@@ -197,11 +203,6 @@ select:disabled {
 }
 
 @media (max-width: 768px) {
-  .wd-33 {
-    width: 100%;
-    padding-right: 0;
-  }
-
   .fio-row {
     max-width: 100%;
     margin-left: 0;
@@ -217,7 +218,7 @@ select:disabled {
   }
 
   .city-map-inputs {
-    flex-direction: column;
+    /* flex-direction: column; */
     gap: 15px;
   }
 
@@ -225,10 +226,9 @@ select:disabled {
     width: 100%;
   }
 
-  .map-button {
-    width: 100%;
-    max-width: 250px;
-    margin: 0 auto;
+  #selectOnMap {
+    width: 180px;
+    padding: initial;
   }
 
   .apply-form .info-list {

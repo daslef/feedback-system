@@ -1,3 +1,8 @@
+export interface AlertManagerInterface {
+  showAlert: (message: string, type?: "success" | "warning") => void;
+  closeAlert: () => void;
+}
+
 export interface Project {
   id: number;
   title: string;
@@ -5,7 +10,7 @@ export interface Project {
   longitude: number;
   year_of_completion: number;
   administrative_unit_id: number;
-  created_at: string;
+  administrative_unit: string;
 }
 
 export interface Person {
@@ -23,7 +28,7 @@ export interface AdministrativeUnit {
   unit_type: "settlement" | "town";
 }
 
-export interface FeedbackTopicCategory {
+export interface TopicCategory {
   id: number;
   title: string;
 }

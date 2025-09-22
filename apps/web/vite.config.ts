@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import htmlPurge from "vite-plugin-purgecss";
 
 export default defineConfig({
   root: ".",
@@ -10,4 +11,8 @@ export default defineConfig({
   build: {
     outDir: "dist",
   },
+  plugins: [htmlPurge({ 
+    content: ["index.html"],
+    css: ["public/css/*"]
+   })],
 });
