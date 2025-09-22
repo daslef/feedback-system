@@ -1,6 +1,102 @@
-import type { DataProvider } from "@refinedev/core";
+import type {
+  CrudFilters,
+  CrudSorting,
+  DataProvider,
+  LogicalFilter,
+} from "@refinedev/core";
 
 const API_URL = "http://localhost:3000/api";
+
+const getValueByPath = (item: Record<string, unknown>, path: string) => {
+  const segments = path.split(".");
+  let current: unknown = item;
+
+  for (const segment of segments) {
+    if (
+      current !== null &&
+      typeof current === "object" &&
+      segment in (current as Record<string, unknown>)
+    ) {
+      current = (current as Record<string, unknown>)[segment];
+    } else {
+      return undefined;
+    }
+  }
+
+  return current;
+};
+
+const applyFilters = (data: unknown[], filters?: CrudFilters) => {
+  if (!filters || filters.length === 0) return data;
+
+  return data.filter((item) => {
+    if (typeof item !== "object" || item === null) return false;
+
+    return filters.every((filter) => {
+      if (!("field" in filter)) return true;
+      const logicalFilter = filter as LogicalFilter;
+      if (logicalFilter.operator !== "eq") return true;
+      const value = getValueByPath(
+        item as Record<string, unknown>,
+        logicalFilter.field,
+      );
+      return value === logicalFilter.value;
+    });
+  });
+};
+
+const applySorters = (data: unknown[], sorters?: CrudSorting) => {
+  if (!sorters || sorters.length === 0) return data;
+
+  return [...data].sort((a, b) => {
+    if (
+      typeof a !== "object" ||
+      typeof b !== "object" ||
+      a === null ||
+      b === null
+    ) {
+      return 0;
+    }
+
+    for (const sorter of sorters) {
+      const aValue = getValueByPath(a as Record<string, unknown>, sorter.field);
+      const bValue = getValueByPath(b as Record<string, unknown>, sorter.field);
+
+      if (aValue === bValue) continue;
+
+      const direction = sorter.order === "asc" ? 1 : -1;
+
+      if (aValue == null) return -1 * direction;
+      if (bValue == null) return 1 * direction;
+
+      const aComparable =
+        typeof aValue === "number"
+          ? aValue
+          : String(aValue).toLocaleLowerCase();
+      const bComparable =
+        typeof bValue === "number"
+          ? bValue
+          : String(bValue).toLocaleLowerCase();
+
+      if (aComparable < bComparable) return -1 * direction;
+      if (aComparable > bComparable) return 1 * direction;
+    }
+
+    return 0;
+  });
+};
+
+const applyPagination = (
+  data: unknown[],
+  pagination?: { current?: number; pageSize?: number },
+) => {
+  if (!pagination || !pagination.current || !pagination.pageSize) {
+    return data;
+  }
+
+  const start = (pagination.current - 1) * pagination.pageSize;
+  return data.slice(start, start + pagination.pageSize);
+};
 
 export const dataProvider: DataProvider = {
   getOne: async ({ resource, id, meta }) => {
@@ -53,15 +149,39 @@ export const dataProvider: DataProvider = {
       }
     }
 
-    const response = await fetch(`${API_URL}/${resource}?${params.toString()}`);
+    const queryString = params.toString();
+    const url = `${API_URL}/${resource}${queryString ? `?${queryString}` : ""}`;
+    const response = await fetch(url);
 
     if (response.status < 200 || response.status > 299) throw response;
 
     const data = await response.json();
 
+    if (Array.isArray(data) && resource === "persons") {
+      const filtered = applyFilters(data, filters);
+      const sorted = applySorters(filtered, sorters);
+      const total = sorted.length;
+      const paginated = applyPagination(sorted, {
+        current: pagination?.currentPage,
+        pageSize: pagination?.pageSize,
+      });
+
+      return {
+        data: paginated,
+        total,
+      };
+    }
+
+    const totalHeader = response.headers.get("X-Total-Count");
+    const total = totalHeader
+      ? Number(totalHeader)
+      : Array.isArray(data)
+        ? data.length
+        : 0;
+
     return {
       data,
-      total: 0, // We'll cover this in the next steps.
+      total,
     };
   },
   create: async ({ resource, variables }) => {
