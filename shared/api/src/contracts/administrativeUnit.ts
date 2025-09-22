@@ -48,6 +48,18 @@ const administrativeUnitContract = oc
               v.minValue(0),
             ),
           ),
+          ids: v.optional(
+            v.array(
+              v.pipe(
+                v.union([
+                  v.pipe(v.string(), v.transform(Number), v.number()),
+                  v.number(),
+                ]),
+                v.integer(),
+                v.minValue(0),
+              ),
+            ),
+          ),
           type: v.optional(v.picklist(["town", "settlement"])),
         }),
       )

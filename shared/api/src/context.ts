@@ -14,6 +14,7 @@ export const createORPCContext = async ({
 }): Promise<{
   db: typeof dbInstance;
   session: AuthInstance["$Infer"]["Session"] | null;
+  headers: Headers;
 }> => {
   const session = await auth.api.getSession({
     headers,
@@ -21,6 +22,7 @@ export const createORPCContext = async ({
   return {
     db,
     session,
+    headers,
   };
 };
 
@@ -51,9 +53,7 @@ export const publicProcedure = base
 export const protectedProcedure = publicProcedure.use(
   ({ context, next, errors }) => {
     if (!context.session?.user) {
-      throw errors.UNAUTHORIZED({
-        message: "Missing user session. Please log in!",
-      });
+      throw errors.UNAUTHORIZED();
     }
     return next({
       context: {

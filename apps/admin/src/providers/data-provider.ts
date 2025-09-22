@@ -59,10 +59,27 @@ export const dataProvider: DataProvider = {
 
     const data = await response.json();
 
+    const total = Number(response.headers.get("x-total-count")) || 0; // TODO
+
     return {
       data,
-      total: 0, // We'll cover this in the next steps.
+      total,
     };
+  },
+  getMany: async ({ resource, ids, meta }) => {
+    const params = new URLSearchParams();
+
+    if (ids) {
+      ids.forEach((id) => params.append("ids", String(id)));
+    }
+
+    const response = await fetch(`${API_URL}/${resource}?${params.toString()}`);
+
+    if (response.status < 200 || response.status > 299) throw response;
+
+    const data = await response.json();
+
+    return { data };
   },
   create: async ({ resource, variables }) => {
     const response = await fetch(`${API_URL}/${resource}`, {
@@ -84,7 +101,6 @@ export const dataProvider: DataProvider = {
   },
   getApiUrl: () => API_URL,
   // Optional methods:
-  // getMany: () => { /* ... */ },
   // createMany: () => { /* ... */ },
   // deleteMany: () => { /* ... */ },
   // updateMany: () => { /* ... */ },

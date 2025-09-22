@@ -6,6 +6,7 @@ import { ValidationError } from "@orpc/contract";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { StrictGetMethodPlugin } from "@orpc/server/plugins";
+import { ResponseHeadersPlugin } from "@orpc/server/plugins";
 import { experimental_ValibotToJsonSchemaConverter as ValibotToJsonSchemaConverter } from "@orpc/valibot";
 
 import type { AuthInstance } from "@shared/auth";
@@ -27,6 +28,7 @@ export const createApi = ({
 }) => {
   const handler = new OpenAPIHandler(appRouter, {
     plugins: [
+      new ResponseHeadersPlugin(),
       new StrictGetMethodPlugin(),
       new OpenAPIReferencePlugin({
         docsTitle: "Feedback System | API Reference",
