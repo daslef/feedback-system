@@ -278,10 +278,6 @@ export const PersonList = () => {
     <div className="page-card">
       <div className="page-header">
         <h1>Пользователи</h1>
-        <p className="page-subtitle">
-          Таблица с информацией о пользователях. Данные можно редактировать
-          прямо в ячейках, а также отсортировать и отфильтровать.
-        </p>
       </div>
 
       <div className="table-controls">

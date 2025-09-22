@@ -143,7 +143,6 @@ export const dataProvider: DataProvider = {
     if (filters && filters.length > 0) {
       for (const filter of filters) {
         if ("field" in filter && filter.operator === "eq") {
-          // supports "eq" operator by simply appending the field name and value to the query string.
           params.append("filter", `${filter.field}[eq]${filter.value}`);
         }
       }

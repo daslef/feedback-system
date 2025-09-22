@@ -10,15 +10,6 @@ import {
   type FC,
 } from "react";
 import { dataProvider } from "./providers/data-provider";
-import { ShowProject } from "./pages/projects/show";
-import { EditProject } from "./pages/projects/edit";
-import { ListProjects } from "./pages/projects/list";
-import { ListTopicCategories } from "./pages/topic-categories/list";
-import { CreateTopicCategory } from "./pages/topic-categories/create";
-import { ListFeedbackTopics } from "./pages/topics/list";
-import { CreateFeedbackTopic } from "./pages/topics/create";
-import { ListTopicCategoryTopics } from "./pages/category-topics/list";
-import { CreateTopicCategoryTopic } from "./pages/category-topics/create";
 import { PersonList } from "./pages/person/list";
 
 type RouteConfig = {
@@ -29,72 +20,10 @@ type RouteConfig = {
 };
 
 type RoutePath =
-  | "/projects"
-  | "/projects/show"
-  | "/projects/edit"
-  | "/topic-categories"
-  | "/topic-categories/create"
-  | "/topics"
-  | "/topics/create"
-  | "/category-topics"
-  | "/category-topics/create"
   | "/persons";
 
 const ROUTES: RouteConfig[] = [
-  {
-    path: "/projects",
-    label: "Список проектов",
-    section: "Проекты",
-    element: <ListProjects />,
-  },
-  {
-    path: "/projects/show",
-    label: "Просмотр проекта",
-    section: "Проекты",
-    element: <ShowProject />,
-  },
-  {
-    path: "/projects/edit",
-    label: "Редактирование проекта",
-    section: "Проекты",
-    element: <EditProject />,
-  },
-  {
-    path: "/topic-categories",
-    label: "Категории тем",
-    section: "Тематики",
-    element: <ListTopicCategories />,
-  },
-  {
-    path: "/topic-categories/create",
-    label: "Создать категорию",
-    section: "Тематики",
-    element: <CreateTopicCategory />,
-  },
-  {
-    path: "/topics",
-    label: "Темы обращений",
-    section: "Тематики",
-    element: <ListFeedbackTopics />,
-  },
-  {
-    path: "/topics/create",
-    label: "Создать тему",
-    section: "Тематики",
-    element: <CreateFeedbackTopic />,
-  },
-  {
-    path: "/category-topics",
-    label: "Темы по категориям",
-    section: "Тематики",
-    element: <ListTopicCategoryTopics />,
-  },
-  {
-    path: "/category-topics/create",
-    label: "Связать тему с категорией",
-    section: "Тематики",
-    element: <CreateTopicCategoryTopic />,
-  },
+
   {
     path: "/persons",
     label: "Пользователи",
@@ -111,7 +40,7 @@ type RouterContextValue = {
 
 const RouterContext = createContext<RouterContextValue | null>(null);
 
-const DEFAULT_PATH: RoutePath = "/projects";
+const DEFAULT_PATH: RoutePath = "/persons";
 
 const useIsBrowser = () => typeof window !== "undefined";
 
