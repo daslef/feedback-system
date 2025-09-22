@@ -2,4 +2,8 @@ node_modules
 .turbo
 .alchemy
 .env
-shared/logs/*
+shared/logs/*.DS_Store
+apps/.DS_Store
+.DS_Store
+apps/.DS_Store
+shared/logs/*.json
