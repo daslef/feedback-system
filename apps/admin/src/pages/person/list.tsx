@@ -189,8 +189,37 @@ export const PersonList = () => {
   const [editingValue, setEditingValue] = useState("");
 
   useEffect(() => {
-    const data = personsResult?.data ?? [];
-    setRows(normalizeRecords(data));
+    if (!personsResult?.data) return;
+
+    const normalizedData = normalizeRecords(personsResult.data);
+    const deduplicated = Array.from(
+      new Map(normalizedData.map((record) => [record.id, record])).values(),
+    );
+
+    setRows((previous) => {
+      if (
+        previous.length === deduplicated.length &&
+        previous.every((row, index) => {
+          const next = deduplicated[index];
+          if (!next) return false;
+          return (
+            row.id === next.id &&
+            row.first_name === next.first_name &&
+            row.last_name === next.last_name &&
+            row.middle_name === next.middle_name &&
+            row.person_type === next.person_type &&
+            row.contact?.email === next.contact?.email &&
+            row.contact?.phone === next.contact?.phone &&
+            row.contact?.social === next.contact?.social &&
+            row.created_at === next.created_at
+          );
+        })
+      ) {
+        return previous;
+      }
+
+      return deduplicated;
+    });
   }, [personsResult?.data]);
 
   const processedRows = useMemo(() => {
@@ -293,7 +322,7 @@ export const PersonList = () => {
           >
             <option value="all">Все типы</option>
             {personTypeOptions.map((type) => (
-              <option key={type.id} value={type.title}>
+              <option key={`filter-type-${type.id}`} value={type.title}>
                 {type.title}
               </option>
             ))}
@@ -389,12 +418,18 @@ export const PersonList = () => {
                             >
                               {!personTypeTitles.includes(editingValue) &&
                                 editingValue !== "" && (
-                                  <option value={editingValue}>
+                                  <option
+                                    key={`custom-${editingValue}`}
+                                    value={editingValue}
+                                  >
                                     {editingValue}
                                   </option>
                                 )}
                               {personTypeOptions.map((type) => (
-                                <option key={type.id} value={type.title}>
+                                <option
+                                  key={`type-${type.id}`}
+                                  value={type.title}
+                                >
                                   {type.title}
                                 </option>
                               ))}
