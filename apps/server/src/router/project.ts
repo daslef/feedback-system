@@ -36,32 +36,6 @@ const projectRouter = {
       try {
         let query = _baseSelect(context.db);
 
-        if (administrative_unit_type != undefined) {
-          query = query.where(
-            "administrative_unit_type.title",
-            "=",
-            administrative_unit_type,
-          );
-        }
-
-        if (limit !== undefined) {
-          query = query.limit(limit);
-        }
-
-        if (offset !== undefined) {
-          query = query.offset(offset);
-        }
-
-        if (sort !== undefined) {
-          for (const sortExpression of sort) {
-            const [field, order] = sortExpression.split(".");
-            query = query.orderBy(
-              field as keyof Database["project"],
-              order as "desc" | "asc",
-            );
-          }
-        }
-
         if (filter !== undefined) {
           const mapOperatorsToSql = {
             eq: "=",
@@ -93,6 +67,35 @@ const projectRouter = {
               convertedFilter.field,
               mapOperatorsToSql[convertedFilter.operator],
               convertedFilter.value,
+            );
+          }
+        }
+
+        if (administrative_unit_type != undefined) {
+          query = query.where(
+            "administrative_unit_type.title",
+            "=",
+            administrative_unit_type,
+          );
+        }
+
+        const total = (await query.execute()).length;
+        context.resHeaders?.set("x-total-count", String(total));
+
+        if (limit !== undefined) {
+          query = query.limit(limit);
+        }
+
+        if (offset !== undefined) {
+          query = query.offset(offset);
+        }
+
+        if (sort !== undefined) {
+          for (const sortExpression of sort) {
+            const [field, order] = sortExpression.split(".");
+            query = query.orderBy(
+              field as keyof Database["project"],
+              order as "desc" | "asc",
             );
           }
         }

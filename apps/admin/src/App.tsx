@@ -13,10 +13,10 @@ import { CreateTopicCategoryTopic } from "./pages/category-topics/create";
 function App() {
   return (
     <Refine dataProvider={dataProvider}>
-      <ShowProject />
-      <EditProject />
+      {/* <ShowProject />
+      <EditProject /> */}
       <ListProjects />
-      <hr />
+      {/* <hr />
       <ListTopicCategories />
       <CreateTopicCategory />
       <hr />
@@ -24,7 +24,7 @@ function App() {
       <CreateFeedbackTopic />
       <hr />
       <ListTopicCategoryTopics />
-      <CreateTopicCategoryTopic />
+      <CreateTopicCategoryTopic /> */}
     </Refine>
   );
 }

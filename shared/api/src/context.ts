@@ -1,4 +1,6 @@
 import { os, implement } from "@orpc/server";
+import { type ResponseHeadersPluginContext } from "@orpc/server/plugins";
+
 import type { AuthInstance } from "@shared/auth";
 import { db as dbInstance } from "@shared/database";
 import apiContract from "./contracts";
@@ -14,7 +16,6 @@ export const createORPCContext = async ({
 }): Promise<{
   db: typeof dbInstance;
   session: AuthInstance["$Infer"]["Session"] | null;
-  headers: Headers;
 }> => {
   const session = await auth.api.getSession({
     headers,
@@ -22,7 +23,6 @@ export const createORPCContext = async ({
   return {
     db,
     session,
-    headers,
   };
 };
 
@@ -46,9 +46,11 @@ const timingMiddleware = os.middleware(async ({ next, path }) => {
 
 const base = implement(apiContract);
 
-export const publicProcedure = base
-  .$context<Awaited<ReturnType<typeof createORPCContext>>>()
-  .use(timingMiddleware);
+export interface Context
+  extends Awaited<ReturnType<typeof createORPCContext>>,
+    ResponseHeadersPluginContext {}
+
+export const publicProcedure = base.$context<Context>().use(timingMiddleware);
 
 export const protectedProcedure = publicProcedure.use(
   ({ context, next, errors }) => {

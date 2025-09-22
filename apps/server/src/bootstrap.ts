@@ -62,6 +62,8 @@ export default function createApp() {
     cors({
       origin: trustedOrigins,
       credentials: true,
+      allowHeaders: ["Content-Type", "x-total-count"],
+      exposeHeaders: ["x-total-count"],
     }),
     async (c, next) => {
       const { matched, response } = await api.handler(c.req.raw);

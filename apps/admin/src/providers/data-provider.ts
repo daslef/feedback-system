@@ -58,8 +58,7 @@ export const dataProvider: DataProvider = {
     if (response.status < 200 || response.status > 299) throw response;
 
     const data = await response.json();
-
-    const total = Number(response.headers.get("x-total-count")) || 0; // TODO
+    const total = Number(response.headers.get("x-total-count")) || 0;
 
     return {
       data,

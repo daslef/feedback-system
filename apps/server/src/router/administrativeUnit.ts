@@ -27,6 +27,9 @@ const administrativeUnitRouter = {
         query = query.where("administrative_unit.id", "in", ids);
       }
 
+      const result = await query.execute();
+      context.resHeaders?.set("x-total-count", String(result.length));
+
       return await query.execute();
     },
   ),
