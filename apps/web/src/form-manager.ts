@@ -84,7 +84,7 @@ export default class FormManager {
     issues.forEach((issue: any) => {
       const option = document.createElement("option");
       option.value = issue.id.toString();
-      option.textContent = issue.feedback_topic;
+      option.textContent = issue.topic;
       this.issueSelect.appendChild(option);
     });
   }
@@ -92,10 +92,11 @@ export default class FormManager {
   private async loadTypes(): Promise<void> {
     this.requestTypeSelect.innerHTML = "";
     this.state.feedbackTypes.forEach(({ id, title }) => {
-      const feedbackTypeSelect = document.createElement("option");
-      feedbackTypeSelect.textContent = title;
-      feedbackTypeSelect.value = String(id);
-      this.requestTypeSelect.appendChild(feedbackTypeSelect);
+      const feedbackTypeOption = document.createElement("option");
+      feedbackTypeOption.textContent = title;
+      feedbackTypeOption.dataset.title = title;
+      feedbackTypeOption.value = String(id);
+      this.requestTypeSelect.appendChild(feedbackTypeOption);
     });
   }
 
@@ -131,8 +132,9 @@ export default class FormManager {
       }
     });
 
-    this.requestTypeSelect.addEventListener("change", () => {
-      if (this.requestTypeSelect.value === "2") {
+    this.requestTypeSelect.addEventListener("input", () => {
+      const selectedOption = this.requestTypeSelect.selectedOptions[0];
+      if (selectedOption?.dataset.title === "Замечание") {
         this.categoryContainer.style.display = "block";
         this.issueContainer.style.display = "block";
       } else {

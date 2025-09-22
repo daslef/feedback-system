@@ -100,7 +100,26 @@ select option {
 
 select:disabled {
   opacity: 0.4;
-  cursor: not-allowed;
+  cursor: default;
+}
+
+.form-block-error {
+  display: inline-block;
+  visibility: hidden;
+  margin-top: 6px;
+  color: #d82335;
+  font-weight: 500;
+}
+
+.form-block:has(textarea:not(:placeholder-shown):invalid) .form-block-error,
+.form-block:has(input:not(:placeholder-shown):invalid) .form-block-error,
+.form-block:has(select:user-invalid) .form-block-error {
+  visibility: visible;
+}
+
+.form-block-required {
+  color: #18a763;
+  margin-left: 3px;
 }
 
 .drag-drop-area {
