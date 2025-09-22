@@ -5,3 +5,4 @@ node_modules
 shared/logs/*
 **/dist
 **/.cache
+.DS_Store

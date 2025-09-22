@@ -10,7 +10,9 @@ import { env } from "./env";
 import apiRouter from "./router";
 
 export default function createApp() {
-  const trustedOrigins = [env.PUBLIC_WEB_URL].map((url) => new URL(url).origin);
+  const trustedOrigins = [env.PUBLIC_WEB_URL, "http://localhost:5174"].map(
+    (url) => new URL(url).origin,
+  );
 
   const auth = createAuth({
     webUrl: env.PUBLIC_WEB_URL,
