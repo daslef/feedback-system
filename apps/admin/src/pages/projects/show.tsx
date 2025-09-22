@@ -1,14 +1,30 @@
-import { useOne } from "@refinedev/core";
+import { useShow } from "@refinedev/core";
+import { TextField, NumberField, Show } from "@refinedev/antd";
+
+import { Typography } from "antd";
 
 export const ShowProject = () => {
   const {
-    result,
+    result: project,
     query: { isLoading },
-  } = useOne({ resource: "projects", id: 729 });
+  } = useShow();
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  return (
+    <Show isLoading={isLoading}>
+      <Typography.Title level={5}>Название</Typography.Title>
+      <TextField value={project?.title} />
 
-  return <div>{JSON.stringify(result)}</div>;
+      <Typography.Title level={5}>Территория</Typography.Title>
+      <TextField value={project?.administrative_unit} />
+
+      <Typography.Title level={5}>Год реализации</Typography.Title>
+      <TextField value={project?.year_of_completion} />
+
+      <Typography.Title level={5}>Широта</Typography.Title>
+      <NumberField value={project?.latitude} />
+
+      <Typography.Title level={5}>Долгота</Typography.Title>
+      <NumberField value={project?.longitude} />
+    </Show>
+  );
 };

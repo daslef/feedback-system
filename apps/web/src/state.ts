@@ -6,7 +6,7 @@ export default class State {
   public projects: types.Project[] = [];
   public cities: types.AdministrativeUnit[] = [];
   public feedbackTypes: types.FeedbackType[] = [];
-  public categories: types.TopicCategory[] = [];  
+  public categories: types.TopicCategory[] = [];
 
   constructor() {
     this.apiClient = createAPIClient({
@@ -26,7 +26,9 @@ export default class State {
     this.feedbackTypes = await this.apiClient.feedbackType.all();
   }
 
-  public async loadIssues(categoryId: number | string): Promise<types.TopicCategoryTopic[]> {
+  public async loadIssues(
+    categoryId: number | string,
+  ): Promise<types.TopicCategoryTopic[]> {
     return await this.apiClient.topicCategoryTopic.all({
       filter_by: "category",
       field_id: String(categoryId),

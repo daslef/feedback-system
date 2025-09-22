@@ -27,7 +27,7 @@ const authProvider: AuthProvider = {
     });
 
     if (data?.token) {
-      return { success: true };
+      return { success: true, redirectTo: "/" };
     }
     return { success: false };
   },
@@ -40,6 +40,7 @@ const authProvider: AuthProvider = {
           },
         },
       });
+      return { success: true, redirectTo: "/login" };
     } catch (error) {
       console.error(error);
       return { success: false };
@@ -48,7 +49,18 @@ const authProvider: AuthProvider = {
     return { success: true };
   },
   onError: async (error) => {
-    throw new Error("Not implemented");
+    if (error?.status === 401) {
+      return {
+        logout: true,
+        error: {
+          message: "Ошибка прав доступа",
+          name: "Error",
+          statusCode: error?.status ?? 403,
+        },
+      };
+    }
+
+    return {};
   },
   getIdentity: async () => {
     const { data } = await authClient.getSession();

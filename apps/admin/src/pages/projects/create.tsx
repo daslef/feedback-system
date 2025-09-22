@@ -1,20 +1,15 @@
 import { Form, Input, Select, InputNumber } from "antd";
-import { useForm, useSelect, Edit } from "@refinedev/antd";
+import { useForm, useSelect, Create } from "@refinedev/antd";
 
-export const EditProject = () => {
-  const { formProps, saveButtonProps, query } = useForm({
-    redirect: "show",
-  });
-
-  const record = query?.data?.data;
+export const CreateProject = () => {
+  const { formProps, saveButtonProps } = useForm();
 
   const { selectProps: administrativeUnitProps } = useSelect({
     resource: "administrative_units",
-    defaultValue: record?.administrative_unit_id,
   });
 
   return (
-    <Edit saveButtonProps={saveButtonProps}>
+    <Create saveButtonProps={saveButtonProps}>
       <Form {...formProps} layout="vertical">
         <Form.Item label="Название" name="title">
           <Input />
@@ -32,6 +27,6 @@ export const EditProject = () => {
           <Input pattern="\d*\.\d*" />
         </Form.Item>
       </Form>
-    </Edit>
+    </Create>
   );
 };

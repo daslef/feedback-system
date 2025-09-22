@@ -49,16 +49,25 @@ const administrativeUnitContract = oc
             ),
           ),
           ids: v.optional(
-            v.array(
-              v.pipe(
-                v.union([
-                  v.pipe(v.string(), v.transform(Number), v.number()),
-                  v.number(),
-                ]),
-                v.integer(),
-                v.minValue(0),
+            v.union([
+              v.array(
+                v.pipe(
+                  v.union([
+                    v.pipe(v.string(), v.transform(Number), v.number()),
+                    v.number(),
+                  ]),
+                  v.integer(),
+                  v.minValue(1),
+                ),
               ),
-            ),
+              v.pipe(
+                v.string(),
+                v.transform(Number),
+                v.number(),
+                v.integer(),
+                v.minValue(1),
+              ),
+            ]),
           ),
           type: v.optional(v.picklist(["town", "settlement"])),
         }),

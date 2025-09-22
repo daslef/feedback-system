@@ -155,7 +155,7 @@ const projectRouter = {
           .executeTakeFirstOrThrow();
 
         return await _baseSelect(context.db)
-          .where("id", "=", Number(insertId))
+          .where("project.id", "=", Number(insertId))
           .executeTakeFirstOrThrow();
       } catch (error) {
         console.error(error);

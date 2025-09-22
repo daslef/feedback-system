@@ -11,8 +11,10 @@ export default defineConfig({
   build: {
     outDir: "dist",
   },
-  plugins: [htmlPurge({ 
-    content: ["index.html"],
-    css: ["public/css/*"]
-   })],
+  plugins: [
+    htmlPurge({
+      content: ["index.html"],
+      css: ["public/css/*"],
+    }),
+  ],
 });

@@ -1,16 +1,19 @@
-import { useTable, useMany } from "@refinedev/core";
+import { useMany } from "@refinedev/core";
+import {
+  useTable,
+  EditButton,
+  ShowButton,
+  getDefaultSortOrder,
+  getDefaultFilter,
+  FilterDropdown,
+  useSelect,
+  List,
+} from "@refinedev/antd";
+
+import { Table, Space, Input, Select } from "antd";
 
 export const ListProjects = () => {
-  const {
-    result,
-    tableQuery: { isLoading },
-    currentPage,
-    setCurrentPage,
-    pageCount,
-    sorters,
-    setSorters,
-  } = useTable({
-    resource: "projects",
+  const { tableProps, sorters, filters } = useTable({
     pagination: { currentPage: 1, pageSize: 12 },
     sorters: {
       initial: [
@@ -32,123 +35,96 @@ export const ListProjects = () => {
         },
       ],
     },
+    syncWithLocation: true,
   });
 
-  const { result: administrativeUnits } = useMany({
+  const { result: administrativeUnits, query } = useMany({
     resource: "administrative_units",
-    ids: result?.data?.map((project) => project.administrative_unit_id) ?? [],
+    ids:
+      tableProps?.dataSource?.map(
+        (project) => project.administrative_unit_id,
+      ) ?? [],
   });
 
-  const onPrevious = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const onNext = () => {
-    if (currentPage < pageCount) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const onPage = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const getSorter = (
-    field: "title" | "administrative_unit" | "year_of_completion",
-  ) => {
-    const sorter = sorters?.find((sorter) => sorter.field === field);
-
-    if (sorter) {
-      return sorter.order;
-    }
-  };
-
-  const onSort = (
-    field: "title" | "administrative_unit" | "year_of_completion",
-  ) => {
-    const sorter = getSorter(field);
-
-    setSorters(
-      sorter === "desc"
-        ? []
-        : [
-            {
-              field,
-              order: sorter === "asc" ? "desc" : "asc",
-            },
-          ],
-    );
-  };
-
-  const indicator = { asc: "⬆️", desc: "⬇️" };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const { selectProps: administrativeUnitSelectProps } = useSelect({
+    resource: "administrative_units",
+    defaultValue: getDefaultFilter("administrative_unit_id", filters, "eq"),
+  });
 
   return (
-    <>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th onClick={() => onSort("title")}>
-              Название{" "}
-              {getSorter("title") &&
-                indicator[getSorter("title") as keyof typeof indicator]}
-            </th>
-            <th onClick={() => onSort("administrative_unit")}>
-              Город / Поселение{" "}
-              {getSorter("administrative_unit") &&
-                indicator[
-                  getSorter("administrative_unit") as keyof typeof indicator
-                ]}
-            </th>
-            <th>Год реализации</th>
-            <th>Геопозиция</th>
-          </tr>
-        </thead>
-        <tbody>
-          {result?.data?.map((project) => (
-            <tr key={project.id}>
-              <td>{project.id}</td>
-              <td>{project.title}</td>
-              <td>
-                {
-                  administrativeUnits?.data?.find(
-                    (unit) => unit.id == project.administrative_unit_id,
-                  )?.title
-                }
-              </td>
-              <td>{project.year_of_completion}</td>
-              <td>{`${project.latitude}, ${project.longitude}`}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="pagination">
-        <button type="button" onClick={onPrevious}>
-          {"<"}
-        </button>
-        <div style={{ display: "inline-block" }}>
-          {currentPage - 1 > 0 && (
-            <span onClick={() => onPage(currentPage - 1)}>
-              {currentPage - 1}
-            </span>
+    <List title="Реализованные проекты">
+      <Table {...tableProps} rowKey="id">
+        <Table.Column
+          dataIndex="title"
+          title="Название"
+          sorter
+          defaultSortOrder={getDefaultSortOrder("title", sorters)}
+          filterDropdown={(props) => (
+            <FilterDropdown {...props}>
+              <Input />
+            </FilterDropdown>
           )}
-          <span style={{ fontWeight: "bold" }}>{currentPage}</span>
-          {currentPage + 1 <= pageCount && (
-            <span onClick={() => onPage(currentPage + 1)}>
-              {currentPage + 1}
-            </span>
+        />
+        <Table.Column
+          dataIndex={"administrative_unit_id"}
+          title="Территория"
+          sorter
+          render={(value) => {
+            if (query.isLoading) {
+              return "Загрузка...";
+            }
+
+            return administrativeUnits?.data?.find((unit) => unit.id == value)
+              ?.title;
+          }}
+          filterDropdown={(props) => (
+            <FilterDropdown
+              {...props}
+              mapValue={(selectedKey) => Number(selectedKey)}
+            >
+              <Select
+                style={{ minWidth: 200 }}
+                {...administrativeUnitSelectProps}
+              />
+            </FilterDropdown>
           )}
-        </div>
-        <button type="button" onClick={onNext}>
-          {">"}
-        </button>
-      </div>
-    </>
+          defaultFilteredValue={getDefaultFilter(
+            "administrative_unit_id",
+            filters,
+            "eq",
+          )}
+        />
+        <Table.Column
+          dataIndex="year_of_completion"
+          title="Год реализации"
+          sorter
+          defaultSortOrder={getDefaultSortOrder("year_of_completion", sorters)}
+          filterDropdown={(props) => (
+            <FilterDropdown
+              {...props}
+              mapValue={(selectedKey) => Number(selectedKey)}
+            >
+              <Select style={{ minWidth: 200 }} />
+            </FilterDropdown>
+          )}
+          defaultFilteredValue={getDefaultFilter(
+            "year_of_completion",
+            filters,
+            "eq",
+          )}
+        />
+        <Table.Column dataIndex="latitude" title="Широта" />
+        <Table.Column dataIndex="longitude" title="Долгота" />
+        <Table.Column
+          title="Действия"
+          render={(_, record) => (
+            <Space>
+              <ShowButton hideText size="small" recordItemId={record.id} />
+              <EditButton hideText size="small" recordItemId={record.id} />
+            </Space>
+          )}
+        />
+      </Table>
+    </List>
   );
 };

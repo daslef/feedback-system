@@ -118,7 +118,7 @@ const projectContract = oc
         summary: "New project",
         description: "Create a new project",
       })
-      .input(v.omit(ProjectSchema, ["id"]))
+      .input(v.omit(ProjectSchema, ["id", "created_at"]))
       .output(GetProjectSchema),
   });
 

@@ -1,6 +1,5 @@
 import type { AlertManagerInterface } from "./types";
 
-
 export default class AlertManager implements AlertManagerInterface {
   private alertCloseButton: HTMLButtonElement;
   private alertElement: HTMLElement;
@@ -15,8 +14,12 @@ export default class AlertManager implements AlertManagerInterface {
   }
 
   public showAlert(message: string, type: "success" | "warning" = "warning") {
-    const messageElement = this.alertElement.querySelector(".alert-message") as HTMLElement;
-    const iconElement = this.alertElement.querySelector(".alert-icon") as HTMLElement;
+    const messageElement = this.alertElement.querySelector(
+      ".alert-message",
+    ) as HTMLElement;
+    const iconElement = this.alertElement.querySelector(
+      ".alert-icon",
+    ) as HTMLElement;
 
     messageElement.textContent = message;
     iconElement.textContent = type === "warning" ? "⚠️" : "✅";

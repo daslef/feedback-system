@@ -24,7 +24,11 @@ const administrativeUnitRouter = {
       }
 
       if (ids) {
-        query = query.where("administrative_unit.id", "in", ids);
+        query = query.where(
+          "administrative_unit.id",
+          Array.isArray(ids) ? "in" : "=",
+          ids,
+        );
       }
 
       const result = await query.execute();

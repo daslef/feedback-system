@@ -23,9 +23,7 @@ export type RouterOutput = InferContractRouterOutputs<typeof apiContract>;
 export const createAPIClient = ({ serverUrl, apiPath }: APIClientOptions) => {
   const link = new OpenAPILink(apiContract, {
     url: urlJoin(serverUrl ?? `${process.env.VITE_SERVER_URL}`, apiPath),
-    plugins: [
-      new ResponseValidationPlugin(apiContract),
-    ],
+    plugins: [new ResponseValidationPlugin(apiContract)],
     fetch: (request, init) => {
       return globalThis.fetch(request, {
         ...init,
