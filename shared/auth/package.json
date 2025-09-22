@@ -8,7 +8,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc",
-    "auth:schema:generate": "pnpx @better-auth/cli generate --config ./src/cli-config.ts --output ../database/src/auth.ts",
+    "auth:generate": "pnpx @better-auth/cli generate --config ./src/cli-config.ts --output ../database/src/auth.initial.sqlite",
+    "auth:migrate": "pnpx @better-auth/cli migrate --config ./src/cli-config.ts",
     "check-types": "tsc -b"
   },
   "dependencies": {

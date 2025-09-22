@@ -34,7 +34,7 @@ export const createAuth = ({
     session: {
       cookieCache: {
         enabled: true,
-        maxAge: 5 * 60,
+        maxAge: 15 * 60,
       },
     },
     emailAndPassword: {

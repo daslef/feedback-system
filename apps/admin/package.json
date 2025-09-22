@@ -9,6 +9,7 @@
     "serve": "refine serve"
   },
   "dependencies": {
+    "@shared/auth": "workspace:*",
     "@refinedev/cli": "catalog:",
     "@refinedev/core": "catalog:",
     "react": "catalog:",

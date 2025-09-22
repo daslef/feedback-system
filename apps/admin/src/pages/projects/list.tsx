@@ -7,6 +7,8 @@ export const ListProjects = () => {
     currentPage,
     setCurrentPage,
     pageCount,
+    sorters,
+    setSorters,
   } = useTable({
     resource: "projects",
     pagination: { currentPage: 1, pageSize: 12 },
@@ -53,6 +55,35 @@ export const ListProjects = () => {
     setCurrentPage(page);
   };
 
+  const getSorter = (
+    field: "title" | "administrative_unit" | "year_of_completion",
+  ) => {
+    const sorter = sorters?.find((sorter) => sorter.field === field);
+
+    if (sorter) {
+      return sorter.order;
+    }
+  };
+
+  const onSort = (
+    field: "title" | "administrative_unit" | "year_of_completion",
+  ) => {
+    const sorter = getSorter(field);
+
+    setSorters(
+      sorter === "desc"
+        ? []
+        : [
+            {
+              field,
+              order: sorter === "asc" ? "desc" : "asc",
+            },
+          ],
+    );
+  };
+
+  const indicator = { asc: "⬆️", desc: "⬇️" };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -63,8 +94,18 @@ export const ListProjects = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Название</th>
-            <th>Город / Поселение</th>
+            <th onClick={() => onSort("title")}>
+              Название{" "}
+              {getSorter("title") &&
+                indicator[getSorter("title") as keyof typeof indicator]}
+            </th>
+            <th onClick={() => onSort("administrative_unit")}>
+              Город / Поселение{" "}
+              {getSorter("administrative_unit") &&
+                indicator[
+                  getSorter("administrative_unit") as keyof typeof indicator
+                ]}
+            </th>
             <th>Год реализации</th>
             <th>Геопозиция</th>
           </tr>

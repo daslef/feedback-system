@@ -44,6 +44,14 @@
         "db:migrate": {
             "cache": false,
             "persistent": true
+        },
+        "auth:generate": {
+            "cache": false,
+            "persistent": true
+        },
+        "auth:migrate": {
+            "cache": false,
+            "persistent": true
         }
     }
 }
