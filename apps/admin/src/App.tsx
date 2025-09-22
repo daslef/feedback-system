@@ -9,8 +9,15 @@ import {
   type ReactNode,
   type FC,
 } from "react";
+import { ConfigProvider, App as AntdApp } from "antd";
+import {
+  RefineThemes,
+  ThemedLayout,
+  useNotificationProvider,
+} from "@refinedev/antd";
+import "@refinedev/antd/dist/reset.css";
 import { dataProvider } from "./providers/data-provider";
-import { PersonList } from "./pages/person/list";
+import { PersonList } from "./pages/person/list-antd";
 
 type RouteConfig = {
   path: RoutePath;
@@ -19,11 +26,9 @@ type RouteConfig = {
   section: string;
 };
 
-type RoutePath =
-  | "/persons";
+type RoutePath = "/persons";
 
 const ROUTES: RouteConfig[] = [
-
   {
     path: "/persons",
     label: "Пользователи",
@@ -109,49 +114,6 @@ const useRouter = () => {
   return context;
 };
 
-const Navigation: FC = () => {
-  const { path, navigate } = useRouter();
-
-  const sections = useMemo(() => {
-    const grouped = new Map<string, RouteConfig[]>();
-    for (const route of ROUTES) {
-      if (!grouped.has(route.section)) {
-        grouped.set(route.section, []);
-      }
-      grouped.get(route.section)!.push(route);
-    }
-
-    return Array.from(grouped.entries()).map(([section, routes]) => ({
-      section,
-      routes,
-    }));
-  }, []);
-
-  return (
-    <nav className="app-sider">
-      <div className="app-brand">refine admin</div>
-      {sections.map(({ section, routes }) => (
-        <div className="app-nav-section" key={section}>
-          <div className="app-nav-section-title">{section}</div>
-          <ul className="app-nav-list">
-            {routes.map((route) => (
-              <li key={route.path}>
-                <button
-                  className={`app-nav-link${path === route.path ? " active" : ""}`}
-                  type="button"
-                  onClick={() => navigate(route.path)}
-                >
-                  {route.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </nav>
-  );
-};
-
 const ContentArea: FC = () => {
   const { path, navigate, availablePaths } = useRouter();
   const activeRoute = useMemo(
@@ -167,23 +129,39 @@ const ContentArea: FC = () => {
     }
   }, [availablePaths, navigate, path]);
 
-  return <div className="app-content">{activeRoute.element}</div>;
+  return <>{activeRoute.element}</>;
 };
 
 const Layout: FC = () => (
-  <div className="app-layout">
-    <Navigation />
+  <ThemedLayout>
     <ContentArea />
-  </div>
+  </ThemedLayout>
 );
 
 function App() {
   return (
-    <RouterProvider>
-      <Refine dataProvider={dataProvider} options={{ syncWithLocation: false }}>
-        <Layout />
-      </Refine>
-    </RouterProvider>
+    <ConfigProvider theme={RefineThemes.Blue}>
+      <AntdApp>
+        <RouterProvider>
+          <Refine
+            dataProvider={dataProvider}
+            notificationProvider={useNotificationProvider}
+            resources={[
+              {
+                name: "persons",
+                list: "/persons",
+                meta: {
+                  label: "Пользователи",
+                },
+              },
+            ]}
+            options={{ syncWithLocation: false }}
+          >
+            <Layout />
+          </Refine>
+        </RouterProvider>
+      </AntdApp>
+    </ConfigProvider>
   );
 }
 
