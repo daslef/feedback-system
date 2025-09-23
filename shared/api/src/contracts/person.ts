@@ -1,25 +1,15 @@
 import { oc } from "@orpc/contract";
 import * as v from "valibot";
-import { ContactSchema } from "./personContact";
 
-const PersonSchema = v.object({
-  id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  first_name: v.string(),
-  last_name: v.string(),
-  middle_name: v.string(),
-  person_type_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  contact_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-});
+import { personSchema } from "@shared/schema/person";
+import { personContactSchema } from "@shared/schema/person_contact";
+import { personTypeSchema } from "@shared/schema/person_type";
 
 const GetPersonSchema = v.intersect([
-  PersonSchema,
+  personSchema,
   v.object({
-    person_type: v.union([
-      v.literal("citizen"),
-      v.literal("official"),
-      v.literal("moderator"),
-    ]),
-    contact: ContactSchema,
+    person_type: v.pick(personTypeSchema, ["title"]),
+    contact: personContactSchema,
   }),
 ]);
 
@@ -78,7 +68,7 @@ const personContract = oc
         summary: "New person",
         description: "Create a new person",
       })
-      .input(v.omit(PersonSchema, ["id"]))
+      .input(v.omit(personSchema, ["id"]))
       .output(GetPersonSchema),
   });
 

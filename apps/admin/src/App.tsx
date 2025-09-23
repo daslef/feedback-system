@@ -25,7 +25,9 @@ import { ListFeedbackTopics } from "./pages/topics/list";
 import { CreateFeedbackTopic } from "./pages/topics/create";
 import { ListTopicCategoryTopics } from "./pages/category-topics/list";
 import { CreateTopicCategoryTopic } from "./pages/category-topics/create";
-import { ListPersons } from "./pages/person/list-antd";
+
+import { ListPersons } from "./pages/persons/list";
+import { CreatePerson } from "./pages/persons/create";
 
 import { Login } from "./pages/auth/login";
 import { Register } from "./pages/auth/register";
@@ -54,6 +56,7 @@ function App() {
               {
                 name: "persons",
                 list: "/persons",
+                create: "/persons/create",
                 meta: {
                   label: "Пользователи",
                 },
@@ -93,6 +96,7 @@ function App() {
                 </Route>
                 <Route path="/persons">
                   <Route index element={<ListPersons />} />
+                  <Route path="create" element={<CreatePerson />} />
                 </Route>
               </Route>
               <Route

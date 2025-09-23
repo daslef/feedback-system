@@ -10,7 +10,6 @@ import feedbackImageContract from "./feedbackImage";
 import feedbackContract from "./feedback";
 import personTypeContract from "./personType";
 import personContract from "./person";
-import personContactContract from "./personContact";
 
 const apiContract = oc
   .errors({
@@ -51,7 +50,6 @@ const apiContract = oc
     feedback: feedbackContract,
     personType: personTypeContract,
     person: personContract,
-    personContact: personContactContract,
   });
 
 export default apiContract;

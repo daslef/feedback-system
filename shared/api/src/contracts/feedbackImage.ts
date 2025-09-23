@@ -7,17 +7,6 @@ const FeedbackImageSchema = v.object({
   feedback_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
 });
 
-const CreateFeedbackImageSchema = v.object({
-  feedback_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  files: v.array(
-    v.pipe(
-      v.file(),
-      v.mimeType(["image/*"], "Пожалуйста, выберите файл с изображением"),
-      v.maxSize(1024 * 1024 * 30, "Максимальный размер файла 30 MB."),
-    ),
-  ),
-});
-
 const GetManyFeedbackImageSchema = v.array(FeedbackImageSchema);
 
 const feedbackImageContract = oc
@@ -40,15 +29,6 @@ const feedbackImageContract = oc
         }),
       )
       .output(GetManyFeedbackImageSchema),
-
-    create: oc
-      .route({
-        method: "POST",
-        path: "/",
-        summary: "Create new feedback image",
-        description: "Create and link new feedback images to feedback record",
-      })
-      .input(CreateFeedbackImageSchema),
   });
 
 export default feedbackImageContract;

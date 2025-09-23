@@ -4,7 +4,7 @@ const administrativeUnitRouter = {
   all: publicProcedure.administrativeUnit.all.handler(
     async ({ context, input }) => {
       // TODO pagination by limit, offset
-      const { offset, limit, type, ids } = input;
+      const { offset, limit, filter, sort, type, ids } = input;
 
       let query = context.db
         .selectFrom("administrative_unit")

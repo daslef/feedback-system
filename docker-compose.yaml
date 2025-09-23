@@ -1,38 +1,38 @@
 services:
-  postgres:
-    image: docker.io/postgres:latest
-    container_name: postgres
-    restart: always
-    command: ["postgres", "-c", "log_statement=all"]
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-    ports:
-      - 5432:5432
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "postgres"]
-    networks:
-      - local
+  # postgres:
+  #   image: docker.io/postgres:latest
+  #   container_name: postgres
+  #   restart: always
+  #   command: ["postgres", "-c", "log_statement=all"]
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #     POSTGRES_DB: postgres
+  #   ports:
+  #     - 5432:5432
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     test: ["CMD", "pg_isready", "-U", "postgres", "-d", "postgres"]
+  #   networks:
+  #     - local
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: ioadjiozcji
-    ports:
-      - 8080:80
-    depends_on:
-      - postgres
-    networks:
-      - local
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin
+  #   restart: always
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@example.com
+  #     PGADMIN_DEFAULT_PASSWORD: ioadjiozcji
+  #   ports:
+  #     - 8080:80
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - local
 
   minio:
     image: minio/minio:latest
@@ -40,8 +40,8 @@ services:
     restart: always
     command: server --console-address ":9001" /data
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_ROOT_USER: securedaccesskey:asddasd
+      MINIO_ROOT_PASSWORD: mostsecretkey:changemechangeme
     ports:
       - 9000:9000 # API
       - 9001:9001 # Web console
@@ -51,7 +51,7 @@ services:
       - local
 
 volumes:
-  postgres_data:
+  # postgres_data:
   minio-data:
 
 networks:
