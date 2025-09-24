@@ -5,6 +5,7 @@ import {
   getPersonSchema,
   getManyPersonsSchema,
   createPersonSchema,
+  updatePersonSchema,
 } from "@shared/schema/person";
 
 import { baseInputAll, baseInputOne } from "@shared/schema/base";
@@ -31,6 +32,22 @@ const personContract = oc
         description: "Get person information by id",
       })
       .input(baseInputOne)
+      .output(getPersonSchema),
+
+    update: oc
+      .route({
+        method: "PATCH",
+        path: "/{id}",
+        summary: "Update a person",
+        description: "Update person information by id",
+        inputStructure: "detailed",
+      })
+      .input(
+        v.object({
+          body: updatePersonSchema,
+          params: v.object({ id: v.string() }),
+        }),
+      )
       .output(getPersonSchema),
 
     create: oc

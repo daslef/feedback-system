@@ -48,6 +48,9 @@ export const ListProjects = () => {
 
   const { selectProps: administrativeUnitSelectProps } = useSelect({
     resource: "administrative_units",
+    pagination: {
+      pageSize: 48,
+    },
     defaultValue: getDefaultFilter("administrative_unit_id", filters, "eq"),
   });
 

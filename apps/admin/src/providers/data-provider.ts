@@ -68,8 +68,14 @@ export const dataProvider: DataProvider = {
 
     if (filters && filters.length > 0) {
       for (const filter of filters) {
-        if ("field" in filter && filter.operator === "eq") {
-          params.append("filter", `${filter.field}[eq]${filter.value}`);
+        if (
+          "field" in filter &&
+          ["eq", "ne", "lt", "gt", "in"].includes(filter.operator)
+        ) {
+          params.append(
+            "filter",
+            `${filter.field}[${filter.operator}]${filter.value}`,
+          );
         }
       }
     }
@@ -91,7 +97,7 @@ export const dataProvider: DataProvider = {
   getMany: async ({ resource, ids, meta }) => {
     const params = new URLSearchParams();
 
-    if (ids) {
+    if (ids?.length) {
       params.append("filter", `id[in]${ids.map(String).join(",")}`);
     }
 

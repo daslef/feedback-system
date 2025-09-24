@@ -21,6 +21,7 @@ export const getPersonSchema = v.object({
 });
 
 export const getManyPersonsSchema = v.array(getPersonSchema);
+
 export const createPersonSchema = v.object({
   first_name: stringSchema,
   last_name: stringSchema,
@@ -30,5 +31,12 @@ export const createPersonSchema = v.object({
   phone: v.optional(v.string()),
   social: v.optional(v.string()),
 });
+
+export const updatePersonSchema = v.partial(
+  v.object({
+    ...createPersonSchema.entries,
+    contact_id: idSchema,
+  }),
+);
 
 export type PersonTable = v.InferInput<typeof personSchema>;

@@ -1,17 +1,18 @@
-import { useState, type KeyboardEvent } from "react";
+import { useEffect, useState, type KeyboardEvent } from "react";
 import { useMany } from "@refinedev/core";
 import {
-  useTable,
   EditButton,
-  ShowButton,
   getDefaultSortOrder,
   getDefaultFilter,
   FilterDropdown,
   useSelect,
   List,
+  useEditableTable,
+  TextField,
+  SaveButton,
 } from "@refinedev/antd";
 
-import { Table, Space, Input, Select, Button } from "antd";
+import { Table, Form, Space, Input, Select, Button } from "antd";
 
 type PersonContact = {
   email: string | null;
@@ -34,57 +35,18 @@ type PersonType = {
   title: string;
 };
 
-type EditableField =
-  | "last_name"
-  | "first_name"
-  | "middle_name"
-  | "person_type"
-  | "contact.email"
-  | "contact.phone"
-  | "contact.social";
-
-type EditingCell = {
-  id: number;
-  field: EditableField;
-};
-
 export const ListPersons = () => {
-  const [filterType, setFilterType] = useState<string | undefined>("all");
-  const [editingCell, setEditingCell] = useState<EditingCell | null>(null);
-  const [editingValue, setEditingValue] = useState("");
-
-  const formatDate = (value?: string | null) => {
-    if (!value) return "—";
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return value;
-    return date.toLocaleDateString("ru-RU");
-  };
-
-  const startEditing = (record: PersonRecord, field: EditableField) => {
-    if (field === "person_type" && personTypes.length === 0) return;
-    const currentValue = String(getNestedValue(record, field) ?? "");
-    setEditingCell({ id: record.id, field });
-    setEditingValue(currentValue);
-  };
-
-  const stopEditing = () => {
-    setEditingCell(null);
-    setEditingValue("");
-  };
-
-  const commitEditing = () => {
-    if (!editingCell) return;
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === editingCell.id
-          ? setNestedValue(row, editingCell.field, editingValue)
-          : row,
-      ),
-    );
-    stopEditing();
-  };
-
-  const { tableProps, sorters, filters } = useTable({
+  const {
+    tableProps,
+    formProps,
+    isEditing,
+    setId: setEditId,
+    saveButtonProps,
+    cancelButtonProps,
+    editButtonProps,
+    sorters,
+    filters,
+  } = useEditableTable({
     pagination: { currentPage: 1, pageSize: 24 },
     sorters: {
       initial: [
@@ -100,6 +62,26 @@ export const ListPersons = () => {
     syncWithLocation: true,
   });
 
+  const [filterType, setFilterType] = useState<string | null>("all");
+
+  useEffect(() => {
+    const personFilterIx = filters.findIndex(
+      (filter) => "field" in filter && filter.field === "person_type",
+    );
+
+    if (personFilterIx !== -1 && filterType === "all") {
+      filters.splice(personFilterIx, 1);
+    } else if (personFilterIx !== -1) {
+      filters[personFilterIx].value = filterType;
+    } else if (personFilterIx === -1 && filterType !== "all") {
+      filters.push({
+        field: "person_type",
+        operator: "eq",
+        value: filterType,
+      });
+    }
+  }, [filterType]);
+
   const { result: personTypes, query } = useMany({
     resource: "person_types",
     ids: tableProps?.dataSource?.map((project) => project.person_type_id) ?? [],
@@ -107,7 +89,7 @@ export const ListPersons = () => {
 
   const { selectProps: personTypeSelectProps } = useSelect({
     resource: "person_types",
-    defaultValue: getDefaultFilter("person_type_id", filters, "eq"),
+    // defaultValue: getDefaultFilter("person_type_id", filters, "eq"),
   });
 
   const handleInputKeyDown = (
@@ -115,11 +97,11 @@ export const ListPersons = () => {
   ) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      commitEditing();
+      // commitEditing();
     }
     if (event.key === "Escape") {
       event.preventDefault();
-      stopEditing();
+      // stopEditing();
     }
   };
 
@@ -134,7 +116,7 @@ export const ListPersons = () => {
         }}
       >
         <Select
-          value={filterType ?? "all"}
+          value={filterType}
           onChange={(value) => {
             setFilterType(value);
           }}
@@ -148,143 +130,229 @@ export const ListPersons = () => {
           ))}
         </Select>
       </div>
-      <Table {...tableProps} rowKey="id">
-        <Table.Column
-          dataIndex="last_name"
-          title="Фамилия"
-          sorter
-          defaultSortOrder={getDefaultSortOrder("last_name", sorters)}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <Input />
-            </FilterDropdown>
-          )}
-          render={(value: string, record: PersonRecord) => {
-            const isEditing =
-              editingCell?.id === record.id &&
-              editingCell.field === "last_name";
-            return isEditing ? (
-              <Input
-                autoFocus
-                value={editingValue}
-                onChange={(e) => setEditingValue(e.target.value)}
-                onBlur={commitEditing}
-                onKeyDown={(e) => handleInputKeyDown(e as any)}
-                size="small"
-              />
-            ) : (
-              <span
-                onClick={() => startEditing(record, "last_name")}
-                style={{ cursor: "pointer" }}
-              >
-                {value || "—"}
-              </span>
-            );
-          }}
-        />
+      <Form {...formProps}>
+        <Table
+          {...tableProps}
+          rowKey="id"
+          onRow={(record) => ({
+            // eslint-disable-next-line
+            onClick: (event: any) => {
+              if (event.target.nodeName === "TD") {
+                setEditId && setEditId(record.id);
+              }
+            },
+          })}
+        >
+          <Table.Column
+            dataIndex="last_name"
+            title="Фамилия"
+            sorter
+            defaultSortOrder={getDefaultSortOrder("last_name", sorters)}
+            filterDropdown={(props) => (
+              <FilterDropdown {...props}>
+                <Input />
+              </FilterDropdown>
+            )}
+            render={(value: string, record: PersonRecord) => {
+              return isEditing(record.id) ? (
+                <Form.Item name="last_name" style={{ margin: 0 }}>
+                  <Input
+                    autoFocus
+                    onKeyDown={(e) => handleInputKeyDown(e as any)}
+                    size="small"
+                  />
+                </Form.Item>
+              ) : (
+                <TextField value={value || "—"} style={{ cursor: "pointer" }} />
+              );
+            }}
+          />
 
-        <Table.Column
-          dataIndex="first_name"
-          title="Имя"
-          sorter
-          defaultSortOrder={getDefaultSortOrder("first_name", sorters)}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <Input />
-            </FilterDropdown>
-          )}
-          render={(value: string, record: PersonRecord) => {
-            const isEditing =
-              editingCell?.id === record.id &&
-              editingCell.field === "first_name";
-            return isEditing ? (
-              <Input
-                autoFocus
-                value={editingValue}
-                onChange={(e) => setEditingValue(e.target.value)}
-                onBlur={commitEditing}
-                onKeyDown={(e) => handleInputKeyDown(e as any)}
-                size="small"
-              />
-            ) : (
-              <span
-                onClick={() => startEditing(record, "first_name")}
-                style={{ cursor: "pointer" }}
-              >
-                {value || "—"}
-              </span>
-            );
-          }}
-        />
-        <Table.Column
-          dataIndex="middle_name"
-          title="Отчество"
-          sorter
-          defaultSortOrder={getDefaultSortOrder("middle_name", sorters)}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <Input />
-            </FilterDropdown>
-          )}
-          render={(value: string, record: PersonRecord) => {
-            const isEditing =
-              editingCell?.id === record.id &&
-              editingCell.field === "middle_name";
-            return isEditing ? (
-              <Input
-                autoFocus
-                value={editingValue}
-                onChange={(e) => setEditingValue(e.target.value)}
-                onBlur={commitEditing}
-                onKeyDown={(e) => handleInputKeyDown(e as any)}
-                size="small"
-              />
-            ) : (
-              <span
-                onClick={() => startEditing(record, "middle_name")}
-                style={{ cursor: "pointer" }}
-              >
-                {value || "—"}
-              </span>
-            );
-          }}
-        />
+          <Table.Column
+            dataIndex="first_name"
+            title="Имя"
+            sorter
+            defaultSortOrder={getDefaultSortOrder("first_name", sorters)}
+            filterDropdown={(props) => (
+              <FilterDropdown {...props}>
+                <Input />
+              </FilterDropdown>
+            )}
+            render={(value: string, record: PersonRecord) => {
+              return isEditing(record.id) ? (
+                <Form.Item name="first_name" style={{ margin: 0 }}>
+                  <Input
+                    autoFocus
+                    onKeyDown={(e) => handleInputKeyDown(e as any)}
+                    size="small"
+                  />
+                </Form.Item>
+              ) : (
+                <TextField value={value || "—"} style={{ cursor: "pointer" }} />
+              );
+            }}
+          />
 
-        <Table.Column
-          dataIndex={"person_type_id"}
-          title="Тип"
-          sorter
-          render={(value) => {
-            if (query.isLoading) {
-              return "Загрузка...";
-            }
+          <Table.Column
+            dataIndex="middle_name"
+            title="Отчество"
+            sorter
+            defaultSortOrder={getDefaultSortOrder("middle_name", sorters)}
+            filterDropdown={(props) => (
+              <FilterDropdown {...props}>
+                <Input />
+              </FilterDropdown>
+            )}
+            render={(value: string, record: PersonRecord) => {
+              return isEditing(record.id) ? (
+                <Form.Item name="middle_name" style={{ margin: 0 }}>
+                  <Input
+                    autoFocus
+                    onKeyDown={(e) => handleInputKeyDown(e as any)}
+                    size="small"
+                  />
+                </Form.Item>
+              ) : (
+                <TextField value={value || "—"} style={{ cursor: "pointer" }} />
+              );
+            }}
+          />
 
-            return personTypes?.data?.find((type) => type.id == value)?.title;
-          }}
-          filterDropdown={(props) => (
-            <FilterDropdown
-              {...props}
-              mapValue={(selectedKey) => Number(selectedKey)}
-            >
-              <Select style={{ minWidth: 200 }} {...personTypeSelectProps} />
-            </FilterDropdown>
-          )}
-          defaultFilteredValue={getDefaultFilter(
-            "person_type_id",
-            filters,
-            "eq",
-          )}
-        />
-        <Table.Column
-          title="Действия"
-          render={(_, record) => (
-            <Space>
-              <ShowButton hideText size="small" recordItemId={record.id} />
-              <EditButton hideText size="small" recordItemId={record.id} />
-            </Space>
-          )}
-        />
-      </Table>
+          <Table.Column
+            dataIndex="phone"
+            title="Телефон"
+            sorter
+            defaultSortOrder={getDefaultSortOrder("phone", sorters)}
+            filterDropdown={(props) => (
+              <FilterDropdown {...props}>
+                <Input />
+              </FilterDropdown>
+            )}
+            render={(value: string, record: PersonRecord) => {
+              return isEditing(record.id) ? (
+                <Form.Item name="phone" style={{ margin: 0 }}>
+                  <Input
+                    autoFocus
+                    onKeyDown={(e) => handleInputKeyDown(e as any)}
+                    size="small"
+                  />
+                </Form.Item>
+              ) : (
+                <TextField value={value || "—"} style={{ cursor: "pointer" }} />
+              );
+            }}
+          />
+
+          <Table.Column
+            dataIndex="email"
+            title="Почта"
+            sorter
+            defaultSortOrder={getDefaultSortOrder("email", sorters)}
+            filterDropdown={(props) => (
+              <FilterDropdown {...props}>
+                <Input />
+              </FilterDropdown>
+            )}
+            render={(value: string, record: PersonRecord) => {
+              return isEditing(record.id) ? (
+                <Form.Item name="email" style={{ margin: 0 }}>
+                  <Input
+                    autoFocus
+                    onKeyDown={(e) => handleInputKeyDown(e as any)}
+                    size="small"
+                  />
+                </Form.Item>
+              ) : (
+                <TextField value={value || "—"} style={{ cursor: "pointer" }} />
+              );
+            }}
+          />
+
+          <Table.Column
+            dataIndex="social"
+            title="Соцсети"
+            sorter
+            defaultSortOrder={getDefaultSortOrder("social", sorters)}
+            filterDropdown={(props) => (
+              <FilterDropdown {...props}>
+                <Input />
+              </FilterDropdown>
+            )}
+            render={(value: string, record: PersonRecord) => {
+              return isEditing(record.id) ? (
+                <Form.Item name="social" style={{ margin: 0 }}>
+                  <Input
+                    autoFocus
+                    onKeyDown={(e) => handleInputKeyDown(e as any)}
+                    size="small"
+                  />
+                </Form.Item>
+              ) : (
+                <TextField value={value || "—"} style={{ cursor: "pointer" }} />
+              );
+            }}
+          />
+
+          <Table.Column
+            dataIndex={"person_type_id"}
+            title="Тип"
+            sorter
+            render={(value: string, record: PersonRecord) => {
+              if (query.isLoading) {
+                return "Загрузка...";
+              }
+
+              const text = personTypes?.data?.find(
+                (type) => type.id == value,
+              )?.title;
+
+              return isEditing(record.id) ? (
+                <Form.Item name="person_type_id" style={{ margin: 0 }}>
+                  <Select {...personTypeSelectProps} />
+                </Form.Item>
+              ) : (
+                <TextField value={text} style={{ cursor: "pointer" }} />
+              );
+            }}
+            filterDropdown={(props) => (
+              <FilterDropdown
+                {...props}
+                mapValue={(selectedKey) => Number(selectedKey)}
+              >
+                <Select style={{ minWidth: 200 }} {...personTypeSelectProps} />
+              </FilterDropdown>
+            )}
+            defaultFilteredValue={getDefaultFilter(
+              "person_type_id",
+              filters,
+              "eq",
+            )}
+          />
+
+          <Table.Column
+            title="Действия"
+            render={(_, record) => {
+              if (isEditing(record.id)) {
+                return (
+                  <Space>
+                    <SaveButton {...saveButtonProps} hideText size="small" />
+                    <Button {...cancelButtonProps} size="small">
+                      Cancel
+                    </Button>
+                  </Space>
+                );
+              }
+              return (
+                <EditButton
+                  {...editButtonProps(record.id)}
+                  hideText
+                  size="small"
+                />
+              );
+            }}
+          />
+        </Table>
+      </Form>
     </List>
   );
 };
