@@ -1,4 +1,9 @@
-import type { DataProvider } from "@refinedev/core";
+import type {
+  CrudFilters,
+  CrudSorting,
+  DataProvider,
+  LogicalFilter,
+} from "@refinedev/core";
 
 const API_URL = "http://localhost:3000/api";
 
@@ -63,9 +68,14 @@ export const dataProvider: DataProvider = {
 
     if (filters && filters.length > 0) {
       for (const filter of filters) {
-        if ("field" in filter && filter.operator === "eq") {
-          // supports "eq" operator by simply appending the field name and value to the query string.
-          params.append("filter", `${filter.field}[eq]${filter.value}`);
+        if (
+          "field" in filter &&
+          ["eq", "ne", "lt", "gt", "in"].includes(filter.operator)
+        ) {
+          params.append(
+            "filter",
+            `${filter.field}[${filter.operator}]${filter.value}`,
+          );
         }
       }
     }
@@ -87,8 +97,8 @@ export const dataProvider: DataProvider = {
   getMany: async ({ resource, ids, meta }) => {
     const params = new URLSearchParams();
 
-    if (ids) {
-      ids.forEach((id) => params.append("ids", String(id)));
+    if (ids?.length) {
+      params.append("filter", `id[in]${ids.map(String).join(",")}`);
     }
 
     const response = await fetcher(
@@ -120,7 +130,6 @@ export const dataProvider: DataProvider = {
     throw new Error("Not implemented");
   },
   getApiUrl: () => API_URL,
-  // Optional methods:
   // createMany: () => { /* ... */ },
   // deleteMany: () => { /* ... */ },
   // updateMany: () => { /* ... */ },

@@ -1,15 +1,13 @@
 import { oc } from "@orpc/contract";
 import * as v from "valibot";
 
-const idSchema = v.pipe(v.number(), v.integer(), v.minValue(1));
+import {
+  getTopicCategoryTopicSchema,
+  getManyTopicCategoryTopicSchema,
+  createTopicCategoryTopicSchema,
+} from "@shared/schema/topic_category_topic";
 
-const GetTopicCategoryTopicSchema = v.object({
-  id: idSchema,
-  topic: v.string(),
-  topic_category: v.string(),
-});
-
-const GetManyTopicCategoryTopicSchema = v.array(GetTopicCategoryTopicSchema);
+import { baseFilterInput } from "@shared/schema/base";
 
 const topicCategoryTopicContract = oc
   .tag("Categories & Topics")
@@ -25,34 +23,10 @@ const topicCategoryTopicContract = oc
       })
       .input(
         v.object({
-          filter: v.optional(
-            v.union([
-              v.pipe(
-                v.string(),
-                v.transform((s) => decodeURI(s).split("&")),
-                v.array(v.string()),
-              ),
-              v.array(
-                v.pipe(
-                  v.string(),
-                  v.transform((s) => decodeURI(s)),
-                ),
-              ),
-            ]),
-          ),
-          filter_by: v.optional(v.picklist(["topic", "category"])),
-          field_id: v.optional(
-            v.pipe(
-              v.string(),
-              v.transform(Number),
-              v.number(),
-              v.integer(),
-              v.minValue(1),
-            ),
-          ),
+          filter: baseFilterInput,
         }),
       )
-      .output(GetManyTopicCategoryTopicSchema),
+      .output(getManyTopicCategoryTopicSchema),
 
     create: oc
       .route({
@@ -62,13 +36,8 @@ const topicCategoryTopicContract = oc
         description:
           "Create topic-categories pair by assign category_id and topic_id",
       })
-      .input(
-        v.object({
-          topic_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-          topic_category_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-        }),
-      )
-      .output(GetTopicCategoryTopicSchema),
+      .input(createTopicCategoryTopicSchema)
+      .output(getTopicCategoryTopicSchema),
   });
 
 export default topicCategoryTopicContract;

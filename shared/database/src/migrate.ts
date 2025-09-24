@@ -111,21 +111,6 @@ async function migrate() {
     .execute();
 
   await db.schema
-    .createTable("person")
-    .ifNotExists()
-    .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
-    .addColumn("first_name", "text", (col) => col.notNull())
-    .addColumn("last_name", "text", (col) => col.notNull())
-    .addColumn("middle_name", "text", (col) => col.notNull())
-    .addColumn("person_type_id", "integer", (col) =>
-      col.references("person_type.id").onDelete("set null"),
-    )
-    .addColumn("contact_id", "integer", (col) =>
-      col.references("person_type.id").onDelete("cascade"),
-    )
-    .execute();
-
-  await db.schema
     .createTable("person_type")
     .ifNotExists()
     .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
@@ -139,6 +124,21 @@ async function migrate() {
     .addColumn("email", "text", (col) => col.notNull().unique())
     .addColumn("phone", "text")
     .addColumn("social", "text")
+    .execute();
+
+  await db.schema
+    .createTable("person")
+    .ifNotExists()
+    .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
+    .addColumn("first_name", "text", (col) => col.notNull())
+    .addColumn("last_name", "text", (col) => col.notNull())
+    .addColumn("middle_name", "text", (col) => col.notNull())
+    .addColumn("person_type_id", "integer", (col) =>
+      col.references("person_type.id").onDelete("set null"),
+    )
+    .addColumn("contact_id", "integer", (col) =>
+      col.references("person_contact.id").onDelete("set null"),
+    )
     .execute();
 
   await db.schema

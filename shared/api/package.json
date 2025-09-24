@@ -12,6 +12,7 @@
         "@shared/typescript-config": "workspace:*",
         "@shared/database": "workspace:*",
         "@shared/auth": "workspace:*",
+        "@shared/schema": "workspace:*",
         "@orpc/client": "catalog:",
         "@orpc/contract": "catalog:",
         "@orpc/openapi": "catalog:",

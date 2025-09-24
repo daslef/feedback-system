@@ -3,7 +3,7 @@ import * as v from "valibot";
 
 const PersonTypeSchema = v.object({
   id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  title: v.string(),
+  title: v.picklist(["citizen", "official", "moderator"]),
 });
 
 const GetManyPersonTypeSchema = v.array(PersonTypeSchema);

@@ -9,15 +9,15 @@
     "serve": "refine serve"
   },
   "dependencies": {
-    "@refinedev/antd": "^6.0.2",
+    "@shared/auth": "workspace:*",
+    "@refinedev/antd": "catalog:",
     "@refinedev/cli": "catalog:",
     "@refinedev/core": "catalog:",
-    "@refinedev/react-router": "^2.0.1",
-    "@shared/auth": "workspace:*",
-    "antd": "^5.27.4",
+    "@refinedev/react-router": "catalog:",
+    "antd": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-router": "^7.9.1"
+    "react-router": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:",

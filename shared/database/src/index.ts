@@ -1,7 +1,14 @@
 import path from "path";
 import SqliteDatabase from "better-sqlite3";
 import { Pool, type PoolConfig } from "pg";
-import { Kysely, SqliteDialect, PostgresDialect } from "kysely";
+import {
+  Kysely,
+  SqliteDialect,
+  PostgresDialect,
+  ParseJSONResultsPlugin,
+} from "kysely";
+
+import { jsonObjectFrom } from "kysely/helpers/sqlite";
 import type { Database } from "./interface";
 
 function getDialect() {
@@ -22,6 +29,7 @@ function getDialect() {
 
 export const db = new Kysely<Database>({
   dialect: getDialect(),
+  plugins: [new ParseJSONResultsPlugin()],
 });
 
-export { type Database };
+export { type Database, jsonObjectFrom };

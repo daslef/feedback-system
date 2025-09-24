@@ -1,29 +1,14 @@
 import { oc } from "@orpc/contract";
 import * as v from "valibot";
-import { ContactSchema } from "./personContact";
 
-const PersonSchema = v.object({
-  id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  first_name: v.string(),
-  last_name: v.string(),
-  middle_name: v.string(),
-  person_type_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  contact_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-});
+import {
+  getPersonSchema,
+  getManyPersonsSchema,
+  createPersonSchema,
+  updatePersonSchema,
+} from "@shared/schema/person";
 
-const GetPersonSchema = v.intersect([
-  PersonSchema,
-  v.object({
-    person_type: v.union([
-      v.literal("citizen"),
-      v.literal("official"),
-      v.literal("moderator"),
-    ]),
-    contact: ContactSchema,
-  }),
-]);
-
-const GetManyPersonsSchema = v.array(GetPersonSchema);
+import { baseInputAll, baseInputOne } from "@shared/schema/base";
 
 const personContract = oc
   .tag("Persons")
@@ -36,30 +21,8 @@ const personContract = oc
         summary: "List all persons",
         description: "Get information for all persons",
       })
-      .input(
-        v.object({
-          limit: v.optional(
-            v.pipe(
-              v.string(),
-              v.transform(Number),
-              v.number(),
-              v.integer(),
-              v.minValue(10),
-              v.maxValue(25),
-            ),
-          ),
-          offset: v.optional(
-            v.pipe(
-              v.string(),
-              v.transform(Number),
-              v.number(),
-              v.integer(),
-              v.minValue(0),
-            ),
-          ),
-        }),
-      )
-      .output(GetManyPersonsSchema),
+      .input(baseInputAll)
+      .output(getManyPersonsSchema),
 
     one: oc
       .route({
@@ -68,8 +31,24 @@ const personContract = oc
         summary: "Get a person",
         description: "Get person information by id",
       })
-      .input(v.object({ id: v.string() }))
-      .output(GetPersonSchema),
+      .input(baseInputOne)
+      .output(getPersonSchema),
+
+    update: oc
+      .route({
+        method: "PATCH",
+        path: "/{id}",
+        summary: "Update a person",
+        description: "Update person information by id",
+        inputStructure: "detailed",
+      })
+      .input(
+        v.object({
+          body: updatePersonSchema,
+          params: v.object({ id: v.string() }),
+        }),
+      )
+      .output(getPersonSchema),
 
     create: oc
       .route({
@@ -78,8 +57,8 @@ const personContract = oc
         summary: "New person",
         description: "Create a new person",
       })
-      .input(v.omit(PersonSchema, ["id"]))
-      .output(GetPersonSchema),
+      .input(createPersonSchema)
+      .output(getPersonSchema),
   });
 
 export default personContract;

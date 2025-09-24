@@ -4,7 +4,7 @@ const idSchema = v.pipe(v.number(), v.integer(), v.minValue(1));
 
 export const administrativeUnitTypeSchema = v.object({
   id: idSchema,
-  title: v.picklist(["settlement", "town"]),
+  title: v.string(),
 });
 
 export type AdministrativeUnitTypeTable = v.InferInput<

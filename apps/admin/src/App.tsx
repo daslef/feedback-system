@@ -1,9 +1,10 @@
-import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router";
 import { ConfigProvider, App as AntdApp } from "antd";
 
 import { Refine, Authenticated } from "@refinedev/core";
 import routerProvider, { NavigateToResource } from "@refinedev/react-router";
 import {
+  RefineThemes,
   ThemedLayout,
   ThemedTitle,
   ThemedSider,
@@ -25,6 +26,9 @@ import { CreateFeedbackTopic } from "./pages/topics/create";
 import { ListTopicCategoryTopics } from "./pages/category-topics/list";
 import { CreateTopicCategoryTopic } from "./pages/category-topics/create";
 
+import { ListPersons } from "./pages/persons/list";
+import { CreatePerson } from "./pages/persons/create";
+
 import { Login } from "./pages/auth/login";
 import { Register } from "./pages/auth/register";
 
@@ -33,7 +37,7 @@ import "antd/dist/reset.css";
 function App() {
   return (
     <BrowserRouter>
-      <ConfigProvider>
+      <ConfigProvider theme={RefineThemes.Blue}>
         <AntdApp>
           <Refine
             dataProvider={dataProvider}
@@ -48,6 +52,14 @@ function App() {
                 edit: "/projects/:id/edit",
                 create: "/projects/create",
                 meta: { label: "Проекты" },
+              },
+              {
+                name: "persons",
+                list: "/persons",
+                create: "/persons/create",
+                meta: {
+                  label: "Пользователи",
+                },
               },
             ]}
           >
@@ -81,6 +93,10 @@ function App() {
                   <Route path=":id" element={<ShowProject />} />
                   <Route path=":id/edit" element={<EditProject />} />
                   <Route path="create" element={<CreateProject />} />
+                </Route>
+                <Route path="/persons">
+                  <Route index element={<ListPersons />} />
+                  <Route path="create" element={<CreatePerson />} />
                 </Route>
               </Route>
               <Route

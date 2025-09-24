@@ -20,7 +20,7 @@ export default class State {
       administrative_unit_type: "town",
     });
     this.cities = await this.apiClient.administrativeUnit.all({
-      type: "town",
+      filter: ["unit_type[eq]town"],
     });
     this.categories = await this.apiClient.topicCategory.all();
     this.feedbackTypes = await this.apiClient.feedbackType.all();

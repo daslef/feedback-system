@@ -21,11 +21,13 @@ export default async function upload(file: File, bucketName: string) {
       "Content-Type": "image",
     };
 
+    const fileBuffer = await file.arrayBuffer();
     await createBucket(minioClient, bucketName ?? "upload");
-    await minioClient.fPutObject(
+    await minioClient.putObject(
       bucketName ?? "upload",
       file.name,
-      file.name,
+      Buffer.from(fileBuffer),
+      file.size,
       metaData,
     );
 
