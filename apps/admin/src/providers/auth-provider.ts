@@ -17,7 +17,18 @@ const authProvider: AuthProvider = {
       name: email,
       email,
       password,
+      fetchOptions: {
+        onError: (error) => {
+          throw error;
+        },
+      },
     });
+
+    if (data?.token) {
+      return { success: true, redirectTo: "/" };
+    }
+
+    return { success: false };
   },
   login: async ({ email, password }) => {
     const { data, error } = await authClient.signIn.email({
@@ -29,6 +40,7 @@ const authProvider: AuthProvider = {
     if (data?.token) {
       return { success: true, redirectTo: "/" };
     }
+
     return { success: false };
   },
   logout: async () => {
@@ -45,8 +57,6 @@ const authProvider: AuthProvider = {
       console.error(error);
       return { success: false };
     }
-
-    return { success: true };
   },
   onError: async (error) => {
     if (error?.status === 401) {

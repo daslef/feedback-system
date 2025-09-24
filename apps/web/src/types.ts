@@ -25,7 +25,7 @@ export interface Person {
 export interface AdministrativeUnit {
   id: number;
   title: string;
-  unit_type: "settlement" | "town";
+  unit_type: string;
 }
 
 export interface TopicCategory {

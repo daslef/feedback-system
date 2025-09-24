@@ -92,7 +92,7 @@ export const dataProvider: DataProvider = {
     const params = new URLSearchParams();
 
     if (ids) {
-      ids.forEach((id) => params.append("ids", String(id)));
+      params.append("filter", `id[in]${ids.map(String).join(",")}`);
     }
 
     const response = await fetcher(

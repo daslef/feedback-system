@@ -1,6 +1,5 @@
 import { publicProcedure, protectedProcedure } from "@shared/api";
-import { db } from "@shared/database";
-import { queryHelpers } from "@shared/database";
+import { db, type Database } from "@shared/database";
 
 const _baseSelect = (dbInstance: typeof db) => {
   return dbInstance
@@ -31,33 +30,78 @@ const _baseSelect = (dbInstance: typeof db) => {
 const projectRouter = {
   all: publicProcedure.project.all.handler(
     async ({ context, input, errors }) => {
-      const { offset, limit, sort, filter, administrative_unit_type } = input;
+      const { offset, limit, sort, filter } = input;
 
       try {
         let query = _baseSelect(context.db);
 
-        let updatedQuery = queryHelpers.withFilterSort(query, "project", { sort, filter }) as typeof query
+        if (filter?.length) {
+          const mapOperatorsToSql = {
+            eq: "=",
+            ne: "!=",
+            lt: "<",
+            gt: ">",
+            in: "in",
+          } as const;
 
-        if (administrative_unit_type != undefined) {
-          updatedQuery = updatedQuery.where(
-            "administrative_unit_type.title",
-            "=",
-            administrative_unit_type,
-          );
+          type WhereValue = string | number | string[] | number[];
+
+          for (const filterExpression of filter) {
+            const matchResult =
+              decodeURI(filterExpression).match(/(.*)\[(.*)\](.*)/);
+
+            if (matchResult === null) {
+              continue;
+            }
+
+            let column = matchResult[1] as
+              | keyof Database["project"]
+              | keyof Database["administrative_unit"]
+              | keyof Database["administrative_unit_type"];
+
+            if (column === "id") {
+              column = "project.id" as keyof Database["project"];
+            }
+
+            const operator = matchResult[2] as keyof typeof mapOperatorsToSql;
+
+            let value: WhereValue = Number.isFinite(+matchResult[3])
+              ? +matchResult[3]
+              : matchResult[3];
+
+            if (operator === "in" && typeof value === "string") {
+              const items = value.split(",");
+              value = items.some((item) => !Number.isFinite(+item))
+                ? items
+                : items.map(Number);
+            }
+
+            query = query.where(column, mapOperatorsToSql[operator], value);
+          }
+        }
+
+        if (sort !== undefined) {
+          for (const sortExpression of sort) {
+            const [field, order] = sortExpression.split(".");
+            query = query.orderBy(
+              field as keyof Database["project"],
+              order as "desc" | "asc",
+            );
+          }
         }
 
         const total = (await query.execute()).length;
         context.resHeaders?.set("x-total-count", String(total));
 
         if (limit !== undefined) {
-          updatedQuery = query.limit(limit);
+          query = query.limit(limit);
         }
 
         if (offset !== undefined) {
           query = query.offset(offset);
         }
 
-        return await updatedQuery.execute();
+        return await query.execute();
       } catch (error) {
         console.error(error);
         throw errors.INTERNAL_SERVER_ERROR();
@@ -80,7 +124,7 @@ const projectRouter = {
       } catch (error) {
         console.error(error);
         throw errors.CONFLICT({
-          message: `Error on update project with ID ${input.params.id}`,
+          message: `Ошибка при обновлении проекта с ID ${input.params.id}`,
         });
       }
     },

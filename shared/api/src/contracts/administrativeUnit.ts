@@ -2,18 +2,11 @@ import { oc } from "@orpc/contract";
 import * as v from "valibot";
 
 import { baseInputAll } from "@shared/schema/base";
-import { administrativeUnitSchema } from "@shared/schema/administrative_unit";
-
-const CreateAdministrativeUnitSchema = v.omit(administrativeUnitSchema, ["id"]);
-
-const GetAdministrativeUnitSchema = v.intersect([
-  administrativeUnitSchema,
-  v.object({
-    unit_type: v.union([v.literal("settlement"), v.literal("town")]),
-  }),
-]);
-
-const GetManyAdministrativeUnitsSchema = v.array(GetAdministrativeUnitSchema);
+import {
+  getAdministrativeUnitSchema,
+  createAdministrativeUnitSchema,
+  getManyAdministrativeUnitSchema,
+} from "@shared/schema/administrative_unit";
 
 const administrativeUnitContract = oc
   .tag("Administrative Units")
@@ -26,13 +19,8 @@ const administrativeUnitContract = oc
         summary: "List all administrative units",
         description: "Get full information for all administrative_units",
       })
-      .input(
-        v.object({
-          ...baseInputAll.entries,
-          type: v.optional(v.picklist(["town", "settlement"])),
-        }),
-      )
-      .output(GetManyAdministrativeUnitsSchema),
+      .input(baseInputAll)
+      .output(getManyAdministrativeUnitSchema),
 
     create: oc
       .route({
@@ -41,8 +29,8 @@ const administrativeUnitContract = oc
         summary: "New administrative unit",
         description: "Create a new administrative unit",
       })
-      .input(CreateAdministrativeUnitSchema)
-      .output(GetAdministrativeUnitSchema),
+      .input(createAdministrativeUnitSchema)
+      .output(getAdministrativeUnitSchema),
   });
 
 export default administrativeUnitContract;

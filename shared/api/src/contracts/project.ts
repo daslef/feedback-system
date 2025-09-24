@@ -1,19 +1,14 @@
 import { oc } from "@orpc/contract";
 import * as v from "valibot";
 
-import { projectSchema } from "@shared/schema/project";
+import {
+  getProjectSchema,
+  getManyProjectsSchema,
+  createProjectSchema,
+  updateProjectSchema,
+} from "@shared/schema/project";
+
 import { baseInputAll, baseInputOne } from "@shared/schema/base";
-
-const CreateProjectSchema = v.omit(projectSchema, ["id", "created_at"]);
-const UpdateProjectSchema = v.partial(CreateProjectSchema);
-
-const GetProjectSchema = v.object({
-  ...projectSchema.entries,
-  administrative_unit: v.string(),
-  administrative_unit_type: v.string(),
-});
-
-const GetManyProjectsSchema = v.array(GetProjectSchema);
 
 const projectContract = oc
   .tag("Projects")
@@ -27,7 +22,7 @@ const projectContract = oc
         description: "Get full project information by id",
       })
       .input(baseInputOne)
-      .output(GetProjectSchema),
+      .output(getProjectSchema),
 
     update: oc
       .route({
@@ -39,11 +34,11 @@ const projectContract = oc
       })
       .input(
         v.object({
-          body: UpdateProjectSchema,
+          body: updateProjectSchema,
           params: v.object({ id: v.string() }),
         }),
       )
-      .output(GetProjectSchema),
+      .output(getProjectSchema),
 
     all: oc
       .route({
@@ -87,15 +82,8 @@ const projectContract = oc
           ],
         }),
       })
-      .input(
-        v.object({
-          ...baseInputAll.entries,
-          administrative_unit_type: v.optional(
-            v.picklist(["settlement", "town"]),
-          ),
-        }),
-      )
-      .output(GetManyProjectsSchema),
+      .input(baseInputAll)
+      .output(getManyProjectsSchema),
 
     create: oc
       .route({
@@ -104,8 +92,8 @@ const projectContract = oc
         summary: "New project",
         description: "Create a new project",
       })
-      .input(CreateProjectSchema)
-      .output(GetProjectSchema),
+      .input(createProjectSchema)
+      .output(getProjectSchema),
   });
 
 export default projectContract;

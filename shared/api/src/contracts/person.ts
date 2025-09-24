@@ -1,19 +1,13 @@
 import { oc } from "@orpc/contract";
 import * as v from "valibot";
 
-import { personSchema } from "@shared/schema/person";
-import { personContactSchema } from "@shared/schema/person_contact";
-import { personTypeSchema } from "@shared/schema/person_type";
+import {
+  getPersonSchema,
+  getManyPersonsSchema,
+  createPersonSchema,
+} from "@shared/schema/person";
 
-const GetPersonSchema = v.intersect([
-  personSchema,
-  v.object({
-    person_type: v.pick(personTypeSchema, ["title"]),
-    contact: personContactSchema,
-  }),
-]);
-
-const GetManyPersonsSchema = v.array(GetPersonSchema);
+import { baseInputAll, baseInputOne } from "@shared/schema/base";
 
 const personContract = oc
   .tag("Persons")
@@ -26,30 +20,8 @@ const personContract = oc
         summary: "List all persons",
         description: "Get information for all persons",
       })
-      .input(
-        v.object({
-          limit: v.optional(
-            v.pipe(
-              v.string(),
-              v.transform(Number),
-              v.number(),
-              v.integer(),
-              v.minValue(10),
-              v.maxValue(25),
-            ),
-          ),
-          offset: v.optional(
-            v.pipe(
-              v.string(),
-              v.transform(Number),
-              v.number(),
-              v.integer(),
-              v.minValue(0),
-            ),
-          ),
-        }),
-      )
-      .output(GetManyPersonsSchema),
+      .input(baseInputAll)
+      .output(getManyPersonsSchema),
 
     one: oc
       .route({
@@ -58,8 +30,8 @@ const personContract = oc
         summary: "Get a person",
         description: "Get person information by id",
       })
-      .input(v.object({ id: v.string() }))
-      .output(GetPersonSchema),
+      .input(baseInputOne)
+      .output(getPersonSchema),
 
     create: oc
       .route({
@@ -68,8 +40,8 @@ const personContract = oc
         summary: "New person",
         description: "Create a new person",
       })
-      .input(v.omit(personSchema, ["id"]))
-      .output(GetPersonSchema),
+      .input(createPersonSchema)
+      .output(getPersonSchema),
   });
 
 export default personContract;

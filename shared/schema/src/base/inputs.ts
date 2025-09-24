@@ -14,28 +14,6 @@ export const baseOffsetInput = v.optional(
   ),
 );
 
-export const baseIdsInput = v.optional(
-  v.union([
-    v.array(
-      v.pipe(
-        v.union([
-          v.pipe(v.string(), v.transform(Number), v.number()),
-          v.number(),
-        ]),
-        v.integer(),
-        v.minValue(1),
-      ),
-    ),
-    v.pipe(
-      v.string(),
-      v.transform(Number),
-      v.number(),
-      v.integer(),
-      v.minValue(1),
-    ),
-  ]),
-);
-
 export const baseSortInput = v.optional(
   v.union([
     v.pipe(
@@ -86,7 +64,6 @@ export const baseInputAll = v.object({
   sort: baseSortInput,
   filter: baseFilterInput,
   offset: baseOffsetInput,
-  ids: baseIdsInput,
 });
 
-export type BaseInputAll = v.InferOutput<typeof baseInputAll>
+export type BaseInputAll = v.InferOutput<typeof baseInputAll>;
