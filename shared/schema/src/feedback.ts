@@ -39,7 +39,8 @@ export const createFeedbackSchema = v.object({
   project_id: idSchema,
   description: v.string(),
   feedback_type_id: idSchema,
-  topic_id: v.nullable(idSchema),
+
+  topic_category_topic_id: v.optional(idSchema),
 
   first_name: v.string(),
   last_name: v.string(),
@@ -47,7 +48,6 @@ export const createFeedbackSchema = v.object({
 
   email: v.string(),
   phone: v.optional(v.string()),
-  social: v.optional(v.string()),
 });
 
 export type FeedbackTable = v.InferOutput<typeof feedbackSchema>;

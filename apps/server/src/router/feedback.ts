@@ -188,7 +188,6 @@ const feedbackRouter = {
             .values({
               email: input.email,
               phone: input.phone ?? "",
-              social: input.social ?? "",
             })
             .executeTakeFirstOrThrow();
 
@@ -222,7 +221,7 @@ const feedbackRouter = {
             project_id: input.project_id,
             description: input.description,
             feedback_type_id: input.feedback_type_id,
-            topic_id: input.topic_id ?? null,
+            topic_id: input.topic_category_topic_id ?? null,
             person_id: personId,
             feedback_status_id: pendingStatusId,
           })

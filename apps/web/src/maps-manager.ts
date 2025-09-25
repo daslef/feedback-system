@@ -32,9 +32,6 @@ export default class MapsManager {
     this.selectedProjectElement = document.getElementById(
       "selectedProjectName",
     ) as HTMLSpanElement;
-    this.mapPopupOverlayElement = document.querySelector(
-      ".map-popup-overlay",
-    ) as HTMLDivElement;
     this.mapPopupCloseElement = document.querySelector(
       ".map-popup-close",
     ) as HTMLButtonElement;

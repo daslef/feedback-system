@@ -17,6 +17,8 @@ const topicCategoryTopicRouter = {
           )
           .select([
             "topic_category_topic.id as id",
+            "topic_category_topic.topic_id",
+            "topic_category_topic.topic_category_id",
             "topic.title as topic",
             "topic_category.title as topic_category",
           ]);
@@ -101,6 +103,8 @@ const topicCategoryTopicRouter = {
           )
           .select([
             "topic_category_topic.id",
+            "topic_category_topic.topic_id",
+            "topic_category_topic.topic_category_id",
             "topic.title as topic",
             "topic_category.title as topic_category",
           ])

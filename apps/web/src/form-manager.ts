@@ -1,6 +1,7 @@
 import DragAndDropManager from "./dnd-manager";
 import AlertManager from "./alert-manager";
-
+import { apiClient } from "./api-client";
+import * as types from "./types";
 import type State from "./state";
 
 type FormManagerProperties = {
@@ -21,6 +22,7 @@ export default class FormManager {
   ) as HTMLDivElement;
 
   private dragAndDrop: DragAndDropManager;
+  private alertManager: AlertManager;
   private form: HTMLFormElement;
   private state: State;
 
@@ -44,6 +46,7 @@ export default class FormManager {
     this.form = document.querySelector(".apply-form") as HTMLFormElement;
     this.dragAndDrop = new DragAndDropManager();
     this.state = state;
+    this.alertManager = new AlertManager();
     this.init();
   }
 
@@ -162,15 +165,30 @@ export default class FormManager {
   }
 
   private handleFormSubmit(): void {
+    const payloadFieldNames = [
+      "project_id",
+      "description",
+      "feedback_type_id",
+      "topic_category_topic_id",
+      "first_name",
+      "last_name",
+      "middle_name",
+      "email",
+      "phone",
+    ];
+
     const formData = new FormData(this.form);
 
-    const formDataObject: any = {};
-    for (const [key, value] of formData.entries()) {
-      if (key === "personal_data_agreement") {
-        continue;
-      }
-      formDataObject[key] = value;
-    }
+    const formDataObject = [...formData.entries()].reduce(
+      (acc, [key, value]) => {
+        if (!payloadFieldNames.includes(key) || value === "") {
+          return acc;
+        }
+
+        return { ...acc, [key]: value };
+      },
+      {},
+    ) as types.Feedback;
 
     // formDataObject.files = this.selectedFiles;
     // .map((file) => ({
@@ -179,6 +197,15 @@ export default class FormManager {
     //   type: file.type,
     // }));
 
-    console.log("Данные формы:", formDataObject);
+    apiClient.feedback
+      .create(formDataObject)
+      .then(() => {
+        this.alertManager.showAlert("Обращение принято", "success");
+        this.form.reset();
+      })
+      .catch((error) => {
+        console.error(error);
+        this.alertManager.showAlert("Ошибка при отправке", "warning");
+      });
   }
 }

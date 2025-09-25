@@ -2,7 +2,7 @@ import * as v from "valibot";
 import { idSchema } from "./base/fields";
 
 const projectSchema = v.object({
-  id: v.optional(idSchema),
+  id: idSchema,
   title: v.pipe(v.string(), v.nonEmpty()),
   latitude: v.pipe(v.number(), v.minValue(-90), v.maxValue(90)),
   longitude: v.pipe(v.number(), v.minValue(-180), v.maxValue(180)),

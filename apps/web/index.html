@@ -280,7 +280,7 @@
             <div class="form-block-title regular-text fw-600">Город<span class="form-block-required">*</span></div>
             <div class="form-block city-map-inputs">
               <select name="city" class="object-settlement city-select" id="citySelect" required>
-                <option value="" disabled hidden>Выберите город</option>
+                <option value="">Выберите город</option>
               </select>
               <button type="button" class="btn btn-regular btn-green map-button" id="selectOnMap">
                 Выбрать на карте
@@ -292,8 +292,8 @@
           <div class="form-block">
             <div class="form-block-title regular-text fw-600">Проект<span class="form-block-required">*</span></div>
             <div class="input-block">
-              <select name="project" class="object-location" id="projectSelect" required>
-                <option value="" disabled hidden>Сначала выберите город</option>
+              <select name="project_id" class="object-location" id="projectSelect" required>
+                <option value="">Сначала выберите город</option>
               </select>
             </div>
             <span class="form-block-error">Заполните поле</span>
@@ -304,8 +304,8 @@
               Тип запроса
             </div>
             <div class="input-block">
-              <select name="request_type" class="object-location" id="requestTypeSelect" required>
-                <option value="" disabled hidden>Загрузка...</option>
+              <select name="feedback_type_id" class="object-location" id="requestTypeSelect" required>
+                <option value="">Загрузка...</option>
               </select>
             </div>
             <span class="form-block-error">Заполните поле</span>
@@ -314,8 +314,8 @@
           <div class="form-block" id="categoryBlock" style="display: none">
             <div class="form-block-title regular-text fw-600">Категория</div>
             <div class="input-block">
-              <select name="category" class="object-location" id="categorySelect">
-                <option value="" disabled hidden>Выберите категорию</option>
+              <select name="topic_category_id" class="object-location" id="categorySelect">
+                <option value="">Выберите категорию</option>
               </select>
             </div>
           </div>
@@ -323,8 +323,8 @@
           <div class="form-block" id="issueBlock" style="display: none">
             <div class="form-block-title regular-text fw-600">Проблема</div>
             <div class="input-block">
-              <select name="issue" class="object-location" id="issueSelect">
-                <option value="" disabled hidden>Сначала выберите категорию</option>
+              <select name="topic_category_topic_id" class="object-location" id="issueSelect">
+                <option value="">Сначала выберите категорию</option>
               </select>
             </div>
           </div>
@@ -334,7 +334,7 @@
               Текстовое пояснение<span class="form-block-required">*</span>
             </div>
             <div class="input-block">
-              <textarea name="explanation" class="object-name" placeholder="Ваше пожелание или замечание"
+              <textarea name="description" class="object-name" placeholder="Ваше пожелание или замечание"
                 maxlength="1000" rows="6" required></textarea>
             </div>
           </div>
@@ -355,7 +355,7 @@
             <div class="form-block">
               <div class="form-block-title regular-text fw-600">Отчество</div>
               <div class="input-block">
-                <input type="text" name="middle_name" class="object-name" placeholder="Отчество" required />
+                <input type="text" name="middle_name" class="object-name" placeholder="Отчество" />
               </div>
             </div>
           </div>

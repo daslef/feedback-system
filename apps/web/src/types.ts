@@ -44,22 +44,15 @@ export interface TopicCategoryTopic {
   topic_category: string;
 }
 
-export interface FeedbackIn {
+export interface Feedback {
   project_id: number;
   description: string;
   feedback_type_id: number;
-  topic_id: number;
+  topic_category_topic_id: number;
   last_name: string;
   first_name: string;
   middle_name: string;
   email: string;
   phone?: string;
-  files: File[];
-}
-
-export interface Contact {
-  id: number;
-  value: string;
-  contact_type_id: number;
-  person_id: number;
+  files?: File[];
 }

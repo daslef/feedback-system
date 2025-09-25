@@ -9,6 +9,8 @@ const topicCategoryTopicSchema = v.object({
 
 export const getTopicCategoryTopicSchema = v.object({
   id: idSchema,
+  topic_id: idSchema,
+  topic_category_id: idSchema,
   topic: v.string(),
   topic_category: v.string(),
 });
