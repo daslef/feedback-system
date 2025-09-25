@@ -28,7 +28,16 @@ const CreateFeedbackSchema = v.object({
   person_email_contact_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
 });
 
+const UpdateFeedbackSchema = v.partial(
+  v.omit(CreateFeedbackSchema, ["project_id"])
+);
+
 const GetManyFeedbackSchema = v.array(GetFeedbackSchema);
+
+const DeleteResponseSchema = v.object({
+  success: v.boolean(),
+  message: v.string(),
+});
 
 const feedbackContract = oc
   .tag("Feedback")
@@ -86,6 +95,49 @@ const feedbackContract = oc
       })
       .input(CreateFeedbackSchema)
       .output(GetFeedbackSchema),
+
+    update: oc
+      .route({
+        method: "PATCH",
+        path: "/{id}",
+        summary: "Update feedback record",
+        description: "Update an existing feedback record",
+      })
+      .input(
+        v.object({
+          params: v.object({
+            id: v.pipe(
+              v.string(),
+              v.transform(Number),
+              v.number(),
+              v.integer(),
+              v.minValue(1),
+            ),
+          }),
+          body: UpdateFeedbackSchema,
+        }),
+      )
+      .output(GetFeedbackSchema),
+
+    delete: oc
+      .route({
+        method: "DELETE",
+        path: "/{id}",
+        summary: "Delete feedback record",
+        description: "Delete a feedback record by ID",
+      })
+      .input(
+        v.object({
+          id: v.pipe(
+            v.string(),
+            v.transform(Number),
+            v.number(),
+            v.integer(),
+            v.minValue(1),
+          ),
+        }),
+      )
+      .output(DeleteResponseSchema),
   });
 
 export default feedbackContract;

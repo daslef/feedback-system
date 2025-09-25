@@ -53,6 +53,26 @@ const administrativeUnitContract = oc
       )
       .output(GetManyAdministrativeUnitsSchema),
 
+    one: oc
+      .route({
+        method: "GET",
+        path: "/:id",
+        summary: "Get administrative unit by ID",
+        description: "Get detailed information for a specific administrative unit",
+      })
+      .input(
+        v.object({
+          id: v.pipe(
+            v.string(),
+            v.transform(Number),
+            v.number(),
+            v.integer(),
+            v.minValue(1),
+          ),
+        }),
+      )
+      .output(GetAdministrativeUnitSchema),
+
     create: oc
       .route({
         method: "POST",
@@ -62,6 +82,54 @@ const administrativeUnitContract = oc
       })
       .input(v.omit(AdministrativeUnitSchema, ["id"]))
       .output(GetAdministrativeUnitSchema),
+
+    update: oc
+      .route({
+        method: "PATCH",
+        path: "/:id",
+        summary: "Update administrative unit",
+        description: "Update an existing administrative unit",
+      })
+      .input(
+        v.object({
+          params: v.object({
+            id: v.pipe(
+              v.string(),
+              v.transform(Number),
+              v.number(),
+              v.integer(),
+              v.minValue(1),
+            ),
+          }),
+          body: v.partial(v.omit(AdministrativeUnitSchema, ["id"])),
+        }),
+      )
+      .output(GetAdministrativeUnitSchema),
+
+    delete: oc
+      .route({
+        method: "DELETE",
+        path: "/:id",
+        summary: "Delete administrative unit",
+        description: "Delete an administrative unit by ID",
+      })
+      .input(
+        v.object({
+          id: v.pipe(
+            v.string(),
+            v.transform(Number),
+            v.number(),
+            v.integer(),
+            v.minValue(1),
+          ),
+        }),
+      )
+      .output(
+        v.object({
+          success: v.boolean(),
+          message: v.string(),
+        }),
+      ),
   });
 
 export default administrativeUnitContract;

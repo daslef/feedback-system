@@ -10,16 +10,17 @@ export const ContactSchema = v.object({
 
 const GetManyContactsSchema = v.array(ContactSchema);
 
-const contactContract = oc
-  .tag("Contacts")
-  .prefix("/contacts")
+const personContactContract = oc
+  .tag("PersonContacts")
+  .prefix("/person-contacts")
   .router({
+
     all: oc
       .route({
         method: "GET",
         path: "/",
         summary: "List all contacts",
-        description: "Get information for all contacts",
+        description: "Get information for all contacts with optional pagination",
       })
       .input(
         v.object({
@@ -29,9 +30,9 @@ const contactContract = oc
               v.transform(Number),
               v.number(),
               v.integer(),
-              v.minValue(10),
-              v.maxValue(25),
-            ),
+              v.minValue(1),
+              v.maxValue(100)
+            )
           ),
           offset: v.optional(
             v.pipe(
@@ -39,10 +40,10 @@ const contactContract = oc
               v.transform(Number),
               v.number(),
               v.integer(),
-              v.minValue(0),
-            ),
+              v.minValue(0)
+            )
           ),
-        }),
+        })
       )
       .output(GetManyContactsSchema),
 
@@ -51,7 +52,7 @@ const contactContract = oc
         method: "GET",
         path: "/{id}",
         summary: "Get a contact",
-        description: "Get contact information by id",
+        description: "Get contact information by ID",
       })
       .input(v.object({ id: v.string() }))
       .output(ContactSchema),
@@ -60,11 +61,36 @@ const contactContract = oc
       .route({
         method: "POST",
         path: "/",
-        summary: "New contact",
+        summary: "Create a contact",
         description: "Create a new contact",
       })
       .input(v.omit(ContactSchema, ["id"]))
       .output(ContactSchema),
+
+    update: oc
+      .route({
+        method: "PUT",
+        path: "/{id}",
+        summary: "Update a contact",
+        description: "Update existing contact by ID",
+      })
+      .input(
+        v.object({
+          params: v.object({ id: v.string() }),
+          body: v.omit(ContactSchema, ["id"]),
+        })
+      )
+      .output(ContactSchema),
+
+    delete: oc
+      .route({
+        method: "DELETE",
+        path: "/{id}",
+        summary: "Delete a contact",
+        description: "Delete a contact by ID",
+      })
+      .input(v.object({ id: v.string() }))
+      .output(v.object({ success: v.boolean() })),
   });
 
-export default contactContract;
+export default personContactContract;

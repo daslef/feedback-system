@@ -23,6 +23,20 @@ const feedbackTopicCategoryContract = oc
       })
       .output(GetManyFeedbackTopicCategoriesSchema),
 
+    one: oc
+      .route({
+        method: "GET",
+        path: "/:id",
+        summary: "Get one topic category",
+        description: "Retrieve a single feedback topic category by ID",
+      })
+      .input(
+        v.object({
+          id: v.pipe(v.number(), v.integer(), v.minValue(1)),
+        }),
+      )
+      .output(FeedbackTopicCategorySchema),
+
     create: oc
       .route({
         method: "POST",
@@ -32,6 +46,41 @@ const feedbackTopicCategoryContract = oc
       })
       .input(v.omit(FeedbackTopicCategorySchema, ["id"]))
       .output(FeedbackTopicCategorySchema),
+
+    update: oc
+      .route({
+        method: "PUT",
+        path: "/:id",
+        summary: "Update topic category",
+        description: "Update an existing feedback topic category",
+      })
+      .input(
+        v.object({
+          params: v.object({
+            id: v.pipe(v.number(), v.integer(), v.minValue(1)),
+          }),
+          body: v.omit(FeedbackTopicCategorySchema, ["id"]),
+        }),
+      )
+      .output(FeedbackTopicCategorySchema),
+
+    delete: oc
+      .route({
+        method: "DELETE",
+        path: "/:id",
+        summary: "Delete topic category",
+        description: "Delete a feedback topic category by ID",
+      })
+      .input(
+        v.object({
+          id: v.pipe(v.number(), v.integer(), v.minValue(1)),
+        }),
+      )
+      .output(
+        v.object({
+          success: v.boolean(),
+        }),
+      ),
   });
 
 export default feedbackTopicCategoryContract;

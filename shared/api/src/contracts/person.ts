@@ -14,11 +14,7 @@ const PersonSchema = v.object({
 const GetPersonSchema = v.intersect([
   PersonSchema,
   v.object({
-    person_type: v.union([
-      v.literal("citizen"),
-      v.literal("official"),
-      v.literal("moderator"),
-    ]),
+    person_type: v.union([v.literal("citizen"), v.literal("official"), v.literal("moderator")]),
     contact: ContactSchema,
   }),
 ]);
@@ -34,7 +30,7 @@ const personContract = oc
         method: "GET",
         path: "/",
         summary: "List all persons",
-        description: "Get information for all persons",
+        description: "Get information for all persons, optionally filter by person_type",
       })
       .input(
         v.object({
@@ -44,9 +40,9 @@ const personContract = oc
               v.transform(Number),
               v.number(),
               v.integer(),
-              v.minValue(10),
-              v.maxValue(25),
-            ),
+              v.minValue(1),
+              v.maxValue(100)
+            )
           ),
           offset: v.optional(
             v.pipe(
@@ -54,10 +50,13 @@ const personContract = oc
               v.transform(Number),
               v.number(),
               v.integer(),
-              v.minValue(0),
-            ),
+              v.minValue(0)
+            )
           ),
-        }),
+          person_type: v.optional(
+            v.union([v.literal("citizen"), v.literal("official"), v.literal("moderator")])
+          ),
+        })
       )
       .output(GetManyPersonsSchema),
 
@@ -80,6 +79,31 @@ const personContract = oc
       })
       .input(v.omit(PersonSchema, ["id"]))
       .output(GetPersonSchema),
+
+    update: oc
+      .route({
+        method: "PATCH",
+        path: "/{id}",
+        summary: "Update a person",
+        description: "Update person information by id",
+      })
+      .input(
+        v.object({
+          params: v.object({ id: v.string() }),
+          body: v.partial(v.omit(PersonSchema, ["id"])),
+        })
+      )
+      .output(GetPersonSchema),
+
+    delete: oc
+      .route({
+        method: "DELETE",
+        path: "/{id}",
+        summary: "Delete a person",
+        description: "Delete person by id",
+      })
+      .input(v.object({ id: v.string() }))
+      .output(v.object({ success: v.boolean() })),
   });
 
 export default personContract;

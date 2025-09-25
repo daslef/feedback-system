@@ -29,5 +29,9 @@
             "better-sqlite3",
             "esbuild"
         ]
+    },
+    "dependencies": {
+        "minio": "catalog:",
+        "pg": "catalog:"
     }
 }

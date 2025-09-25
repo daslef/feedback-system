@@ -69,6 +69,9 @@ catalogs:
     kysely:
       specifier: ^0.28.5
       version: 0.28.6
+    minio:
+      specifier: ^8.0.6
+      version: 8.0.6
     oxlint:
       specifier: ^1.12.0
       version: 1.15.0
@@ -106,6 +109,13 @@ catalogs:
 importers:
 
   .:
+    dependencies:
+      minio:
+        specifier: 'catalog:'
+        version: 8.0.6
+      pg:
+        specifier: 'catalog:'
+        version: 8.16.3
     devDependencies:
       '@biomejs/biome':
         specifier: 'catalog:'
