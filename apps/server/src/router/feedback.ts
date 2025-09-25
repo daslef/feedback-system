@@ -4,9 +4,15 @@ import { db, type Database } from "@shared/database";
 function prepareBaseQuery(databaseInstance: typeof db) {
   return databaseInstance
     .selectFrom("feedback")
+    .selectAll()
     .innerJoin("project", "feedback.project_id", "project.id")
     .innerJoin("feedback_type", "feedback.feedback_type_id", "feedback_type.id")
-    .innerJoin("topic", "feedback.topic_id", "topic.id")
+    .innerJoin(
+      "topic_category_topic",
+      "feedback.topic_id",
+      "topic_category_topic.id",
+    )
+    .innerJoin("topic", "topic.id", "topic_category_topic.topic_id")
     .innerJoin(
       "feedback_status",
       "feedback.feedback_status_id",
@@ -15,14 +21,14 @@ function prepareBaseQuery(databaseInstance: typeof db) {
     .select([
       "feedback.id",
       "feedback.project_id",
-      "project.title as project",
       "feedback.description",
       "feedback.feedback_type_id",
-      "feedback_type.title as feedback_type",
       "feedback.topic_id",
-      "topic.title as topic",
-      "feedback.person_email_contact_id",
+      "feedback.person_id",
       "feedback.feedback_status_id",
+      "project.title as project",
+      "feedback_type.title as feedback_type",
+      "topic.title as topic",
       "feedback_status.title as feedback_status",
       "feedback.created_at",
     ]);
@@ -129,33 +135,113 @@ const feedbackRouter = {
     },
   ),
 
-  // create: publicProcedure.feedback.create.handler(
-  //   async ({ context, input, errors }) => {
-  //     try {
-  //       // TODO: add processing person data
+  update: protectedProcedure.feedback.update.handler(
+    async ({ context, input, errors }) => {
+      const { params, body } = input;
 
-  //       const { id: pendingStatusId } = await context.db
-  //         .selectFrom("feedback_status")
-  //         .select("id")
-  //         .where("feedback_status.title", "=", "pending")
-  //         .executeTakeFirstOrThrow();
+      try {
+        await context.db
+          .updateTable("feedback")
+          .set(body)
+          .where("feedback.id", "=", Number(params.id))
+          .executeTakeFirstOrThrow();
 
-  //       const { insertId } = await context.db
-  //         .insertInto("feedback")
-  //         .values({ ...input, feedback_status_id: pendingStatusId })
-  //         .executeTakeFirstOrThrow();
+        return await prepareBaseQuery(context.db)
+          .where("feedback.id", "=", Number(params.id))
+          .executeTakeFirstOrThrow();
+      } catch (error) {
+        console.error(error);
+        throw errors.NOT_FOUND({
+          message: `Не удалось обновить запись с ID ${params.id}`,
+        });
+      }
+    },
+  ),
 
-  //       return await prepareBaseQuery(context.db)
-  //         .where("id", "=", Number(insertId))
-  //         .executeTakeFirstOrThrow();
-  //     } catch (error) {
-  //       console.error(error);
-  //       throw errors.CONFLICT({
-  //         message: `Ошибка при создании записи`,
-  //       });
-  //     }
-  //   },
-  // ),
+  create: publicProcedure.feedback.create.handler(
+    async ({ context, input, errors }) => {
+      const transaction = await context.db.startTransaction().execute();
+
+      try {
+        let personId = (
+          await transaction
+            .selectFrom("person")
+            .selectAll()
+            .innerJoin(
+              "person_contact",
+              "person.contact_id",
+              "person_contact.id",
+            )
+            .where("person_contact.email", "=", input.email)
+            .executeTakeFirst()
+        )?.id;
+
+        if (!personId) {
+          const { id: personTypeId } = await transaction
+            .selectFrom("person_type")
+            .select("person_type.id")
+            .where("person_type.title", "=", "citizen")
+            .executeTakeFirstOrThrow();
+
+          const { insertId: personContactId } = await transaction
+            .insertInto("person_contact")
+            .values({
+              email: input.email,
+              phone: input.phone ?? "",
+              social: input.social ?? "",
+            })
+            .executeTakeFirstOrThrow();
+
+          if (personContactId === undefined) {
+            throw new Error("Ошибка при создании нового контакта");
+          }
+
+          const { insertId } = await transaction
+            .insertInto("person")
+            .values({
+              first_name: input.first_name,
+              last_name: input.last_name,
+              middle_name: input.middle_name ?? "",
+              person_type_id: personTypeId,
+              contact_id: Number(personContactId),
+            })
+            .executeTakeFirstOrThrow();
+
+          personId = Number(insertId);
+        }
+
+        const { id: pendingStatusId } = await transaction
+          .selectFrom("feedback_status")
+          .select("id")
+          .where("feedback_status.title", "=", "pending")
+          .executeTakeFirstOrThrow();
+
+        const { insertId } = await transaction
+          .insertInto("feedback")
+          .values({
+            project_id: input.project_id,
+            description: input.description,
+            feedback_type_id: input.feedback_type_id,
+            topic_id: input.topic_id ?? null,
+            person_id: personId,
+            feedback_status_id: pendingStatusId,
+          })
+          .executeTakeFirstOrThrow();
+
+        if (insertId === undefined) {
+          throw new Error("Ошибка при создании записи");
+        }
+
+        await transaction.commit().execute();
+      } catch (error) {
+        await transaction.rollback().execute();
+        console.error(error);
+        throw errors.CONFLICT({
+          message: `Ошибка при создании записи`,
+        });
+      }
+    },
+  ),
 };
 
 export default feedbackRouter;

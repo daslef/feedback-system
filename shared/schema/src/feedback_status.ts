@@ -1,6 +1,5 @@
 import * as v from "valibot";
-
-const idSchema = v.pipe(v.number(), v.integer(), v.minValue(1));
+import { idSchema } from "./base/fields";
 
 const feedbackStatusSchema = v.object({
   id: idSchema,
@@ -10,4 +9,4 @@ const feedbackStatusSchema = v.object({
 export const getFeedbackStatusSchema = feedbackStatusSchema;
 export const getManyFeedbackStatusSchema = v.array(getFeedbackStatusSchema);
 
-export type FeedbackStatusTable = v.InferInput<typeof feedbackStatusSchema>;
+export type FeedbackStatusTable = v.InferOutput<typeof feedbackStatusSchema>;

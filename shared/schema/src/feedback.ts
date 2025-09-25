@@ -1,7 +1,6 @@
 import * as v from "valibot";
-
-const idSchema = v.pipe(v.number(), v.integer(), v.minValue(1));
-const dateSchema = v.string();
+import { baseInputOne } from "./base/inputs";
+import { idSchema } from "./base/fields";
 
 const feedbackSchema = v.object({
   id: idSchema,
@@ -9,9 +8,9 @@ const feedbackSchema = v.object({
   description: v.string(),
   feedback_type_id: idSchema,
   topic_id: v.nullable(idSchema),
-  person_email_contact_id: idSchema,
+  person_id: idSchema,
   feedback_status_id: idSchema,
-  created_at: dateSchema,
+  created_at: v.string(),
 });
 
 export const getFeedbackSchema = v.object({
@@ -24,18 +23,31 @@ export const getFeedbackSchema = v.object({
 
 export const getManyFeedbackSchema = v.array(getFeedbackSchema);
 
+export const updateFeedbackSchema = v.object({
+  params: baseInputOne,
+  body: v.partial(
+    v.pick(feedbackSchema, [
+      "topic_id",
+      "feedback_type_id",
+      "feedback_status_id",
+      "project_id",
+    ]),
+  ),
+});
+
 export const createFeedbackSchema = v.object({
   project_id: idSchema,
   description: v.string(),
   feedback_type_id: idSchema,
   topic_id: v.nullable(idSchema),
+
   first_name: v.string(),
   last_name: v.string(),
-  middle_name: v.string(),
-  person_type_id: idSchema,
+  middle_name: v.optional(v.string()),
+
   email: v.string(),
   phone: v.optional(v.string()),
   social: v.optional(v.string()),
 });
 
-export type FeedbackTable = v.InferInput<typeof feedbackSchema>;
+export type FeedbackTable = v.InferOutput<typeof feedbackSchema>;

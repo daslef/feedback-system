@@ -1,7 +1,8 @@
 import * as v from "valibot";
+import { idSchema } from "./base/fields";
 
 const topicCategorySchema = v.object({
-  id: v.pipe(v.number(), v.integer(), v.minValue(1)),
+  id: idSchema,
   title: v.pipe(v.string(), v.nonEmpty()),
 });
 
@@ -9,4 +10,4 @@ export const getTopicCategorySchema = topicCategorySchema;
 export const getManyTopicCategoriesSchema = v.array(getTopicCategorySchema);
 export const createTopicCategorySchema = v.omit(getTopicCategorySchema, ["id"]);
 
-export type TopicCategoryTable = v.InferInput<typeof topicCategorySchema>;
+export type TopicCategoryTable = v.InferOutput<typeof topicCategorySchema>;

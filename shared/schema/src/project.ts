@@ -1,6 +1,5 @@
 import * as v from "valibot";
-
-const idSchema = v.pipe(v.number(), v.integer(), v.minValue(1));
+import { idSchema } from "./base/fields";
 
 const projectSchema = v.object({
   id: v.optional(idSchema),
@@ -27,4 +26,4 @@ export const getManyProjectsSchema = v.array(getProjectSchema);
 export const createProjectSchema = v.omit(projectSchema, ["id", "created_at"]);
 export const updateProjectSchema = v.partial(createProjectSchema);
 
-export type ProjectTable = v.InferInput<typeof projectSchema>;
+export type ProjectTable = v.InferOutput<typeof projectSchema>;

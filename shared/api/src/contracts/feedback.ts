@@ -4,6 +4,7 @@ import {
   getFeedbackSchema,
   getManyFeedbackSchema,
   createFeedbackSchema,
+  updateFeedbackSchema,
 } from "@shared/schema/feedback";
 
 import { baseInputAll, baseInputOne } from "@shared/schema/base";
@@ -32,15 +33,25 @@ const feedbackContract = oc
       .input(baseInputOne)
       .output(getFeedbackSchema),
 
-    // create: oc
-    //   .route({
-    //     method: "POST",
-    //     path: "/",
-    //     summary: "New feedback record",
-    //     description: "Create a new feedback record",
-    //   })
-    //   .input(createFeedbackSchema)
-    //   .output(getFeedbackSchema),
+    create: oc
+      .route({
+        method: "POST",
+        path: "/",
+        summary: "New feedback record",
+        description: "Create a new feedback record",
+      })
+      .input(createFeedbackSchema),
+
+    update: oc
+      .route({
+        method: "PATCH",
+        path: "/{id}",
+        inputStructure: "detailed",
+        summary: "Update feedback record",
+        description: "Update feedback record (topic, status, project)",
+      })
+      .input(updateFeedbackSchema)
+      .output(getFeedbackSchema),
   });
 
 export default feedbackContract;

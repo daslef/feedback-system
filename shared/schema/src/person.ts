@@ -1,15 +1,13 @@
 import * as v from "valibot";
 
+import { idSchema } from "./base/fields";
 import { personContactSchema } from "./person_contact";
-
-const idSchema = v.pipe(v.number(), v.integer(), v.minValue(1));
-const stringSchema = v.string();
 
 const personSchema = v.object({
   id: idSchema,
-  first_name: stringSchema,
-  last_name: stringSchema,
-  middle_name: stringSchema,
+  first_name: v.string(),
+  last_name: v.string(),
+  middle_name: v.string(),
   person_type_id: idSchema,
   contact_id: idSchema,
 });
@@ -23,11 +21,11 @@ export const getPersonSchema = v.object({
 export const getManyPersonsSchema = v.array(getPersonSchema);
 
 export const createPersonSchema = v.object({
-  first_name: stringSchema,
-  last_name: stringSchema,
-  middle_name: stringSchema,
+  first_name: v.string(),
+  last_name: v.string(),
+  middle_name: v.string(),
   person_type_id: idSchema,
-  email: stringSchema,
+  email: v.string(),
   phone: v.optional(v.string()),
   social: v.optional(v.string()),
 });
@@ -39,4 +37,4 @@ export const updatePersonSchema = v.partial(
   }),
 );
 
-export type PersonTable = v.InferInput<typeof personSchema>;
+export type PersonTable = v.InferOutput<typeof personSchema>;

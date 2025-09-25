@@ -1,6 +1,5 @@
 import * as v from "valibot";
-
-const idSchema = v.pipe(v.number(), v.integer(), v.minValue(1));
+import { idSchema } from "./base/fields";
 
 export const personContactSchema = v.object({
   id: idSchema,
@@ -9,4 +8,4 @@ export const personContactSchema = v.object({
   social: v.optional(v.string()),
 });
 
-export type PersonContactTable = v.InferInput<typeof personContactSchema>;
+export type PersonContactTable = v.InferOutput<typeof personContactSchema>;

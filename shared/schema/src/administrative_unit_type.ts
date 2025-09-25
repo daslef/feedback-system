@@ -1,6 +1,5 @@
 import * as v from "valibot";
-
-const idSchema = v.pipe(v.number(), v.integer(), v.minValue(1));
+import { idSchema } from "./base/fields";
 
 const administrativeUnitTypeSchema = v.object({
   id: idSchema,
@@ -17,6 +16,6 @@ export type AdministrativeUnitType = v.InferOutput<
   typeof administrativeUnitTypeSchema
 >;
 
-export type AdministrativeUnitTypeTable = v.InferInput<
+export type AdministrativeUnitTypeTable = v.InferOutput<
   typeof administrativeUnitTypeSchema
 >;

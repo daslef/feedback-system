@@ -36,31 +36,6 @@ async function migrate() {
     .execute();
 
   await db.schema
-    .createTable("feedback")
-    .ifNotExists()
-    .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
-    .addColumn("project_id", "integer", (col) =>
-      col.references("project.id").onDelete("cascade").notNull(),
-    )
-    .addColumn("description", "text", (col) => col.notNull())
-    .addColumn("feedback_type_id", "integer", (col) =>
-      col.references("feedback_type.id").notNull(),
-    )
-    .addColumn("topic_id", "integer", (col) =>
-      col.references("topic.id").onDelete("cascade").notNull(),
-    )
-    .addColumn("person_email_contact_id", "integer", (col) =>
-      col.references("person_contact.id").onDelete("cascade").notNull(),
-    )
-    .addColumn("feedback_status_id", "integer", (col) =>
-      col.references("feedback_status.id").notNull(),
-    )
-    .addColumn("created_at", "timestamp", (col) =>
-      col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
-    )
-    .execute();
-
-  await db.schema
     .createTable("topic")
     .ifNotExists()
     .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
@@ -98,16 +73,6 @@ async function migrate() {
     .ifNotExists()
     .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
     .addColumn("title", "text", (col) => col.notNull().unique())
-    .execute();
-
-  await db.schema
-    .createTable("feedback_image")
-    .ifNotExists()
-    .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
-    .addColumn("feedback_id", "integer", (col) =>
-      col.notNull().references("feedback.id").onDelete("cascade"),
-    )
-    .addColumn("link_to_s3", "text", (col) => col.notNull())
     .execute();
 
   await db.schema
@@ -151,6 +116,41 @@ async function migrate() {
     .addColumn("official_id", "integer", (col) =>
       col.notNull().references("person.id").onDelete("cascade"),
     )
+    .execute();
+
+  await db.schema
+    .createTable("feedback")
+    .ifNotExists()
+    .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
+    .addColumn("project_id", "integer", (col) =>
+      col.references("project.id").onDelete("cascade").notNull(),
+    )
+    .addColumn("description", "text", (col) => col.notNull())
+    .addColumn("feedback_type_id", "integer", (col) =>
+      col.references("feedback_type.id").onDelete("set null"),
+    )
+    .addColumn("topic_id", "integer", (col) =>
+      col.references("topic_category_topic.id").onDelete("set null"),
+    )
+    .addColumn("person_id", "integer", (col) =>
+      col.references("person.id").onDelete("set null"),
+    )
+    .addColumn("feedback_status_id", "integer", (col) =>
+      col.references("feedback_status.id").onDelete("set null"),
+    )
+    .addColumn("created_at", "timestamp", (col) =>
+      col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
+    )
+    .execute();
+
+  await db.schema
+    .createTable("feedback_image")
+    .ifNotExists()
+    .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
+    .addColumn("feedback_id", "integer", (col) =>
+      col.notNull().references("feedback.id").onDelete("cascade"),
+    )
+    .addColumn("link_to_s3", "text", (col) => col.notNull())
     .execute();
 
   console.log("база данных успешно создана! :D");

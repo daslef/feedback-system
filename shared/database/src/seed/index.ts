@@ -1,5 +1,4 @@
 import resetDatabase from "./reset";
-import * as fake from "./fake";
 import * as real from "./real";
 import { db } from "../index";
 
@@ -13,16 +12,12 @@ async function seedDatabase() {
     "seedFeedbackTopicCategories",
     "seedFeedbackTopicCategoryTopic",
     "seedPersonTypes",
-    "seedPersonsAndContacts",
     "seedProjects",
-    // "seedFeedbacks",
   ] as const;
 
   for await (const seedFunctionName of seedFunctionIdentifiers) {
     try {
-      // @ts-ignore
-      const seedFunction = real[seedFunctionName] ?? fake[seedFunctionName];
-      await seedFunction(db);
+      await real[seedFunctionName](db);
     } catch (error) {
       console.error(error);
     }
