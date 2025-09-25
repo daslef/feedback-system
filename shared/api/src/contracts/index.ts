@@ -1,15 +1,20 @@
 import { oc } from "@orpc/contract";
 
-import projectContract from "./project";
-import administrativeUnitContract from "./administrativeUnit";
 import topicContract from "./topic";
 import topicCategoryContract from "./topicCategory";
 import topicCategoryTopicContract from "./topicCategoryTopic";
+
 import feedbackTypeContract from "./feedbackType";
-import feedbackImageContract from "./feedbackImage";
+import feedbackStatusContract from "./feedbackStatus";
 import feedbackContract from "./feedback";
+
+import administrativeUnitContract from "./administrativeUnit";
+import administrativeUnitTypeContract from "./administrativeUnitType";
+
 import personTypeContract from "./personType";
 import personContract from "./person";
+
+import projectContract from "./project";
 
 const apiContract = oc
   .errors({
@@ -40,16 +45,21 @@ const apiContract = oc
     },
   })
   .router({
-    project: projectContract,
-    administrativeUnit: administrativeUnitContract,
-    feedbackType: feedbackTypeContract,
-    feedbackImage: feedbackImageContract,
     topic: topicContract,
     topicCategory: topicCategoryContract,
     topicCategoryTopic: topicCategoryTopicContract,
+
     feedback: feedbackContract,
+    feedbackType: feedbackTypeContract,
+    feedbackStatus: feedbackStatusContract,
+
     personType: personTypeContract,
     person: personContract,
+
+    administrativeUnit: administrativeUnitContract,
+    administrativeUnitType: administrativeUnitTypeContract,
+
+    project: projectContract,
   });
 
 export default apiContract;

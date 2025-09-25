@@ -1,12 +1,6 @@
 import { oc } from "@orpc/contract";
-import * as v from "valibot";
 
-const PersonTypeSchema = v.object({
-  id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  title: v.picklist(["citizen", "official", "moderator"]),
-});
-
-const GetManyPersonTypeSchema = v.array(PersonTypeSchema);
+import { getManyPersonTypeSchema } from "@shared/schema/person_type";
 
 const personTypeContract = oc
   .tag("Persons")
@@ -19,7 +13,7 @@ const personTypeContract = oc
         summary: "List all person types",
         description: "Get information for all person types",
       })
-      .output(GetManyPersonTypeSchema),
+      .output(getManyPersonTypeSchema),
   });
 
 export default personTypeContract;

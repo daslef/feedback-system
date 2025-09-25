@@ -1,71 +1,26 @@
 import { oc } from "@orpc/contract";
-import * as v from "valibot";
 
-const GetFeedbackSchema = v.object({
-  id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  project_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  project: v.string(),
-  description: v.string(),
-  feedback_type_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  feedback_type: v.string(),
-  topic_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  topic: v.string(),
-  person_email_contact_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  feedback_status_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  feedback_status: v.union([
-    v.literal("pending"),
-    v.literal("approved"),
-    v.literal("declined"),
-  ]),
-  created_at: v.string(),
-});
+import {
+  getFeedbackSchema,
+  getManyFeedbackSchema,
+  createFeedbackSchema,
+} from "@shared/schema/feedback";
 
-const CreateFeedbackSchema = v.object({
-  project_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  description: v.string(),
-  feedback_type_id: v.union([v.literal(1), v.literal(2)]),
-  topic_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  person_email_contact_id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-});
-
-const GetManyFeedbackSchema = v.array(GetFeedbackSchema);
+import { baseInputAll, baseInputOne } from "@shared/schema/base";
 
 const feedbackContract = oc
   .tag("Feedback")
   .prefix("/feedback")
   .router({
     all: oc
-      .input(
-        v.object({
-          limit: v.exactOptional(
-            v.pipe(
-              v.union([v.string(), v.number()]),
-              v.transform(Number),
-              v.number(),
-              v.integer(),
-              v.minValue(12),
-              v.maxValue(48),
-            ),
-            24,
-          ),
-          offset: v.exactOptional(
-            v.pipe(
-              v.union([v.string(), v.number()]),
-              v.transform(Number),
-              v.number(),
-              v.integer(),
-            ),
-            0,
-          ),
-        }),
-      )
+      .input(baseInputAll)
       .route({
         method: "GET",
         path: "/",
         summary: "List all feedback records",
         description: "Get information for all feedback records",
       })
-      .output(GetManyFeedbackSchema),
+      .output(getManyFeedbackSchema),
 
     one: oc
       .route({
@@ -74,18 +29,18 @@ const feedbackContract = oc
         summary: "Get a feedback record",
         description: "Get full feedback information by id",
       })
-      .input(v.object({ id: v.string() }))
-      .output(GetFeedbackSchema),
+      .input(baseInputOne)
+      .output(getFeedbackSchema),
 
-    create: oc
-      .route({
-        method: "POST",
-        path: "/",
-        summary: "New feedback record",
-        description: "Create a new feedback record",
-      })
-      .input(CreateFeedbackSchema)
-      .output(GetFeedbackSchema),
+    // create: oc
+    //   .route({
+    //     method: "POST",
+    //     path: "/",
+    //     summary: "New feedback record",
+    //     description: "Create a new feedback record",
+    //   })
+    //   .input(createFeedbackSchema)
+    //   .output(getFeedbackSchema),
   });
 
 export default feedbackContract;

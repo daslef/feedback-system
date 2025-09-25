@@ -1,12 +1,6 @@
 import { oc } from "@orpc/contract";
-import * as v from "valibot";
 
-const FeedbackTypeSchema = v.object({
-  id: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  title: v.string(),
-});
-
-const GetManyFeedbackTypeSchema = v.array(FeedbackTypeSchema);
+import { getManyFeedbackTypeSchema } from "@shared/schema/feedback_type";
 
 const feedbackTypeContract = oc
   .tag("Feedback")
@@ -19,7 +13,7 @@ const feedbackTypeContract = oc
         summary: "List all feedback types",
         description: "Get information for all feedback types",
       })
-      .output(GetManyFeedbackTypeSchema),
+      .output(getManyFeedbackTypeSchema),
   });
 
 export default feedbackTypeContract;

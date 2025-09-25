@@ -1,18 +1,24 @@
 import * as v from "valibot";
 
-export const baseLimitInput = v.optional(
-  v.pipe(v.string(), v.transform(Number), v.number(), v.picklist([12, 24, 48])),
-);
-
-export const baseOffsetInput = v.optional(
-  v.pipe(
-    v.string(),
-    v.transform(Number),
-    v.number(),
-    v.integer(),
-    v.minValue(0),
+export const basePaginationInput = v.object({
+  limit: v.optional(
+    v.pipe(
+      v.union([v.string(), v.number()]),
+      v.transform(Number),
+      v.number(),
+      v.picklist([12, 24, 48]),
+    ),
   ),
-);
+  offset: v.optional(
+    v.pipe(
+      v.union([v.string(), v.number()]),
+      v.transform(Number),
+      v.number(),
+      v.integer(),
+      v.minValue(0),
+    ),
+  ),
+});
 
 export const baseSortInput = v.optional(
   v.union([
@@ -60,10 +66,9 @@ export const baseInputOne = v.object({
 });
 
 export const baseInputAll = v.object({
-  limit: baseLimitInput,
+  ...basePaginationInput.entries,
   sort: baseSortInput,
   filter: baseFilterInput,
-  offset: baseOffsetInput,
 });
 
 export type BaseInputAll = v.InferOutput<typeof baseInputAll>;
