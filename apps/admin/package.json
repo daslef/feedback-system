@@ -15,8 +15,11 @@
     "@refinedev/core": "catalog:",
     "@refinedev/react-router": "catalog:",
     "antd": "catalog:",
+    "i18next": "^25.5.2",
+    "i18next-browser-languagedetector": "^8.2.0",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "react-i18next": "^15.7.3",
     "react-router": "catalog:"
   },
   "devDependencies": {

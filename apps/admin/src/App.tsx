@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Outlet } from "react-router";
 import { ConfigProvider, App as AntdApp } from "antd";
+import { useTranslation } from "react-i18next";
 
 import { Refine, Authenticated } from "@refinedev/core";
 import routerProvider, { NavigateToResource } from "@refinedev/react-router";
@@ -10,6 +11,8 @@ import {
   ThemedSider,
   useNotificationProvider,
 } from "@refinedev/antd";
+
+import "./i18n";
 
 import { dataProvider } from "./providers/data-provider";
 import { authProvider } from "./providers/auth-provider";
@@ -34,7 +37,28 @@ import { Register } from "./pages/auth/register";
 
 import "antd/dist/reset.css";
 
+interface I18nProvider {
+  translate: (key: string, params?: any) => string;
+  changeLocale: (lang: string) => void;
+  getLocale: () => string;
+}
+
+
 function App() {
+  const { t } = useTranslation();
+
+  const i18nProvider: I18nProvider = {
+    translate: (key: string, params?: any) => {
+      return String(t(key, params));
+    },
+    changeLocale: (lang: string) => {
+      console.log(`Только русский язык доступен ${lang}`);
+    },
+    getLocale: () => {
+      return "ru";
+    },
+  };
+
   return (
     <BrowserRouter>
       <ConfigProvider theme={RefineThemes.Blue}>
@@ -44,6 +68,7 @@ function App() {
             authProvider={authProvider}
             routerProvider={routerProvider}
             notificationProvider={useNotificationProvider}
+            i18nProvider={i18nProvider}
             resources={[
               {
                 name: "projects",
@@ -51,14 +76,14 @@ function App() {
                 show: "/projects/:id",
                 edit: "/projects/:id/edit",
                 create: "/projects/create",
-                meta: { label: "Проекты" },
+                meta: { label: t("projects.projects") },
               },
               {
                 name: "persons",
                 list: "/persons",
                 create: "/persons/create",
                 meta: {
-                  label: "Пользователи",
+                  label: t("persons.persons"),
                 },
               },
             ]}
@@ -74,7 +99,7 @@ function App() {
                       Title={(props) => (
                         <ThemedTitle
                           {...props}
-                          text="Обратная связь вместе47"
+                          text={t("documentTitle.default")}
                         />
                       )}
                       Sider={(props) => <ThemedSider {...props} />}

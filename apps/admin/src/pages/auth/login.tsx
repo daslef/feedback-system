@@ -10,7 +10,6 @@ export const Login = () => {
           password: "admin2password",
         },
       }}
-      title="Аутентификация"
     />
   );
 };
