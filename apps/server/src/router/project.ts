@@ -59,8 +59,8 @@ const projectRouter = {
               | keyof Database["administrative_unit"]
               | keyof Database["administrative_unit_type"];
 
-            if (column === "id") {
-              column = "project.id" as keyof Database["project"];
+            if (["id", "title"].includes(column)) {
+              column = `project.${column}` as keyof Database["project"];
             }
 
             const operator = matchResult[2] as keyof typeof mapOperatorsToSql;

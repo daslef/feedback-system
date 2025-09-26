@@ -89,7 +89,9 @@ const personRouter = {
           query = query.offset(offset);
         }
 
-        return await query.execute();
+        const person = await query.execute();
+        console.log(person);
+        return person;
       } catch (error) {
         console.error(error);
         throw errors.INTERNAL_SERVER_ERROR();

@@ -28,11 +28,6 @@ export const ListProjects = () => {
           operator: "eq",
           value: "town",
         },
-        {
-          field: "year_of_completion",
-          operator: "eq",
-          value: "2023",
-        },
       ],
     },
     syncWithLocation: true,
