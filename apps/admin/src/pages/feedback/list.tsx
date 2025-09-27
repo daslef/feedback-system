@@ -42,30 +42,27 @@ export const ListFeedback = () => {
     defaultValue: getDefaultFilter("feedback_type_id", filters, "eq"),
   });
 
+  const { selectProps: feedbackStatusSelectProps } = useSelect({
+    resource: "feedback_statuses",
+    optionLabel: "title",
+    optionValue: "id",
+    pagination: {
+      pageSize: 48,
+    },
+    defaultValue: getDefaultFilter("feedback_status_id", filters, "eq"),
+  });
+
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "orange";
-      case "approved":
-        return "green";
-      case "declined":
-        return "red";
-      default:
-        return "default";
-    }
+    const colorMap: Record<string, string> = {
+      pending: "orange",
+      approved: "green",
+      declined: "red",
+    };
+    return colorMap[status] || "default";
   };
 
   const getStatusText = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "На рассмотрении";
-      case "approved":
-        return "Согласовано";
-      case "declined":
-        return "Отклонено";
-      default:
-        return status;
-    }
+    return status;
   };
 
   return (
@@ -137,11 +134,29 @@ export const ListFeedback = () => {
           render={(value) => value || "—"}
         />
         <Table.Column
-          dataIndex="feedback_status"
+          dataIndex="feedback_status_id"
           title="Статус"
           sorter
-          render={(value) => (
-            <Tag color={getStatusColor(value)}>{getStatusText(value)}</Tag>
+          render={(_, record) => (
+            <Tag color={getStatusColor(record.feedback_status)}>
+              {getStatusText(record.feedback_status)}
+            </Tag>
+          )}
+          filterDropdown={(props) => (
+            <FilterDropdown
+              {...props}
+              mapValue={(selectedKey) => Number(selectedKey)}
+            >
+              <Select
+                style={{ minWidth: 200 }}
+                {...feedbackStatusSelectProps}
+              />
+            </FilterDropdown>
+          )}
+          defaultFilteredValue={getDefaultFilter(
+            "feedback_status_id",
+            filters,
+            "eq",
           )}
         />
         <Table.Column

@@ -5,6 +5,7 @@ import topicRouter from "./topic";
 import topicCategoryRouter from "./topicCategory";
 import topicCategoryTopicRouter from "./topicCategoryTopic";
 import feedbackTypeRouter from "./feedbackType";
+import feedbackStatusRouter from "./feedbackStatus";
 import feedbackRouter from "./feedback";
 import personTypeRouter from "./personType";
 import personRouter from "./person";
@@ -14,6 +15,7 @@ const apiRouter = {
   administrativeUnits: administrativeUnitRouter,
   administrativeUnitTypes: administrativeUnitTypeRouter,
   feedbackType: feedbackTypeRouter,
+  feedback_statuses: feedbackStatusRouter,
   topic: topicRouter,
   topicCategories: topicCategoryRouter,
   topicCategoryTopic: topicCategoryTopicRouter,

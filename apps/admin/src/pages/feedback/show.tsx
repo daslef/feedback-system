@@ -1,4 +1,4 @@
-import { useShow, useUpdate } from "@refinedev/core";
+import { useShow, useUpdate, useList } from "@refinedev/core";
 import { TextField, Show } from "@refinedev/antd";
 import { Button, Space, Tag, Carousel } from "antd";
 
@@ -12,39 +12,38 @@ export const ShowFeedback = () => {
 
   const { mutate: updateFeedback } = useUpdate();
 
+  const { result: statuses } = useList({
+    resource: "feedback_statuses",
+  });
+
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "orange";
-      case "approved":
-        return "green";
-      case "declined":
-        return "red";
-      default:
-        return "default";
-    }
+    const colorMap: Record<string, string> = {
+      pending: "orange",
+      approved: "green",
+      declined: "red",
+    };
+    return colorMap[status] || "default";
   };
 
   const getStatusText = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "На рассмотрении";
-      case "approved":
-        return "Согласовано";
-      case "declined":
-        return "Отклонено";
-      default:
-        return status;
-    }
+    return status;
   };
 
   const handleApprove = () => {
+    const approvedStatus = statuses?.data?.find(
+      (status: any) => status.title === "approved",
+    );
+    if (!approvedStatus) {
+      message.error("Статус 'approved' не найден");
+      return;
+    }
+
     updateFeedback(
       {
         resource: "feedback",
         id: feedback?.id,
         values: {
-          feedback_status_id: 1,
+          feedback_status_id: approvedStatus.id,
         },
       },
       {
@@ -59,12 +58,20 @@ export const ShowFeedback = () => {
   };
 
   const handleDecline = () => {
+    const declinedStatus = statuses?.data?.find(
+      (status: any) => status.title === "declined",
+    );
+    if (!declinedStatus) {
+      message.error("Статус 'declined' не найден");
+      return;
+    }
+
     updateFeedback(
       {
         resource: "feedback",
         id: feedback?.id,
         values: {
-          feedback_status_id: 2,
+          feedback_status_id: declinedStatus.id,
         },
       },
       {
@@ -108,7 +115,10 @@ export const ShowFeedback = () => {
             <TextField value={feedback?.topic || "—"} />
 
             <Typography.Title level={5}>Статус</Typography.Title>
-            <Tag color={getStatusColor(feedback?.feedback_status)} style={{marginBottom: "16px" }}>
+            <Tag
+              color={getStatusColor(feedback?.feedback_status)}
+              style={{ marginBottom: "16px" }}
+            >
               {getStatusText(feedback?.feedback_status)}
             </Tag>
 

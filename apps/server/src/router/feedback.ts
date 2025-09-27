@@ -72,6 +72,11 @@ const feedbackRouter = {
               column = "feedback.id" as keyof Database["feedback"];
             }
 
+            if (column === "feedback_status_id") {
+              column =
+                "feedback.feedback_status_id" as keyof Database["feedback"];
+            }
+
             const operator = matchResult[2] as keyof typeof mapOperatorsToSql;
 
             let value: WhereValue = Number.isFinite(+matchResult[3])
