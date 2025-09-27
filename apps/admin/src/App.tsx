@@ -22,15 +22,18 @@ import { EditProject } from "./pages/projects/edit";
 import { ListProjects } from "./pages/projects/list";
 import { CreateProject } from "./pages/projects/create";
 
-import { ListTopicCategories } from "./pages/topic-categories/list";
-import { CreateTopicCategory } from "./pages/topic-categories/create";
-import { ListFeedbackTopics } from "./pages/topics/list";
-import { CreateFeedbackTopic } from "./pages/topics/create";
-import { ListTopicCategoryTopics } from "./pages/category-topics/list";
-import { CreateTopicCategoryTopic } from "./pages/category-topics/create";
+// import { ListTopicCategories } from "./pages/topic-categories/list";
+// import { CreateTopicCategory } from "./pages/topic-categories/create";
+// import { ListFeedbackTopics } from "./pages/topics/list";
+// import { CreateFeedbackTopic } from "./pages/topics/create";
+// import { ListTopicCategoryTopics } from "./pages/category-topics/list";
+// import { CreateTopicCategoryTopic } from "./pages/category-topics/create";
 
 import { ListPersons } from "./pages/persons/list";
 import { CreatePerson } from "./pages/persons/create";
+
+import { ListFeedback } from "./pages/feedback/list";
+import { ShowFeedback } from "./pages/feedback/show";
 
 import { Login } from "./pages/auth/login";
 import { Register } from "./pages/auth/register";
@@ -42,7 +45,6 @@ interface I18nProvider {
   changeLocale: (lang: string) => void;
   getLocale: () => string;
 }
-
 
 function App() {
   const { t } = useTranslation();
@@ -77,6 +79,12 @@ function App() {
                 edit: "/projects/:id/edit",
                 create: "/projects/create",
                 meta: { label: t("projects.projects") },
+              },
+              {
+                name: "feedback",
+                list: "/feedback",
+                show: "/feedback/:id",
+                meta: { label: "Обращения" },
               },
               {
                 name: "persons",
@@ -118,6 +126,10 @@ function App() {
                   <Route path=":id" element={<ShowProject />} />
                   <Route path=":id/edit" element={<EditProject />} />
                   <Route path="create" element={<CreateProject />} />
+                </Route>
+                <Route path="/feedback">
+                  <Route index element={<ListFeedback />} />
+                  <Route path=":id" element={<ShowFeedback />} />
                 </Route>
                 <Route path="/persons">
                   <Route index element={<ListPersons />} />

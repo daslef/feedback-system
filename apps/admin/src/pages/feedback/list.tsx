@@ -1,0 +1,165 @@
+import { useMany } from "@refinedev/core";
+import {
+  useTable,
+  ShowButton,
+  getDefaultSortOrder,
+  getDefaultFilter,
+  FilterDropdown,
+  useSelect,
+  List,
+} from "@refinedev/antd";
+
+import { Table, Space, Input, Select, Tag } from "antd";
+
+export const ListFeedback = () => {
+  const { tableProps, sorters, filters } = useTable({
+    resource: "feedback",
+    pagination: { currentPage: 1, pageSize: 12 },
+    sorters: {
+      initial: [{ field: "created_at", order: "desc" }],
+    },
+    syncWithLocation: true,
+  });
+
+  const { result: projects, query: projectsQuery } = useMany({
+    resource: "projects",
+    ids: tableProps?.dataSource?.map((feedback) => feedback.project_id) ?? [],
+  });
+
+  const { selectProps: projectSelectProps } = useSelect({
+    resource: "projects",
+    pagination: {
+      pageSize: 48,
+    },
+    defaultValue: getDefaultFilter("project_id", filters, "eq"),
+  });
+
+  const { selectProps: feedbackTypeSelectProps } = useSelect({
+    resource: "feedback_types",
+    pagination: {
+      pageSize: 48,
+    },
+    defaultValue: getDefaultFilter("feedback_type_id", filters, "eq"),
+  });
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "orange";
+      case "approved":
+        return "green";
+      case "declined":
+        return "red";
+      default:
+        return "default";
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "На рассмотрении";
+      case "approved":
+        return "Согласовано";
+      case "declined":
+        return "Отклонено";
+      default:
+        return status;
+    }
+  };
+
+  return (
+    <List title="Обращения граждан">
+      <Table {...tableProps} rowKey="id">
+        <Table.Column
+          dataIndex="description"
+          title="Описание"
+          sorter
+          defaultSortOrder={getDefaultSortOrder("description", sorters)}
+          filterDropdown={(props) => (
+            <FilterDropdown {...props}>
+              <Input />
+            </FilterDropdown>
+          )}
+          render={(value) => (
+            <div
+              style={{
+                maxWidth: 300,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {value}
+            </div>
+          )}
+        />
+        <Table.Column
+          dataIndex="project_id"
+          title="Проект"
+          sorter
+          render={(value) => {
+            if (projectsQuery.isLoading) {
+              return "Загрузка...";
+            }
+
+            return projects?.data?.find((project) => project.id == value)
+              ?.title;
+          }}
+          filterDropdown={(props) => (
+            <FilterDropdown
+              {...props}
+              mapValue={(selectedKey) => Number(selectedKey)}
+            >
+              <Select style={{ minWidth: 200 }} {...projectSelectProps} />
+            </FilterDropdown>
+          )}
+          defaultFilteredValue={getDefaultFilter("project_id", filters, "eq")}
+        />
+        <Table.Column
+          dataIndex="feedback_type"
+          title="Тип обращения"
+          sorter
+          filterDropdown={(props) => (
+            <FilterDropdown {...props}>
+              <Select style={{ minWidth: 200 }} {...feedbackTypeSelectProps} />
+            </FilterDropdown>
+          )}
+          defaultFilteredValue={getDefaultFilter(
+            "feedback_type",
+            filters,
+            "eq",
+          )}
+        />
+        <Table.Column
+          dataIndex="topic"
+          title="Тема"
+          sorter
+          render={(value) => value || "—"}
+        />
+        <Table.Column
+          dataIndex="feedback_status"
+          title="Статус"
+          sorter
+          render={(value) => (
+            <Tag color={getStatusColor(value)}>{getStatusText(value)}</Tag>
+          )}
+        />
+        <Table.Column
+          dataIndex="created_at"
+          title="Дата создания"
+          sorter
+          defaultSortOrder={getDefaultSortOrder("created_at", sorters)}
+          render={(value) => new Date(value).toLocaleDateString("ru-RU")}
+        />
+        <Table.Column
+          title="Действия"
+          render={(_, record) => (
+            <Space>
+              <ShowButton hideText size="small" recordItemId={record.id} />
+            </Space>
+          )}
+        />
+      </Table>
+    </List>
+  );
+};
