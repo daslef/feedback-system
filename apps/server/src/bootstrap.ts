@@ -5,7 +5,6 @@ import { cors } from "hono/cors";
 import { createApi } from "@shared/api";
 import { createAuth } from "@shared/auth";
 import { db } from "@shared/database";
-import upload from "@shared/upload";
 
 import { env } from "./env";
 import apiRouter from "./router";
@@ -43,54 +42,6 @@ export default function createApp() {
   });
 
   app.use(logger());
-
-  app.post("/api/upload", async (c) => {
-    const contentType = c.req.header("content-type");
-
-    if (!contentType?.includes("multipart/form-data")) {
-      console.error("Invalid content type:", contentType);
-      return c.json({ error: "Expected multipart/form-data" }, 400);
-    }
-
-    const formData = await c.req.formData();
-    const feedback_id = Number(formData.get("feedback_id"));
-
-    if (!isFinite(feedback_id)) {
-      return c.json({ error: "Feedback ID is required" }, 400);
-    }
-
-    const images = formData.getAll("files") as File[];
-
-    console.log("Form data parsed:", {
-      feedback_id,
-    });
-
-    console.log(
-      images.map((imageFile) => ({
-        hasImage: !!imageFile,
-        fileName: imageFile?.name,
-        fileSize: imageFile?.size,
-      })),
-    );
-
-    await Promise.all(
-      images.map(async (file) => {
-        console.log(file);
-        try {
-          const fileUrl = await upload(file, "upload");
-          await db
-            .insertInto("feedback_image")
-            .values({
-              feedback_id: feedback_id,
-              link_to_s3: fileUrl,
-            })
-            .execute();
-        } catch {
-          throw new Error("Error on images upload");
-        }
-      }),
-    );
-  });
 
   app.use(
     `${env.PUBLIC_SERVER_API_PATH}/auth/*`,

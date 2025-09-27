@@ -43,7 +43,6 @@ interface I18nProvider {
   getLocale: () => string;
 }
 
-
 function App() {
   const { t } = useTranslation();
 
@@ -51,9 +50,7 @@ function App() {
     translate: (key: string, params?: any) => {
       return String(t(key, params));
     },
-    changeLocale: (lang: string) => {
-      console.log(`Только русский язык доступен ${lang}`);
-    },
+    changeLocale: (_: string) => {},
     getLocale: () => {
       return "ru";
     },

@@ -60,6 +60,8 @@ const administrativeUnitRouter = {
               value = items.some((item) => !Number.isFinite(+item))
                 ? items
                 : items.map(Number);
+            } else if (operator === "in" && typeof value === "number") {
+              value = Array.isArray(value) ? value : [value];
             }
 
             query = query.where(column, mapOperatorsToSql[operator], value);
@@ -79,6 +81,8 @@ const administrativeUnitRouter = {
               order as "desc" | "asc",
             );
           }
+        } else {
+          query = query.orderBy("administrative_unit.title", "asc");
         }
 
         if (limit !== undefined) {

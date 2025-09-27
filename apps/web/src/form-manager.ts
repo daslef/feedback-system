@@ -190,15 +190,10 @@ export default class FormManager {
       {},
     ) as types.Feedback;
 
-    // formDataObject.files = this.selectedFiles;
-    // .map((file) => ({
-    //   name: file.name,
-    //   size: file.size,
-    //   type: file.type,
-    // }));
+    formDataObject.files = this.dragAndDrop.selectedFiles; // .fileInput
 
     apiClient.feedback
-      .create(formDataObject)
+      .create({ body: formDataObject })
       .then(() => {
         this.alertManager.showAlert("Обращение принято", "success");
         this.form.reset();

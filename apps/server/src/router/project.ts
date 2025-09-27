@@ -74,6 +74,7 @@ const projectRouter = {
               value = items.some((item) => !Number.isFinite(+item))
                 ? items
                 : items.map(Number);
+              console.log(value);
             }
 
             query = query.where(column, mapOperatorsToSql[operator], value);
@@ -82,7 +83,10 @@ const projectRouter = {
 
         if (sort !== undefined) {
           for (const sortExpression of sort) {
-            const [field, order] = sortExpression.split(".");
+            let [field, order] = sortExpression.split(".");
+            if (["id", "title"].includes(field)) {
+              field = `project.${field}`;
+            }
             query = query.orderBy(
               field as keyof Database["project"],
               order as "desc" | "asc",
@@ -162,6 +166,22 @@ const projectRouter = {
         console.error(error);
         throw errors.CONFLICT({
           message: "Ошибка при создании нового проекта",
+        });
+      }
+    },
+  ),
+
+  delete: protectedProcedure.project.delete.handler(
+    async ({ context, input, errors }) => {
+      try {
+        await context.db
+          .deleteFrom("project")
+          .where("project.id", "=", Number(input.id))
+          .executeTakeFirstOrThrow();
+      } catch (error) {
+        console.error(error);
+        throw errors.CONFLICT({
+          message: `Ошибка при удалении проекта с ID ${input.id}`,
         });
       }
     },

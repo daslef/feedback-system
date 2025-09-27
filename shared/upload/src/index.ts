@@ -22,10 +22,13 @@ export default async function upload(file: File, bucketName: string) {
     };
 
     const fileBuffer = await file.arrayBuffer();
+    const fileName = `${new Date().toJSON()}_${file.name}`;
+
     await createBucket(minioClient, bucketName ?? "upload");
+
     await minioClient.putObject(
       bucketName ?? "upload",
-      file.name,
+      fileName,
       Buffer.from(fileBuffer),
       file.size,
       metaData,
@@ -33,7 +36,7 @@ export default async function upload(file: File, bucketName: string) {
 
     logger.info("[*] SUCCESS: File uploaded successfully!");
 
-    const imageUrl = `http://${env.MINIO_ENDPOINT}:${env.MINIO_PORT}/${bucketName}/${file.name}`;
+    const imageUrl = `http://${env.MINIO_ENDPOINT}:${env.MINIO_PORT}/${bucketName}/${fileName}`;
 
     if (imageUrl === null) {
       throw new Error();

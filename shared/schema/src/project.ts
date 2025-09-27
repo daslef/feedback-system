@@ -13,7 +13,13 @@ const projectSchema = v.object({
     v.maxValue(2026),
   ),
   administrative_unit_id: idSchema,
-  created_at: v.optional(v.string()),
+  created_at: v.optional(
+    v.union([
+      v.date(),
+      v.pipe(v.string(), v.isoTimestamp()),
+      v.pipe(v.string(), v.isoDateTime()),
+    ]),
+  ),
 });
 
 export const getProjectSchema = v.object({

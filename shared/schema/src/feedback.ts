@@ -10,7 +10,11 @@ const feedbackSchema = v.object({
   topic_id: v.nullable(idSchema),
   person_id: idSchema,
   feedback_status_id: idSchema,
-  created_at: v.string(),
+  created_at: v.union([
+    v.date(),
+    v.pipe(v.string(), v.isoTimestamp()),
+    v.pipe(v.string(), v.isoDateTime()),
+  ]),
 });
 
 export const getFeedbackSchema = v.object({
@@ -48,6 +52,15 @@ export const createFeedbackSchema = v.object({
 
   email: v.string(),
   phone: v.optional(v.string()),
+
+  files: v.optional(
+    v.union([
+      v.array(
+        v.pipe(v.file(), v.mimeType(["image/jpeg", "image/jpg", "image/png"])),
+      ),
+      v.pipe(v.file(), v.mimeType(["image/jpeg", "image/jpg", "image/png"])),
+    ]),
+  ),
 });
 
 export type FeedbackTable = v.InferOutput<typeof feedbackSchema>;

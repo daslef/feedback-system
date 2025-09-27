@@ -1,5 +1,6 @@
 import { publicProcedure, protectedProcedure } from "@shared/api";
 import { db, type Database } from "@shared/database";
+import upload from "@shared/upload";
 
 function prepareBaseQuery(databaseInstance: typeof db) {
   return databaseInstance
@@ -161,6 +162,7 @@ const feedbackRouter = {
   create: publicProcedure.feedback.create.handler(
     async ({ context, input, errors }) => {
       const transaction = await context.db.startTransaction().execute();
+      console.log(input.body);
 
       try {
         let personId = (
@@ -172,7 +174,7 @@ const feedbackRouter = {
               "person.contact_id",
               "person_contact.id",
             )
-            .where("person_contact.email", "=", input.email)
+            .where("person_contact.email", "=", input.body.email)
             .executeTakeFirst()
         )?.id;
 
@@ -186,8 +188,8 @@ const feedbackRouter = {
           const { insertId: personContactId } = await transaction
             .insertInto("person_contact")
             .values({
-              email: input.email,
-              phone: input.phone ?? "",
+              email: input.body.email,
+              phone: input.body.phone ?? "",
             })
             .executeTakeFirstOrThrow();
 
@@ -198,9 +200,9 @@ const feedbackRouter = {
           const { insertId } = await transaction
             .insertInto("person")
             .values({
-              first_name: input.first_name,
-              last_name: input.last_name,
-              middle_name: input.middle_name ?? "",
+              first_name: input.body.first_name,
+              last_name: input.body.last_name,
+              middle_name: input.body.middle_name ?? "",
               person_type_id: personTypeId,
               contact_id: Number(personContactId),
             })
@@ -215,21 +217,46 @@ const feedbackRouter = {
           .where("feedback_status.title", "=", "pending")
           .executeTakeFirstOrThrow();
 
-        const { insertId } = await transaction
+        const { insertId: feedbackId } = await transaction
           .insertInto("feedback")
           .values({
-            project_id: input.project_id,
-            description: input.description,
-            feedback_type_id: input.feedback_type_id,
-            topic_id: input.topic_category_topic_id ?? null,
+            project_id: input.body.project_id,
+            description: input.body.description,
+            feedback_type_id: input.body.feedback_type_id,
+            topic_id: input.body.topic_category_topic_id ?? null,
             person_id: personId,
             feedback_status_id: pendingStatusId,
           })
           .executeTakeFirstOrThrow();
 
-        if (insertId === undefined) {
+        if (feedbackId === undefined) {
           throw new Error("Ошибка при создании записи");
         }
+
+        const images = [];
+        if (input.body.files && Array.isArray(input.body.files)) {
+          images.push(...input.body.files);
+        } else if (input.body.files) {
+          images.push(input.body.files);
+        }
+
+        await Promise.all(
+          images.map(async (file) => {
+            console.log(file);
+            try {
+              const fileUrl = await upload(file, "upload");
+              await transaction
+                .insertInto("feedback_image")
+                .values({
+                  feedback_id: Number(feedbackId),
+                  link_to_s3: fileUrl,
+                })
+                .execute();
+            } catch {
+              throw new Error("Error on images upload");
+            }
+          }),
+        );
 
         await transaction.commit().execute();
       } catch (error) {

@@ -89,9 +89,7 @@ const personRouter = {
           query = query.offset(offset);
         }
 
-        const person = await query.execute();
-        console.log(person);
-        return person;
+        return await query.execute();
       } catch (error) {
         console.error(error);
         throw errors.INTERNAL_SERVER_ERROR();
@@ -121,25 +119,27 @@ const personRouter = {
       try {
         const { email, phone, social, ...personInput } = input;
 
-        const { insertId: personContactId } = await context.db
+        const { id: personContactId } = await context.db
           .insertInto("person_contact")
           .values({
             email: email,
             phone: phone ?? "",
             social: social ?? "",
           })
+          .returning("id")
           .executeTakeFirstOrThrow();
 
         if (personContactId === undefined) {
           throw new Error("Ошибка при создании нового контакта");
         }
 
-        const { insertId: personId } = await context.db
+        const { id: personId } = await context.db
           .insertInto("person")
           .values({
             ...personInput,
             contact_id: Number(personContactId),
           })
+          .returning("id")
           .executeTakeFirstOrThrow();
 
         const person = await getBasePersonQuery(context.db)

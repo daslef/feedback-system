@@ -61,6 +61,23 @@ export const createApi = ({
             cause: error.cause,
           });
         }
+
+        if (
+          error instanceof ORPCError &&
+          error.code === "INTERNAL_SERVER_ERROR" &&
+          error.cause instanceof ValidationError
+        ) {
+          const valiIssues = error.cause.issues as [
+            v.BaseIssue<unknown>,
+            ...v.BaseIssue<unknown>[],
+          ];
+          console.error(v.flatten(valiIssues));
+
+          throw new ORPCError("OUTPUT_VALIDATION_FAILED", {
+            message: v.summarize(valiIssues),
+            cause: error.cause,
+          });
+        }
       }),
     ],
   });
