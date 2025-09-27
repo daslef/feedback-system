@@ -9,7 +9,7 @@ import {
   List,
 } from "@refinedev/antd";
 
-import { Table, Space, Input, Select, Tag } from "antd";
+import { Table, Space, Select, Tag } from "antd";
 
 export const ListFeedback = () => {
   const { tableProps, sorters, filters } = useTable({
@@ -24,14 +24,6 @@ export const ListFeedback = () => {
   const { result: projects, query: projectsQuery } = useMany({
     resource: "projects",
     ids: tableProps?.dataSource?.map((feedback) => feedback.project_id) ?? [],
-  });
-
-  const { selectProps: projectSelectProps } = useSelect({
-    resource: "projects",
-    pagination: {
-      pageSize: 48,
-    },
-    defaultValue: getDefaultFilter("project_id", filters, "eq"),
   });
 
   const { selectProps: feedbackTypeSelectProps } = useSelect({
@@ -73,11 +65,6 @@ export const ListFeedback = () => {
           title="Описание"
           sorter
           defaultSortOrder={getDefaultSortOrder("description", sorters)}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <Input />
-            </FilterDropdown>
-          )}
           render={(value) => (
             <div
               style={{
@@ -102,15 +89,6 @@ export const ListFeedback = () => {
             return projects?.data?.find((project) => project.id == value)
               ?.title;
           }}
-          filterDropdown={(props) => (
-            <FilterDropdown
-              {...props}
-              mapValue={(selectedKey) => Number(selectedKey)}
-            >
-              <Select style={{ minWidth: 200 }} {...projectSelectProps} />
-            </FilterDropdown>
-          )}
-          defaultFilteredValue={getDefaultFilter("project_id", filters, "eq")}
         />
         <Table.Column
           dataIndex="feedback_type"
