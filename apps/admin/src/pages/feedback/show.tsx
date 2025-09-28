@@ -105,6 +105,9 @@ export const ShowFeedback = () => {
             <Typography.Title level={5}>Описание</Typography.Title>
             <TextField value={feedback?.description} />
 
+            <Typography.Title level={5}>Территория</Typography.Title>
+            <TextField value={feedback?.administrative_unit || "—"} />
+
             <Typography.Title level={5}>Проект</Typography.Title>
             <TextField value={feedback?.project} />
 
