@@ -6,10 +6,10 @@ import { createApi } from "@shared/api";
 import { createAuth } from "@shared/auth";
 import { db } from "@shared/database";
 
-import { env } from "./env";
+import { type Env } from "./env";
 import apiRouter from "./router";
 
-export default function createApp() {
+export default function createApp(env: Env) {
   const trustedOrigins = [env.PUBLIC_WEB_URL, env.PUBLIC_ADMIN_URL].map(
     (url) => new URL(url).origin,
   );
@@ -25,6 +25,7 @@ export default function createApp() {
   const api = createApi({
     auth,
     db,
+    environment: env.ENV,
     serverUrl: env.PUBLIC_SERVER_URL,
     apiPath: env.PUBLIC_SERVER_API_PATH,
     appRouter: apiRouter,

@@ -20,15 +20,27 @@ const topicCategoryRouter = {
   create: protectedProcedure.topicCategory.create.handler(
     async ({ context, input, errors }) => {
       try {
-        const { insertId } = await context.db
-          .insertInto("topic_category")
-          .values(input)
-          .executeTakeFirstOrThrow();
+        let topicCategoryId;
+
+        if (context.environment === "development") {
+          const { insertId } = await context.db
+            .insertInto("topic_category")
+            .values(input)
+            .executeTakeFirstOrThrow();
+          topicCategoryId = insertId;
+        } else {
+          const { id } = await context.db
+            .insertInto("topic_category")
+            .values(input)
+            .returning("id")
+            .executeTakeFirstOrThrow();
+          topicCategoryId = id;
+        }
 
         return await context.db
           .selectFrom("topic_category")
           .selectAll()
-          .where("id", "=", Number(insertId))
+          .where("topic_category.id", "=", Number(topicCategoryId))
           .executeTakeFirstOrThrow();
       } catch (error) {
         console.error(error);

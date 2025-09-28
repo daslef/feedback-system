@@ -5,7 +5,7 @@ const topicCategoryTopicRouter = {
   all: publicProcedure.topicCategoryTopic.all.handler(
     async ({ context, input, errors }) => {
       try {
-        const { filter } = input;
+        const { filter, sort } = input;
 
         let query = context.db
           .selectFrom("topic_category_topic")
@@ -73,6 +73,21 @@ const topicCategoryTopicRouter = {
           }
         }
 
+        if (sort !== undefined) {
+          for (const sortExpression of sort) {
+            let [field, order] = sortExpression.split(".");
+            if (field === "topic_id") {
+              query = query.orderBy("topic.title", order as "desc" | "asc");
+            }
+            if (field === "topic_category_id") {
+              query = query.orderBy(
+                "topic_category.title",
+                order as "desc" | "asc",
+              );
+            }
+          }
+        }
+
         return await query.execute();
       } catch (error) {
         console.error(error);
@@ -85,13 +100,27 @@ const topicCategoryTopicRouter = {
     async ({ context, input, errors }) => {
       try {
         const { topic_category_id, topic_id } = input;
-        const { insertId } = await context.db
-          .insertInto("topic_category_topic")
-          .values({
-            topic_category_id,
-            topic_id,
-          })
-          .executeTakeFirstOrThrow();
+
+        const tctValues = {
+          topic_category_id,
+          topic_id,
+        };
+
+        let tctId;
+        if (context.environment === "development") {
+          const { insertId } = await context.db
+            .insertInto("topic_category_topic")
+            .values(tctValues)
+            .executeTakeFirstOrThrow();
+          tctId = insertId;
+        } else {
+          const { id } = await context.db
+            .insertInto("topic_category_topic")
+            .values(tctValues)
+            .returning("id")
+            .executeTakeFirstOrThrow();
+          tctId = id;
+        }
 
         return await context.db
           .selectFrom("topic_category_topic")
@@ -108,7 +137,7 @@ const topicCategoryTopicRouter = {
             "topic.title as topic",
             "topic_category.title as topic_category",
           ])
-          .where("topic_category_topic.id", "=", Number(insertId))
+          .where("topic_category_topic.id", "=", Number(tctId))
           .executeTakeFirstOrThrow();
       } catch (error) {
         console.error(error);

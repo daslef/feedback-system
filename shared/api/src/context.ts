@@ -8,14 +8,17 @@ import apiContract from "./contracts";
 export const createORPCContext = async ({
   auth,
   db,
+  environment,
   headers,
 }: {
   auth: AuthInstance;
   db: typeof dbInstance;
+  environment: "production" | "development";
   headers: Headers;
 }): Promise<{
   db: typeof dbInstance;
   session: AuthInstance["$Infer"]["Session"] | null;
+  environment: "production" | "development";
 }> => {
   const session = await auth.api.getSession({
     headers,
@@ -23,6 +26,7 @@ export const createORPCContext = async ({
   return {
     db,
     session,
+    environment,
   };
 };
 

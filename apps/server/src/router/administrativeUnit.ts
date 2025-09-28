@@ -1,5 +1,21 @@
 import { publicProcedure, protectedProcedure } from "@shared/api";
-import { type Database } from "@shared/database";
+import { type Database, db } from "@shared/database";
+
+function _baseSelect(dbInstance: typeof db) {
+  return dbInstance
+    .selectFrom("administrative_unit")
+    .innerJoin(
+      "administrative_unit_type",
+      "administrative_unit_type.id",
+      "administrative_unit.unit_type_id",
+    )
+    .select([
+      "administrative_unit.id as id",
+      "administrative_unit.title as title",
+      "administrative_unit.unit_type_id as unit_type_id",
+      "administrative_unit_type.title as unit_type",
+    ]);
+}
 
 const administrativeUnitRouter = {
   all: publicProcedure.administrativeUnit.all.handler(
@@ -7,19 +23,7 @@ const administrativeUnitRouter = {
       try {
         const { offset, limit, filter, sort } = input;
 
-        let query = context.db
-          .selectFrom("administrative_unit")
-          .innerJoin(
-            "administrative_unit_type",
-            "administrative_unit_type.id",
-            "administrative_unit.unit_type_id",
-          )
-          .select([
-            "administrative_unit.id as id",
-            "administrative_unit.title as title",
-            "administrative_unit.unit_type_id as unit_type_id",
-            "administrative_unit_type.title as unit_type",
-          ]);
+        let query = _baseSelect(context.db);
 
         if (filter?.length) {
           const mapOperatorsToSql = {
@@ -104,30 +108,51 @@ const administrativeUnitRouter = {
   create: protectedProcedure.administrativeUnit.create.handler(
     async ({ context, input, errors }) => {
       try {
-        const { insertId } = await context.db
-          .insertInto("administrative_unit")
-          .values(input)
-          .executeTakeFirstOrThrow();
+        let unitId;
 
-        return await context.db
-          .selectFrom("administrative_unit")
-          .innerJoin(
-            "administrative_unit_type",
-            "administrative_unit.id",
-            "administrative_unit_type.id",
-          )
-          .select([
-            "administrative_unit.id",
-            "administrative_unit.title",
-            "administrative_unit.unit_type_id",
-            "administrative_unit_type.title as unit_type",
-          ])
-          .where("id", "=", Number(insertId))
+        if (context.environment === "development") {
+          const { insertId } = await context.db
+            .insertInto("administrative_unit")
+            .values(input)
+            .executeTakeFirstOrThrow();
+          unitId = insertId;
+        } else {
+          const { id } = await context.db
+            .insertInto("administrative_unit")
+            .values(input)
+            .returning("id")
+            .executeTakeFirstOrThrow();
+          unitId = id;
+        }
+
+        return await _baseSelect(context.db)
+          .where("administrative_unit.id", "=", Number(unitId))
           .executeTakeFirstOrThrow();
       } catch (error) {
         console.error(error);
         throw errors.CONFLICT({
           message: "Ошибка при создании нового поселения",
+        });
+      }
+    },
+  ),
+
+  update: publicProcedure.administrativeUnit.update.handler(
+    async ({ context, input, errors }) => {
+      try {
+        await context.db
+          .updateTable("administrative_unit")
+          .set(input.body)
+          .where("administrative_unit.id", "=", +input.params.id)
+          .execute();
+
+        return await _baseSelect(context.db)
+          .where("administrative_unit.id", "=", +input.params.id)
+          .executeTakeFirstOrThrow();
+      } catch (error) {
+        console.error(error);
+        throw errors.CONFLICT({
+          message: `Ошибка при обновлении проекта с ID ${input.params.id}`,
         });
       }
     },

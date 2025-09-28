@@ -17,12 +17,14 @@ export const createApi = ({
   appRouter,
   auth,
   db,
+  environment,
   serverUrl,
   apiPath,
 }: {
   appRouter: any;
   auth: AuthInstance;
   db: typeof dbInstance;
+  environment: "production" | "development"
   serverUrl: string;
   apiPath: `/${string}`;
 }) => {
@@ -88,6 +90,7 @@ export const createApi = ({
         context: await createORPCContext({
           db,
           auth,
+          environment,
           headers: request.headers,
         }),
       });

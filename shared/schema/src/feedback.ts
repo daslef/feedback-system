@@ -23,9 +23,12 @@ export const getFeedbackSchema = v.object({
   project: v.string(),
   feedback_type: v.string(),
   feedback_status: v.picklist(["pending", "approved", "declined"]),
+  image_links: v.optional(v.array(v.string()), []),
 });
 
-export const getManyFeedbackSchema = v.array(getFeedbackSchema);
+export const getManyFeedbackSchema = v.array(
+  v.omit(getFeedbackSchema, ["image_links"]),
+);
 
 export const updateFeedbackSchema = v.object({
   params: baseInputOne,

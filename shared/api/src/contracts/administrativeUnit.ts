@@ -4,6 +4,7 @@ import { baseInputAll } from "@shared/schema/base";
 import {
   getAdministrativeUnitSchema,
   createAdministrativeUnitSchema,
+  updateAdministrativeUnitSchema,
   getManyAdministrativeUnitSchema,
 } from "@shared/schema/administrative_unit";
 
@@ -21,12 +22,21 @@ const administrativeUnitContract = oc
       .input(baseInputAll)
       .output(getManyAdministrativeUnitSchema),
 
+    update: oc
+      .route({
+        method: "PATCH",
+        path: "/{id}",
+        inputStructure: "detailed",
+        summary: "Update administrative unit",
+      })
+      .input(updateAdministrativeUnitSchema)
+      .output(getAdministrativeUnitSchema),
+
     create: oc
       .route({
         method: "POST",
         path: "/",
-        summary: "New administrative unit",
-        description: "Create a new administrative unit",
+        summary: "Create administrative unit",
       })
       .input(createAdministrativeUnitSchema)
       .output(getAdministrativeUnitSchema),

@@ -89,7 +89,6 @@ const feedbackContract = oc
                   required: [
                     "project_id",
                     "description",
-                    "topic_category_topic_id",
                     "feedback_type_id",
                     "first_name",
                     "last_name",

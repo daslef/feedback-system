@@ -16,6 +16,7 @@ const projectSchema = v.object({
   created_at: v.optional(
     v.union([
       v.date(),
+      v.string(),
       v.pipe(v.string(), v.isoTimestamp()),
       v.pipe(v.string(), v.isoDateTime()),
     ]),

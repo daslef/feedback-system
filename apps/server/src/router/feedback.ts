@@ -126,7 +126,17 @@ const feedbackRouter = {
           .where("feedback.id", "=", Number(input.id))
           .executeTakeFirstOrThrow();
 
-        return project;
+        const feedbackImages = await context.db
+          .selectFrom("feedback_image")
+          .innerJoin("feedback", "feedback_image.feedback_id", "feedback.id")
+          .select("feedback_image.link_to_s3")
+          .where("feedback.id", "=", Number(input.id))
+          .execute();
+
+        return {
+          ...project,
+          image_links: feedbackImages.map(({ link_to_s3 }) => link_to_s3),
+        };
       } catch (error) {
         console.error(error);
         throw errors.NOT_FOUND({
@@ -162,18 +172,17 @@ const feedbackRouter = {
   create: publicProcedure.feedback.create.handler(
     async ({ context, input, errors }) => {
       const transaction = await context.db.startTransaction().execute();
-      console.log(input.body);
 
       try {
         let personId = (
           await transaction
             .selectFrom("person")
-            .selectAll()
             .innerJoin(
               "person_contact",
               "person.contact_id",
               "person_contact.id",
             )
+            .select("person.id")
             .where("person_contact.email", "=", input.body.email)
             .executeTakeFirst()
         )?.id;
@@ -185,30 +194,54 @@ const feedbackRouter = {
             .where("person_type.title", "=", "citizen")
             .executeTakeFirstOrThrow();
 
-          const { insertId: personContactId } = await transaction
-            .insertInto("person_contact")
-            .values({
-              email: input.body.email,
-              phone: input.body.phone ?? "",
-            })
-            .executeTakeFirstOrThrow();
+          let personContactId;
+          if (context.environment === "development") {
+            const { insertId } = await transaction
+              .insertInto("person_contact")
+              .values({
+                email: input.body.email,
+                phone: input.body.phone ?? "",
+              })
+              .executeTakeFirstOrThrow();
+            personContactId = insertId;
+          } else {
+            const { id } = await transaction
+              .insertInto("person_contact")
+              .values({
+                email: input.body.email,
+                phone: input.body.phone ?? "",
+              })
+              .returning("id")
+              .executeTakeFirstOrThrow();
+            personContactId = id;
+          }
 
           if (personContactId === undefined) {
             throw new Error("Ошибка при создании нового контакта");
           }
 
-          const { insertId } = await transaction
-            .insertInto("person")
-            .values({
-              first_name: input.body.first_name,
-              last_name: input.body.last_name,
-              middle_name: input.body.middle_name ?? "",
-              person_type_id: personTypeId,
-              contact_id: Number(personContactId),
-            })
-            .executeTakeFirstOrThrow();
+          const newPersonValues = {
+            first_name: input.body.first_name,
+            last_name: input.body.last_name,
+            middle_name: input.body.middle_name ?? "",
+            person_type_id: personTypeId,
+            contact_id: Number(personContactId),
+          };
 
-          personId = Number(insertId);
+          if (context.environment === "development") {
+            const { insertId } = await transaction
+              .insertInto("person")
+              .values(newPersonValues)
+              .executeTakeFirstOrThrow();
+            personId = Number(insertId);
+          } else {
+            const { id } = await transaction
+              .insertInto("person")
+              .values(newPersonValues)
+              .returning("id")
+              .executeTakeFirstOrThrow();
+            personId = Number(id);
+          }
         }
 
         const { id: pendingStatusId } = await transaction
@@ -217,17 +250,31 @@ const feedbackRouter = {
           .where("feedback_status.title", "=", "pending")
           .executeTakeFirstOrThrow();
 
-        const { insertId: feedbackId } = await transaction
-          .insertInto("feedback")
-          .values({
-            project_id: input.body.project_id,
-            description: input.body.description,
-            feedback_type_id: input.body.feedback_type_id,
-            topic_id: input.body.topic_category_topic_id ?? null,
-            person_id: personId,
-            feedback_status_id: pendingStatusId,
-          })
-          .executeTakeFirstOrThrow();
+        const newFeedbackValues = {
+          project_id: input.body.project_id,
+          description: input.body.description,
+          feedback_type_id: input.body.feedback_type_id,
+          topic_id: input.body.topic_category_topic_id ?? null,
+          person_id: personId,
+          feedback_status_id: pendingStatusId,
+        };
+
+        let feedbackId;
+
+        if (context.environment === "development") {
+          const { insertId } = await transaction
+            .insertInto("feedback")
+            .values(newFeedbackValues)
+            .executeTakeFirstOrThrow();
+          feedbackId = insertId;
+        } else {
+          const { id } = await transaction
+            .insertInto("feedback")
+            .values(newFeedbackValues)
+            .returning("id")
+            .executeTakeFirstOrThrow();
+          feedbackId = id;
+        }
 
         if (feedbackId === undefined) {
           throw new Error("Ошибка при создании записи");
@@ -242,9 +289,8 @@ const feedbackRouter = {
 
         await Promise.all(
           images.map(async (file) => {
-            console.log(file);
             try {
-              const fileUrl = await upload(file, "upload");
+              const fileUrl = await upload(file, "photos");
               await transaction
                 .insertInto("feedback_image")
                 .values({
