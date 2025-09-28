@@ -15,6 +15,7 @@
         "auth:migrate": "turbo -F @shared/auth auth:migrate",
         "db:reset": "turbo -F @shared/database db:reset",
         "db:seed": "turbo -F @shared/database db:seed",
+        "db:check": "turbo db:check",
         "db:migrate": "turbo -F @shared/database db:migrate"
     },
     "devDependencies": {

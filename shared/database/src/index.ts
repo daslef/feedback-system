@@ -12,16 +12,17 @@ import { env } from "./env";
 import type { Database } from "./interface";
 
 function getDialect() {
-  if (env.ENV === "production" && env.DATABASE_URI) {
+  if (env.ENV === "production") {
     return new PostgresDialect({
-      pool: new Pool({ user: "postgres", password: "postgres", host: "localhost", port: 6543, database: "feedback", ssl: false }),
+      pool: new Pool({
+        connectionString: env.POSTGRES_DATABASE_URI,
+        ssl: false,
+      }),
     });
   }
 
   return new SqliteDialect({
-    database: new SqliteDatabase(
-      env.DATABASE_URI,
-    ),
+    database: new SqliteDatabase(env.SQLITE_DATABASE_URI),
   });
 }
 
