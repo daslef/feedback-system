@@ -1,0 +1,37 @@
+{
+  "name": "@shared/queue",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check-types": "tsc -b",
+    "dev:email": "email dev --dir ./src/mail/templates -p 3333 ",
+    "export": "email export --packageManager"
+  },
+  "dependencies": {
+    "@react-email/components": "catalog:",
+    "@react-email/preview-server": "catalog:",
+    "@shared/schema": "workspace:*",
+    "bullmq": "catalog:",
+    "dotenv": "catalog:",
+    "ioredis": "catalog:",
+    "nodemailer": "catalog:",
+    "pino": "catalog:",
+    "react-email": "catalog:",
+    "valibot": "catalog:"
+  },
+  "devDependencies": {
+    "@shared/typescript-config": "workspace:*",
+    "@types/nodemailer": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "pino-pretty": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  }
+}
