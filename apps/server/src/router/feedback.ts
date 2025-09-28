@@ -7,6 +7,11 @@ function prepareBaseQuery(databaseInstance: typeof db) {
     .selectFrom("feedback")
     .selectAll()
     .innerJoin("project", "feedback.project_id", "project.id")
+    .leftJoin(
+      "administrative_unit",
+      "project.administrative_unit_id",
+      "administrative_unit.id",
+    )
     .innerJoin("feedback_type", "feedback.feedback_type_id", "feedback_type.id")
     .innerJoin(
       "topic_category_topic",
@@ -28,6 +33,7 @@ function prepareBaseQuery(databaseInstance: typeof db) {
       "feedback.person_id",
       "feedback.feedback_status_id",
       "project.title as project",
+      "administrative_unit.title as administrative_unit",
       "feedback_type.title as feedback_type",
       "topic.title as topic",
       "feedback_status.title as feedback_status",
@@ -116,7 +122,12 @@ const feedbackRouter = {
           query = query.offset(offset);
         }
 
-        return await query.execute();
+        const results = await query.execute();
+
+        return results.map((result) => ({
+          ...result,
+          created_at: new Date(result.created_at).toISOString(),
+        }));
       } catch (error) {
         console.error(error);
         throw errors.INTERNAL_SERVER_ERROR();
@@ -140,6 +151,7 @@ const feedbackRouter = {
 
         return {
           ...project,
+          created_at: new Date(project.created_at).toISOString(),
           image_links: feedbackImages.map(({ link_to_s3 }) => link_to_s3),
         };
       } catch (error) {
@@ -162,9 +174,14 @@ const feedbackRouter = {
           .where("feedback.id", "=", Number(params.id))
           .executeTakeFirstOrThrow();
 
-        return await prepareBaseQuery(context.db)
+        const result = await prepareBaseQuery(context.db)
           .where("feedback.id", "=", Number(params.id))
           .executeTakeFirstOrThrow();
+
+        return {
+          ...result,
+          created_at: new Date(result.created_at).toISOString(),
+        };
       } catch (error) {
         console.error(error);
         throw errors.NOT_FOUND({
