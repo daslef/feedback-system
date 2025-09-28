@@ -4,7 +4,7 @@ import createApp from "./bootstrap";
 
 const server = serve(
   {
-    fetch: createApp().fetch,
+    fetch: createApp(env).fetch,
     port: env.SERVER_PORT,
     hostname: env.SERVER_HOST,
   },

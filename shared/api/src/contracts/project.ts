@@ -94,6 +94,14 @@ const projectContract = oc
       })
       .input(createProjectSchema)
       .output(getProjectSchema),
+
+    delete: oc
+      .route({
+        method: "DELETE",
+        path: "/{id}",
+        summary: "Delete project by ID",
+      })
+      .input(baseInputOne),
   });
 
 export default projectContract;

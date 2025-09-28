@@ -22,12 +22,7 @@ import { EditProject } from "./pages/projects/edit";
 import { ListProjects } from "./pages/projects/list";
 import { CreateProject } from "./pages/projects/create";
 
-// import { ListTopicCategories } from "./pages/topic-categories/list";
-// import { CreateTopicCategory } from "./pages/topic-categories/create";
-// import { ListFeedbackTopics } from "./pages/topics/list";
-// import { CreateFeedbackTopic } from "./pages/topics/create";
-// import { ListTopicCategoryTopics } from "./pages/category-topics/list";
-// import { CreateTopicCategoryTopic } from "./pages/category-topics/create";
+import { ListTopicCategoryTopics } from "./pages/category-topics/list";
 
 import { ListPersons } from "./pages/persons/list";
 import { CreatePerson } from "./pages/persons/create";
@@ -53,9 +48,7 @@ function App() {
     translate: (key: string, params?: any) => {
       return String(t(key, params));
     },
-    changeLocale: (lang: string) => {
-      console.log(`Только русский язык доступен ${lang}`);
-    },
+    changeLocale: (_: string) => {},
     getLocale: () => {
       return "ru";
     },
@@ -94,6 +87,13 @@ function App() {
                   label: t("persons.persons"),
                 },
               },
+              {
+                name: "topic_category_topics",
+                list: "/issues",
+                meta: {
+                  label: "Категории",
+                },
+              },
             ]}
           >
             <Routes>
@@ -126,6 +126,9 @@ function App() {
                   <Route path=":id" element={<ShowProject />} />
                   <Route path=":id/edit" element={<EditProject />} />
                   <Route path="create" element={<CreateProject />} />
+                </Route>
+                <Route path="/issues" element={<ListTopicCategoryTopics />}>
+                  {" "}
                 </Route>
                 <Route path="/feedback">
                   <Route index element={<ListFeedback />} />

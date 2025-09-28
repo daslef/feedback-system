@@ -8,14 +8,17 @@ import apiContract from "./contracts";
 export const createORPCContext = async ({
   auth,
   db,
+  environment,
   headers,
 }: {
   auth: AuthInstance;
   db: typeof dbInstance;
+  environment: "production" | "development";
   headers: Headers;
 }): Promise<{
   db: typeof dbInstance;
   session: AuthInstance["$Infer"]["Session"] | null;
+  environment: "production" | "development";
 }> => {
   const session = await auth.api.getSession({
     headers,
@@ -23,18 +26,13 @@ export const createORPCContext = async ({
   return {
     db,
     session,
+    environment,
   };
 };
 
 const timingMiddleware = os.middleware(async ({ next, path }) => {
   const start = Date.now();
   let waitMsDisplay = "";
-  if (process.env.NODE_ENV !== "production") {
-    // artificial delay in dev 100-500ms
-    const waitMs = Math.floor(Math.random() * 400) + 100;
-    await new Promise((resolve) => setTimeout(resolve, waitMs));
-    waitMsDisplay = ` (artificial delay: ${waitMs}ms)`;
-  }
   const result = await next();
   const end = Date.now();
 

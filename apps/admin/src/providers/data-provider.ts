@@ -1,18 +1,6 @@
-import type {
-  CrudFilters,
-  CrudSorting,
-  DataProvider,
-  LogicalFilter,
-} from "@refinedev/core";
+import type { DataProvider } from "@refinedev/core";
 
 const API_URL = "http://localhost:3000/api";
-
-import { createAuthClient } from "@shared/auth";
-
-const authClient = createAuthClient({
-  apiBasePath: "/api",
-  apiBaseUrl: "http://localhost:3000",
-});
 
 const fetcher = async (url: string, options?: RequestInit) => {
   return fetch(url, {
@@ -98,12 +86,13 @@ export const dataProvider: DataProvider = {
     const params = new URLSearchParams();
 
     if (ids?.length) {
-      params.append("filter", `id[in]${ids.map(String).join(",")}`);
+      const idsString = [...new Set(ids)].map(String).join(",");
+      params.append("filter", `id[in]${idsString}`);
     }
 
-    const response = await fetcher(
-      `${API_URL}/${resource}?${params.toString()}`,
-    );
+    const paramsString = params.size !== 0 ? `?${params.toString()}` : "";
+
+    const response = await fetcher(`${API_URL}/${resource}${paramsString}`);
 
     if (response.status < 200 || response.status > 299) throw response;
 

@@ -1,9 +1,9 @@
 export default class DragAndDropManager {
   private dragDropArea: HTMLElement;
   private dragDropContent: HTMLElement;
-  private fileInput: HTMLInputElement;
+  public fileInput: HTMLInputElement;
   private fileList: HTMLElement;
-  private selectedFiles: File[] = [];
+  public selectedFiles: File[] = [];
 
   constructor() {
     this.dragDropArea = document.getElementById("dragDropArea") as HTMLElement;

@@ -17,12 +17,14 @@ export const createApi = ({
   appRouter,
   auth,
   db,
+  environment,
   serverUrl,
   apiPath,
 }: {
   appRouter: any;
   auth: AuthInstance;
   db: typeof dbInstance;
+  environment: "production" | "development"
   serverUrl: string;
   apiPath: `/${string}`;
 }) => {
@@ -61,6 +63,23 @@ export const createApi = ({
             cause: error.cause,
           });
         }
+
+        if (
+          error instanceof ORPCError &&
+          error.code === "INTERNAL_SERVER_ERROR" &&
+          error.cause instanceof ValidationError
+        ) {
+          const valiIssues = error.cause.issues as [
+            v.BaseIssue<unknown>,
+            ...v.BaseIssue<unknown>[],
+          ];
+          console.error(v.flatten(valiIssues));
+
+          throw new ORPCError("OUTPUT_VALIDATION_FAILED", {
+            message: v.summarize(valiIssues),
+            cause: error.cause,
+          });
+        }
       }),
     ],
   });
@@ -71,6 +90,7 @@ export const createApi = ({
         context: await createORPCContext({
           db,
           auth,
+          environment,
           headers: request.headers,
         }),
       });

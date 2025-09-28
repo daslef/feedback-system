@@ -82,7 +82,10 @@ const projectRouter = {
 
         if (sort !== undefined) {
           for (const sortExpression of sort) {
-            const [field, order] = sortExpression.split(".");
+            let [field, order] = sortExpression.split(".");
+            if (["id", "title"].includes(field)) {
+              field = `project.${field}`;
+            }
             query = query.orderBy(
               field as keyof Database["project"],
               order as "desc" | "asc",
@@ -150,18 +153,46 @@ const projectRouter = {
   create: protectedProcedure.project.create.handler(
     async ({ context, input, errors }) => {
       try {
-        const { insertId } = await context.db
-          .insertInto("project")
-          .values(input)
-          .executeTakeFirstOrThrow();
+        let projectId;
+
+        if (context.environment === "development") {
+          const { insertId } = await context.db
+            .insertInto("project")
+            .values(input)
+            .executeTakeFirstOrThrow();
+          projectId = insertId;
+        } else {
+          const { id } = await context.db
+            .insertInto("project")
+            .values(input)
+            .returning("id")
+            .executeTakeFirstOrThrow();
+          projectId = id;
+        }
 
         return await _baseSelect(context.db)
-          .where("project.id", "=", Number(insertId))
+          .where("project.id", "=", Number(projectId))
           .executeTakeFirstOrThrow();
       } catch (error) {
         console.error(error);
         throw errors.CONFLICT({
           message: "Ошибка при создании нового проекта",
+        });
+      }
+    },
+  ),
+
+  delete: protectedProcedure.project.delete.handler(
+    async ({ context, input, errors }) => {
+      try {
+        await context.db
+          .deleteFrom("project")
+          .where("project.id", "=", Number(input.id))
+          .executeTakeFirstOrThrow();
+      } catch (error) {
+        console.error(error);
+        throw errors.CONFLICT({
+          message: `Ошибка при удалении проекта с ID ${input.id}`,
         });
       }
     },

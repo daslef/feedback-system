@@ -337,6 +337,9 @@ importers:
       pg:
         specifier: 'catalog:'
         version: 8.16.3
+      valibot:
+        specifier: 'catalog:'
+        version: 1.1.0(typescript@5.9.2)
     devDependencies:
       '@ngneat/falso':
         specifier: ^8.0.2

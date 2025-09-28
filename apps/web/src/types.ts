@@ -48,7 +48,7 @@ export interface Feedback {
   project_id: number;
   description: string;
   feedback_type_id: number;
-  topic_category_topic_id: number;
+  topic_category_topic_id?: number;
   last_name: string;
   first_name: string;
   middle_name: string;

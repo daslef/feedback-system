@@ -1,6 +1,5 @@
-import path from "path";
 import SqliteDatabase from "better-sqlite3";
-import { Pool, type PoolConfig } from "pg";
+import { Pool } from "pg";
 import {
   Kysely,
   SqliteDialect,
@@ -9,21 +8,21 @@ import {
 } from "kysely";
 
 import { jsonObjectFrom } from "kysely/helpers/sqlite";
+import { env } from "./env";
 import type { Database } from "./interface";
 
 function getDialect() {
-  const postgresURI = process.env.POSTGRES_DATABASE_URI;
-
-  if (postgresURI) {
+  if (env.ENV === "production") {
     return new PostgresDialect({
-      pool: new Pool(postgresURI as PoolConfig),
+      pool: new Pool({
+        connectionString: env.POSTGRES_DATABASE_URI,
+        ssl: false,
+      }),
     });
   }
 
   return new SqliteDialect({
-    database: new SqliteDatabase(
-      path.join(import.meta.dirname, "..", "data.db"),
-    ),
+    database: new SqliteDatabase(env.SQLITE_DATABASE_URI),
   });
 }
 

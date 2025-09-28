@@ -1,42 +1,69 @@
 services:
-  # postgres:
-  #   image: docker.io/postgres:latest
-  #   container_name: postgres
-  #   restart: always
-  #   command: ["postgres", "-c", "log_statement=all"]
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: postgres
-  #     POSTGRES_DB: postgres
-  #   ports:
-  #     - 5432:5432
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   healthcheck:
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 3
-  #     test: ["CMD", "pg_isready", "-U", "postgres", "-d", "postgres"]
-  #   networks:
-  #     - local
+  postgres:
+    image: "postgres:17.6-bookworm"
+    container_name: feedback-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-feedback}
+      LC_LANG: ru_RU.UTF-8
+    ports:
+      - "${POSTGRES_PORT:-6543}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-feedback}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
-  # pgadmin:
-  #   image: dpage/pgadmin4
-  #   container_name: pgadmin
-  #   restart: always
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: admin@example.com
-  #     PGADMIN_DEFAULT_PASSWORD: ioadjiozcji
-  #   ports:
-  #     - 8080:80
-  #   depends_on:
-  #     - postgres
-  #   networks:
-  #     - local
+
+  redis:
+    image: redis:8.2-alpine
+    container_name: feedback-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  bullboard:
+    container_name: feedback-bullboard
+    image: venatum/bull-board
+    restart: unless-stopped
+    ports:
+      - "8000:3000"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_USE_TLS: 'false'
+      BULL_PREFIX: bull
+    depends_on:
+      - redis
+
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: feedback-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+
 
   minio:
     image: minio/minio:latest
-    container_name: minio
+    container_name: feedback-minio
     restart: always
     command: server --console-address ":9001" /data
     environment:
@@ -47,13 +74,8 @@ services:
       - 9001:9001 # Web console
     volumes:
       - minio-data:/data
-    networks:
-      - local
 
 volumes:
-  # postgres_data:
   minio-data:
-
-networks:
-  local:
-    driver: bridge
+  postgres_data:
+  redis_data:

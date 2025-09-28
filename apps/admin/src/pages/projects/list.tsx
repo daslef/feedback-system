@@ -23,11 +23,11 @@ export const ListProjects = () => {
     },
     filters: {
       initial: [
-        {
-          field: "administrative_unit_type",
-          operator: "eq",
-          value: "town",
-        },
+        // {
+        //   field: "administrative_unit_type",
+        //   operator: "eq",
+        //   value: "town",
+        // },
       ],
     },
     syncWithLocation: true,
