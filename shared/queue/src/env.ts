@@ -10,7 +10,14 @@ export const envSchema = v.object({
     v.pipe(v.string(), v.transform(Number), v.number(), v.integer()),
     465,
   ),
-  SMTP_SECURE: v.fallback(v.pipe(v.string(), v.transform(v => v === "true"), v.boolean()), true),
+  SMTP_SECURE: v.fallback(
+    v.pipe(
+      v.string(),
+      v.transform((v) => v === "true"),
+      v.boolean(),
+    ),
+    true,
+  ),
   SMTP_USER: v.pipe(v.string(), v.email()),
   SMTP_PASSWORD: v.pipe(v.string(), v.minLength(3)),
 

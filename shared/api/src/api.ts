@@ -24,7 +24,7 @@ export const createApi = ({
   appRouter: any;
   auth: AuthInstance;
   db: typeof dbInstance;
-  environment: "production" | "development"
+  environment: "production" | "development";
   serverUrl: string;
   apiPath: `/${string}`;
 }) => {
