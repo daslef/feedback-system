@@ -14,6 +14,8 @@ import administrativeUnitTypeContract from "./administrativeUnitType";
 import personTypeContract from "./personType";
 import personContract from "./person";
 
+import officialResponsibilityContract from "./officialResponsibility";
+
 import projectContract from "./project";
 
 const apiContract = oc
@@ -60,6 +62,8 @@ const apiContract = oc
     administrativeUnitType: administrativeUnitTypeContract,
 
     project: projectContract,
+    
+    officialResponsibility: officialResponsibilityContract,
   });
 
 export default apiContract;
