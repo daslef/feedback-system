@@ -85,7 +85,7 @@ export const ShowFeedback = () => {
     );
   };
 
-  const images = feedback?.image_links || [];
+  const images: string[] = feedback?.image_links || [];
 
   return (
     <Show isLoading={isLoading} title="Обращения">
@@ -142,7 +142,7 @@ export const ShowFeedback = () => {
             <Typography.Title level={4}>Фотографии</Typography.Title>
             {images.length > 0 ? (
               <Carousel arrows={true} style={{ height: "400px" }}>
-                {images.map((image, index) => (
+                {images.map((image: string, index: number) => (
                   <div key={index}>
                     <div
                       style={{
