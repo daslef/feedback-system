@@ -23,6 +23,7 @@ import { ListProjects } from "./pages/projects/list";
 import { CreateProject } from "./pages/projects/create";
 
 import { ListTopicCategoryTopics } from "./pages/category-topics/list";
+import { ListResponsibilities } from "./pages/responsibilities/list";
 
 import { ListPersons } from "./pages/persons/list";
 import { CreatePerson } from "./pages/persons/create";
@@ -85,6 +86,13 @@ function App() {
                   label: "Категории",
                 },
               },
+              {
+                name: "official_responsibilities",
+                list: "/responsibilities",
+                meta: {
+                  label: "Ответственные",
+                },
+              },
             ]}
           >
             <Routes>
@@ -118,9 +126,14 @@ function App() {
                   <Route path=":id/edit" element={<EditProject />} />
                   <Route path="create" element={<CreateProject />} />
                 </Route>
-                <Route path="/issues" element={<ListTopicCategoryTopics />}>
-                  {" "}
-                </Route>
+                <Route
+                  path="/issues"
+                  element={<ListTopicCategoryTopics />}
+                ></Route>
+                <Route
+                  path="/responsibilities"
+                  element={<ListResponsibilities />}
+                ></Route>
                 <Route path="/persons">
                   <Route index element={<ListPersons />} />
                   <Route path="create" element={<CreatePerson />} />

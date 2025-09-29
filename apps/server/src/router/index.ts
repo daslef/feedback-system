@@ -8,6 +8,7 @@ import feedbackTypeRouter from "./feedbackType";
 import feedbackRouter from "./feedback";
 import personTypeRouter from "./personType";
 import personRouter from "./person";
+import officialResponsibilityRouter from "./officialResponsibility";
 
 const apiRouter = {
   projects: projectRouter,
@@ -20,6 +21,7 @@ const apiRouter = {
   feedback: feedbackRouter,
   person: personRouter,
   personType: personTypeRouter,
+  officialResponsibility: officialResponsibilityRouter,
 };
 
 export default apiRouter;
