@@ -1,4 +1,3 @@
-import { useEffect, useState, type KeyboardEvent } from "react";
 import { useMany } from "@refinedev/core";
 import {
   EditButton,
@@ -57,30 +56,15 @@ export const ListPersons = () => {
       ],
     },
     filters: {
-      initial: [],
+      initial: [
+        {
+          field: "person_type.title",
+          operator: "in",
+          value: ["citizen", "moderator"],
+        },
+      ],
     },
-    syncWithLocation: true,
   });
-
-  const [filterType, setFilterType] = useState<string | null>("all");
-
-  useEffect(() => {
-    const personFilterIx = filters.findIndex(
-      (filter) => "field" in filter && filter.field === "person_type",
-    );
-
-    if (personFilterIx !== -1 && filterType === "all") {
-      filters.splice(personFilterIx, 1);
-    } else if (personFilterIx !== -1) {
-      filters[personFilterIx].value = filterType;
-    } else if (personFilterIx === -1 && filterType !== "all") {
-      filters.push({
-        field: "person_type",
-        operator: "eq",
-        value: filterType,
-      });
-    }
-  }, [filterType]);
 
   const { result: personTypes, query } = useMany({
     resource: "person_types",
@@ -91,19 +75,6 @@ export const ListPersons = () => {
     resource: "person_types",
     // defaultValue: getDefaultFilter("person_type_id", filters, "eq"),
   });
-
-  const handleInputKeyDown = (
-    event: KeyboardEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      // commitEditing();
-    }
-    if (event.key === "Escape") {
-      event.preventDefault();
-      // stopEditing();
-    }
-  };
 
   return (
     <List title="Пользователи">
@@ -116,15 +87,16 @@ export const ListPersons = () => {
         }}
       >
         <Select
-          value={filterType}
-          onChange={(value) => {
-            setFilterType(value);
-          }}
+          value={
+            filters.find(
+              (filter) => "field" in filter && filter.field === "person_type",
+            )?.value ?? ""
+          }
           style={{ width: 200 }}
         >
-          <Select.Option value="all">Все типы</Select.Option>
+          <Select.Option value="">Все типы</Select.Option>
           {personTypes.data.map((type) => (
-            <Select.Option key={type.id} value={type.title}>
+            <Select.Option key={type.id} value={type.id}>
               {type.title}
             </Select.Option>
           ))}
@@ -156,11 +128,7 @@ export const ListPersons = () => {
             render={(value: string, record: PersonRecord) => {
               return isEditing(record.id) ? (
                 <Form.Item name="last_name" style={{ margin: 0 }}>
-                  <Input
-                    autoFocus
-                    onKeyDown={(e) => handleInputKeyDown(e as any)}
-                    size="small"
-                  />
+                  <Input autoFocus size="small" />
                 </Form.Item>
               ) : (
                 <TextField value={value || "—"} style={{ cursor: "pointer" }} />
@@ -181,11 +149,7 @@ export const ListPersons = () => {
             render={(value: string, record: PersonRecord) => {
               return isEditing(record.id) ? (
                 <Form.Item name="first_name" style={{ margin: 0 }}>
-                  <Input
-                    autoFocus
-                    onKeyDown={(e) => handleInputKeyDown(e as any)}
-                    size="small"
-                  />
+                  <Input autoFocus size="small" />
                 </Form.Item>
               ) : (
                 <TextField value={value || "—"} style={{ cursor: "pointer" }} />
@@ -206,11 +170,7 @@ export const ListPersons = () => {
             render={(value: string, record: PersonRecord) => {
               return isEditing(record.id) ? (
                 <Form.Item name="middle_name" style={{ margin: 0 }}>
-                  <Input
-                    autoFocus
-                    onKeyDown={(e) => handleInputKeyDown(e as any)}
-                    size="small"
-                  />
+                  <Input autoFocus size="small" />
                 </Form.Item>
               ) : (
                 <TextField value={value || "—"} style={{ cursor: "pointer" }} />
@@ -231,11 +191,7 @@ export const ListPersons = () => {
             render={(value: string, record: PersonRecord) => {
               return isEditing(record.id) ? (
                 <Form.Item name="phone" style={{ margin: 0 }}>
-                  <Input
-                    autoFocus
-                    onKeyDown={(e) => handleInputKeyDown(e as any)}
-                    size="small"
-                  />
+                  <Input autoFocus size="small" />
                 </Form.Item>
               ) : (
                 <TextField value={value || "—"} style={{ cursor: "pointer" }} />
@@ -256,11 +212,7 @@ export const ListPersons = () => {
             render={(value: string, record: PersonRecord) => {
               return isEditing(record.id) ? (
                 <Form.Item name="email" style={{ margin: 0 }}>
-                  <Input
-                    autoFocus
-                    onKeyDown={(e) => handleInputKeyDown(e as any)}
-                    size="small"
-                  />
+                  <Input autoFocus size="small" />
                 </Form.Item>
               ) : (
                 <TextField value={value || "—"} style={{ cursor: "pointer" }} />
@@ -281,11 +233,7 @@ export const ListPersons = () => {
             render={(value: string, record: PersonRecord) => {
               return isEditing(record.id) ? (
                 <Form.Item name="social" style={{ margin: 0 }}>
-                  <Input
-                    autoFocus
-                    onKeyDown={(e) => handleInputKeyDown(e as any)}
-                    size="small"
-                  />
+                  <Input autoFocus size="small" />
                 </Form.Item>
               ) : (
                 <TextField value={value || "—"} style={{ cursor: "pointer" }} />
