@@ -18,7 +18,6 @@ export const ListFeedback = () => {
     sorters: {
       initial: [{ field: "created_at", order: "asc" }],
     },
-    syncWithLocation: true,
   });
 
   const { result: projects, query: projectsQuery } = useMany({
@@ -56,12 +55,20 @@ export const ListFeedback = () => {
   };
 
   const getStatusText = (status: string) => {
-    return status;
+    return {
+      pending: "В обработке",
+      approved: "Утверждено",
+      declined: "Отклонено",
+    }[status];
   };
 
   return (
     <List title="Обращения граждан">
-      <Table {...tableProps} rowKey="id">
+      <Table
+        {...tableProps}
+        rowKey="id"
+        pagination={{ hideOnSinglePage: true }}
+      >
         <Table.Column
           dataIndex="description"
           title="Описание"

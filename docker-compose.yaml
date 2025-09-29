@@ -79,3 +79,4 @@ volumes:
   minio-data:
   postgres_data:
   redis_data:
+    external: false

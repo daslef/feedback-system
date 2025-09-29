@@ -1,6 +1,7 @@
 import { publicProcedure, protectedProcedure } from "@shared/api";
 import { db, type Database } from "@shared/database";
 import upload from "@shared/upload";
+import { sendCitizenEmail } from "@shared/queue";
 
 function prepareBaseQuery(databaseInstance: typeof db) {
   return databaseInstance
@@ -95,6 +96,8 @@ const feedbackRouter = {
               value = items.some((item) => !Number.isFinite(+item))
                 ? items
                 : items.map(Number);
+            } else if (operator === "in" && typeof value === "number") {
+              value = Array.isArray(value) ? value : [value];
             }
 
             query = query.where(column, mapOperatorsToSql[operator], value);
@@ -103,7 +106,12 @@ const feedbackRouter = {
 
         if (sort !== undefined) {
           for (const sortExpression of sort) {
-            const [field, order] = sortExpression.split(".");
+            let [field, order] = sortExpression.split(".");
+
+            if (field === "created_at") {
+              field = "feedback.created_at";
+            }
+
             query = query.orderBy(
               field as keyof Database["feedback"],
               order as "desc" | "asc",
@@ -177,6 +185,28 @@ const feedbackRouter = {
         const result = await prepareBaseQuery(context.db)
           .where("feedback.id", "=", Number(params.id))
           .executeTakeFirstOrThrow();
+
+        if (body.feedback_status_id) {
+          const citizen = await context.db
+            .selectFrom("person")
+            .innerJoin(
+              "person_contact",
+              "person_contact.id",
+              "person.contact_id",
+            )
+            .where("person.id", "=", result.person_id)
+            .select(["email", "first_name", "last_name", "middle_name"])
+            .executeTakeFirstOrThrow();
+
+          const name = citizen.middle_name
+            ? `${citizen.first_name} ${citizen.middle_name}`
+            : `${citizen.first_name}`;
+          await sendCitizenEmail(
+            citizen.email,
+            name,
+            result.feedback_status === "approved",
+          );
+        }
 
         return {
           ...result,

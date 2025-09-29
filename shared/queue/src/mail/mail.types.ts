@@ -1,10 +1,8 @@
-import type { ReactElement } from "react";
-
 export type MailJobData =
   | {
       to: string;
       subject: string;
-      react: ReactElement;
+      html: string;
       text?: string;
     }
   | {

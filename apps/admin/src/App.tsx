@@ -26,7 +26,6 @@ import { ListTopicCategoryTopics } from "./pages/category-topics/list";
 import { ListResponsibilities } from "./pages/responsibilities/list";
 
 import { ListPersons } from "./pages/persons/list";
-import { CreatePerson } from "./pages/persons/create";
 
 import { ListFeedback } from "./pages/feedback/list";
 import { ShowFeedback } from "./pages/feedback/show";
@@ -83,9 +82,8 @@ function App() {
               {
                 name: "persons",
                 list: "/persons",
-                create: "/persons/create",
                 meta: {
-                  label: t("persons.persons"),
+                  label: "Респонденты",
                 },
               },
               {
@@ -150,10 +148,7 @@ function App() {
                   path="/responsibilities"
                   element={<ListResponsibilities />}
                 ></Route>
-                <Route path="/persons">
-                  <Route index element={<ListPersons />} />
-                  <Route path="create" element={<CreatePerson />} />
-                </Route>
+                <Route path="/persons" element={<ListPersons />} />
               </Route>
               <Route
                 element={

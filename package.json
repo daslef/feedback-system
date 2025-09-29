@@ -11,6 +11,7 @@
         "dev:admin": "turbo -F admin dev",
         "dev:web": "turbo -F web dev",
         "dev:server": "turbo -F server dev",
+        "dev:workers": "turbo -F @shared/queue dev",
         "auth:generate": "turbo -F @shared/auth auth:generate",
         "auth:migrate": "turbo -F @shared/auth auth:migrate",
         "db:reset": "turbo -F @shared/database db:reset",

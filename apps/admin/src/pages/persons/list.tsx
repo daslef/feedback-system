@@ -59,61 +59,20 @@ export const ListPersons = () => {
       initial: [
         {
           field: "person_type.title",
-          operator: "in",
-          value: ["citizen", "moderator"],
+          operator: "eq",
+          value: "citizen",
         },
       ],
     },
   });
 
-  const { result: personTypes, query } = useMany({
-    resource: "person_types",
-    ids: tableProps?.dataSource?.map((project) => project.person_type_id) ?? [],
-  });
-
-  const { selectProps: personTypeSelectProps } = useSelect({
-    resource: "person_types",
-    // defaultValue: getDefaultFilter("person_type_id", filters, "eq"),
-  });
-
   return (
     <List title="Пользователи">
-      <div
-        style={{
-          marginBottom: 16,
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-        }}
-      >
-        <Select
-          value={
-            filters.find(
-              (filter) => "field" in filter && filter.field === "person_type",
-            )?.value ?? ""
-          }
-          style={{ width: 200 }}
-        >
-          <Select.Option value="">Все типы</Select.Option>
-          {personTypes.data.map((type) => (
-            <Select.Option key={type.id} value={type.id}>
-              {type.title}
-            </Select.Option>
-          ))}
-        </Select>
-      </div>
       <Form {...formProps}>
         <Table
           {...tableProps}
           rowKey="id"
-          onRow={(record) => ({
-            // eslint-disable-next-line
-            onClick: (event: any) => {
-              if (event.target.nodeName === "TD") {
-                setEditId && setEditId(record.id);
-              }
-            },
-          })}
+          pagination={{ hideOnSinglePage: true }}
         >
           <Table.Column
             dataIndex="last_name"
@@ -242,42 +201,6 @@ export const ListPersons = () => {
           />
 
           <Table.Column
-            dataIndex={"person_type_id"}
-            title="Тип"
-            sorter
-            render={(value: string, record: PersonRecord) => {
-              if (query.isLoading) {
-                return "Загрузка...";
-              }
-
-              const text = personTypes?.data?.find(
-                (type) => type.id == value,
-              )?.title;
-
-              return isEditing(record.id) ? (
-                <Form.Item name="person_type_id" style={{ margin: 0 }}>
-                  <Select {...personTypeSelectProps} />
-                </Form.Item>
-              ) : (
-                <TextField value={text} style={{ cursor: "pointer" }} />
-              );
-            }}
-            filterDropdown={(props) => (
-              <FilterDropdown
-                {...props}
-                mapValue={(selectedKey) => Number(selectedKey)}
-              >
-                <Select style={{ minWidth: 200 }} {...personTypeSelectProps} />
-              </FilterDropdown>
-            )}
-            defaultFilteredValue={getDefaultFilter(
-              "person_type_id",
-              filters,
-              "eq",
-            )}
-          />
-
-          <Table.Column
             title="Действия"
             render={(_, record) => {
               if (isEditing(record.id)) {
@@ -285,7 +208,7 @@ export const ListPersons = () => {
                   <Space>
                     <SaveButton {...saveButtonProps} hideText size="small" />
                     <Button {...cancelButtonProps} size="small">
-                      Cancel
+                      Отменить
                     </Button>
                   </Space>
                 );

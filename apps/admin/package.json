@@ -9,11 +9,12 @@
     "serve": "refine serve"
   },
   "dependencies": {
-    "@shared/auth": "workspace:*",
+    "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@refinedev/antd": "catalog:",
     "@refinedev/cli": "catalog:",
     "@refinedev/core": "catalog:",
     "@refinedev/react-router": "catalog:",
+    "@shared/auth": "workspace:*",
     "antd": "catalog:",
     "i18next": "^25.5.2",
     "i18next-browser-languagedetector": "^8.2.0",

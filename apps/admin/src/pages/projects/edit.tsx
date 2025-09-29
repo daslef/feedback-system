@@ -11,6 +11,9 @@ export const EditProject = () => {
   const { selectProps: administrativeUnitProps } = useSelect({
     resource: "administrative_units",
     defaultValue: record?.administrative_unit_id,
+    pagination: {
+      pageSize: 48,
+    },
   });
 
   return (

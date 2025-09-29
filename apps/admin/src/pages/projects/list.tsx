@@ -22,15 +22,8 @@ export const ListProjects = () => {
       ],
     },
     filters: {
-      initial: [
-        // {
-        //   field: "administrative_unit_type",
-        //   operator: "eq",
-        //   value: "town",
-        // },
-      ],
+      initial: [],
     },
-    syncWithLocation: true,
   });
 
   const { result: administrativeUnits, query } = useMany({
@@ -57,11 +50,6 @@ export const ListProjects = () => {
           title="Название"
           sorter
           defaultSortOrder={getDefaultSortOrder("title", sorters)}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <Input />
-            </FilterDropdown>
-          )}
         />
         <Table.Column
           dataIndex={"administrative_unit_id"}

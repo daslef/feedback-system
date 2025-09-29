@@ -168,7 +168,7 @@ export const ListResponsibilities = () => {
 
           <Table.Column
             dataIndex="administrative_unit_id"
-            title="Категория"
+            title="Поселение"
             sorter
             defaultSortOrder={getDefaultSortOrder(
               "administrative_unit_id",

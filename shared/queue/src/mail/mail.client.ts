@@ -15,6 +15,9 @@ async function createMailClient({ env }: ClientProps) {
         user: env.SMTP_USER,
         pass: env.SMTP_PASSWORD,
       },
+      tls: {
+        minVersion: "TLSv1",
+      },
     });
   } catch (error) {
     console.error(error);

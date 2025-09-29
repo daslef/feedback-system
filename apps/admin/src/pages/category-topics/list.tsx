@@ -1,9 +1,8 @@
-import { useMany, useList } from "@refinedev/core";
+import { useMany } from "@refinedev/core";
 
 import {
   useTable,
   EditButton,
-  ShowButton,
   getDefaultSortOrder,
   getDefaultFilter,
   FilterDropdown,
@@ -23,7 +22,7 @@ export const ListTopicCategoryTopics = () => {
 
   const { tableProps, sorters, filters } = useTable({
     resource: "topic_category_topics",
-    pagination: { currentPage: 1, pageSize: 48 },
+    pagination: { currentPage: 1, pageSize: 24 },
     sorters: {
       initial: [{ field: "topic_category_id", order: "asc" }],
     },
@@ -55,7 +54,12 @@ export const ListTopicCategoryTopics = () => {
 
   return (
     <List title="Категории">
-      <Table {...tableProps} rowKey="id" sticky={true}>
+      <Table
+        {...tableProps}
+        rowKey="id"
+        sticky={true}
+        pagination={{ hideOnSinglePage: true }}
+      >
         <Table.Column
           dataIndex="topic_category_id"
           title="Категория"

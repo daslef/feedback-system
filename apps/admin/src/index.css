@@ -1,9 +1,6 @@
 :root {
   font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
   font-weight: 400;
-  color: #0f172a;
-  background-color: #f5f6fb;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -11,25 +8,21 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  color: inherit;
-}
-
-a:hover {
-  color: inherit;
-}
-
-html,
-body,
-#root {
-  height: 100%;
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background-color: #f5f6fb;
 }
 
 #root {
   min-height: 100vh;
+}
+
+.slick-arrow.slick-prev {
+  color: black;
+}
+.slick-arrow.slick-next {
+  color: black;
 }

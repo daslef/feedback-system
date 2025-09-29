@@ -158,6 +158,9 @@ importers:
 
   apps/admin:
     dependencies:
+      '@ant-design/v5-patch-for-react-19':
+        specifier: ^1.0.3
+        version: 1.0.3(antd@5.27.4(luxon@3.7.2)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@refinedev/antd':
         specifier: 'catalog:'
         version: 6.0.2(@refinedev/core@5.0.1(@tanstack/react-query@5.89.0(react@19.1.1))(@types/react-dom@19.1.9(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@types/react-dom@19.1.9(@types/react@19.1.13))(@types/react@19.1.13)(antd@5.27.4(luxon@3.7.2)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(dayjs@1.11.18)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -225,6 +228,9 @@ importers:
       '@shared/database':
         specifier: workspace:*
         version: link:../../shared/database
+      '@shared/queue':
+        specifier: workspace:*
+        version: link:../../shared/queue
       '@shared/schema':
         specifier: workspace:*
         version: link:../../shared/schema
@@ -422,6 +428,9 @@ importers:
       react-email:
         specifier: 'catalog:'
         version: 4.2.12
+      tsx:
+        specifier: 'catalog:'
+        version: 4.20.5
       valibot:
         specifier: 'catalog:'
         version: 1.1.0(typescript@5.9.2)
@@ -549,6 +558,14 @@ packages:
     resolution: {integrity: sha512-EzlvzE6xQUBrZuuhSAFTdsr4P2bBBHGZwKFemEfq8gIGyIQCxalYfZW/T2ORbtQx5rU69o+WycP3exY/7T1hGA==}
     peerDependencies:
       react: '>=16.9.0'
+
+  '@ant-design/v5-patch-for-react-19@1.0.3':
+    resolution: {integrity: sha512-iWfZuSUl5kuhqLUw7jJXUQFMMkM7XpW7apmKzQBQHU0cpifYW4A79xIBt9YVO5IBajKpPG5UKP87Ft7Yrw1p/w==}
+    engines: {node: '>=12.x'}
+    peerDependencies:
+      antd: '>=5.22.6'
+      react: '>=19.0.0'
+      react-dom: '>=19.0.0'
 
   '@aws-crypto/sha256-browser@5.2.0':
     resolution: {integrity: sha512-AXfN/lGotSQwu6HNcEsIASo7kWXZ5HYWvfOmSNKDsEqC4OashTp8alTmaz+F7TC2L083SFv5RdB+qU3Vs1kZqw==}
@@ -6748,6 +6765,12 @@ snapshots:
       react: 19.1.1
       resize-observer-polyfill: 1.5.1
       throttle-debounce: 5.0.2
+
+  '@ant-design/v5-patch-for-react-19@1.0.3(antd@5.27.4(luxon@3.7.2)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+    dependencies:
+      antd: 5.27.4(luxon@3.7.2)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      react: 19.1.1
+      react-dom: 19.1.1(react@19.1.1)
 
   '@aws-crypto/sha256-browser@5.2.0':
     dependencies:

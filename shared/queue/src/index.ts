@@ -1,2 +1,2 @@
-import { mailQueue } from "./mail/mail.queue";
-import logger from "./logger";
+export { default as sendCitizenEmail } from "./use-cases/send-citizen-email";
+export { default as sendOfficialEmail } from "./use-cases/send-official-email";

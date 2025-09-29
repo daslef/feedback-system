@@ -1,6 +1,7 @@
+import * as React from "react";
+
 import {
   Body,
-  Button,
   Column,
   Container,
   Head,
@@ -15,6 +16,7 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
+
 
 interface Props {
   name: string;

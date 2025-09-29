@@ -63,6 +63,8 @@ const topicCategoryTopicRouter = {
               value = items.some((item) => !Number.isFinite(+item))
                 ? items
                 : items.map(Number);
+            } else if (operator === "in" && typeof value === "number") {
+              value = Array.isArray(value) ? value : [value];
             }
 
             query = query.where(

@@ -1,11 +1,9 @@
-import "server-only";
-import { render } from "@react-email/components";
-
+import buildWorker from "src/lib/buildWorker";
 import { env } from "../env";
 import { mailClient } from "./mail.client";
 import { type MailJobData } from "./mail.types";
 
-export async function sendMail(options: MailJobData) {
+async function sendMail(options: MailJobData) {
   const { to, subject, text } = options;
 
   return await mailClient?.sendMail({
@@ -13,6 +11,14 @@ export async function sendMail(options: MailJobData) {
     to,
     subject,
     text,
-    html: "react" in options ? await render(options.react) : undefined,
+    html: "html" in options ? options.html : undefined,
+  });
+}
+
+export default function (queueName: string) {
+  console.log(`mail worker "${queueName}" started`);
+
+  return buildWorker(queueName, async (job) => {
+    await sendMail(job.data);
   });
 }

@@ -18,7 +18,7 @@ export const envSchema = v.object({
     ),
     true,
   ),
-  SMTP_USER: v.pipe(v.string(), v.email()),
+  SMTP_USER: v.pipe(v.string(), v.includes("@")),
   SMTP_PASSWORD: v.pipe(v.string(), v.minLength(3)),
 
   REDIS_HOST: v.optional(v.string(), "127.0.0.1"),

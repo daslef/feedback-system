@@ -8,6 +8,7 @@
   "scripts": {
     "check-types": "tsc -b",
     "dev:email": "email dev --dir ./src/mail/templates -p 3333 ",
+    "dev": "tsx ./src/run.ts",
     "export": "email export --packageManager"
   },
   "dependencies": {
@@ -19,7 +20,10 @@
     "ioredis": "catalog:",
     "nodemailer": "catalog:",
     "pino": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "react-email": "catalog:",
+    "tsx": "catalog:",
     "valibot": "catalog:"
   },
   "devDependencies": {
