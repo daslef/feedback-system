@@ -85,13 +85,7 @@ export const ShowFeedback = () => {
     );
   };
 
-  const sampleImages = [
-    "https://picsum.photos/400/300?random=1",
-    "https://picsum.photos/400/300?random=2",
-    "https://picsum.photos/400/300?random=3",
-    "https://picsum.photos/400/300?random=4",
-    "https://picsum.photos/400/300?random=5",
-  ];
+  const images = feedback?.image_links || [];
 
   return (
     <Show isLoading={isLoading} title="Обращения">
@@ -146,21 +140,39 @@ export const ShowFeedback = () => {
 
           <div style={{ width: "700px" }}>
             <Typography.Title level={4}>Фотографии</Typography.Title>
-            <Carousel arrows={true} style={{ height: "400px" }}>
-              {sampleImages.map((image, index) => (
-                <div key={index}>
-                  <div
-                    style={{
-                      height: "400px",
-                      backgroundImage: `url(${image})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      borderRadius: "8px",
-                    }}
-                  ></div>
-                </div>
-              ))}
-            </Carousel>
+            {images.length > 0 ? (
+              <Carousel arrows={true} style={{ height: "400px" }}>
+                {images.map((image, index) => (
+                  <div key={index}>
+                    <div
+                      style={{
+                        height: "400px",
+                        backgroundImage: `url(${image})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        borderRadius: "8px",
+                      }}
+                    ></div>
+                  </div>
+                ))}
+              </Carousel>
+            ) : (
+              <div
+                style={{
+                  height: "400px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "#f5f5f5",
+                  borderRadius: "8px",
+                  border: "2px dashed #d9d9d9",
+                }}
+              >
+                <Typography.Text type="secondary">
+                  Фотографии не прикреплены
+                </Typography.Text>
+              </div>
+            )}
           </div>
         </div>
       </Card>
