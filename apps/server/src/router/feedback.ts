@@ -13,12 +13,12 @@ function prepareBaseQuery(databaseInstance: typeof db) {
       "administrative_unit.id",
     )
     .innerJoin("feedback_type", "feedback.feedback_type_id", "feedback_type.id")
-    .innerJoin(
+    .leftJoin(
       "topic_category_topic",
       "feedback.topic_id",
       "topic_category_topic.id",
     )
-    .innerJoin("topic", "topic.id", "topic_category_topic.topic_id")
+    .leftJoin("topic", "topic.id", "topic_category_topic.topic_id")
     .innerJoin(
       "feedback_status",
       "feedback.feedback_status_id",
