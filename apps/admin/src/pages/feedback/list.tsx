@@ -16,7 +16,7 @@ export const ListFeedback = () => {
     resource: "feedback",
     pagination: { currentPage: 1, pageSize: 12 },
     sorters: {
-      initial: [{ field: "created_at", order: "desc" }],
+      initial: [{ field: "created_at", order: "asc" }],
     },
     syncWithLocation: true,
   });
