@@ -28,6 +28,9 @@ import { ListResponsibilities } from "./pages/responsibilities/list";
 import { ListPersons } from "./pages/persons/list";
 import { CreatePerson } from "./pages/persons/create";
 
+import { ListFeedback } from "./pages/feedback/list";
+import { ShowFeedback } from "./pages/feedback/show";
+
 import { Login } from "./pages/auth/login";
 import { Register } from "./pages/auth/register";
 
@@ -70,6 +73,12 @@ function App() {
                 edit: "/projects/:id/edit",
                 create: "/projects/create",
                 meta: { label: t("projects.projects") },
+              },
+              {
+                name: "feedback",
+                list: "/feedback",
+                show: "/feedback/:id",
+                meta: { label: "Обращения" },
               },
               {
                 name: "persons",
@@ -125,6 +134,13 @@ function App() {
                   <Route path=":id" element={<ShowProject />} />
                   <Route path=":id/edit" element={<EditProject />} />
                   <Route path="create" element={<CreateProject />} />
+                </Route>
+                <Route path="/issues" element={<ListTopicCategoryTopics />}>
+                  {" "}
+                </Route>
+                <Route path="/feedback">
+                  <Route index element={<ListFeedback />} />
+                  <Route path=":id" element={<ShowFeedback />} />
                 </Route>
                 <Route
                   path="/issues"
