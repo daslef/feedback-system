@@ -28,6 +28,8 @@ export const ListFeedback = () => {
 
   const { selectProps: feedbackTypeSelectProps } = useSelect({
     resource: "feedback_types",
+    optionLabel: "title",
+    optionValue: "id",
     pagination: {
       pageSize: 48,
     },
@@ -91,16 +93,20 @@ export const ListFeedback = () => {
           }}
         />
         <Table.Column
-          dataIndex="feedback_type"
+          dataIndex="feedback_type_id"
           title="Тип обращения"
           sorter
+          render={(_, record) => record.feedback_type}
           filterDropdown={(props) => (
-            <FilterDropdown {...props}>
+            <FilterDropdown
+              {...props}
+              mapValue={(selectedKey) => Number(selectedKey)}
+            >
               <Select style={{ minWidth: 200 }} {...feedbackTypeSelectProps} />
             </FilterDropdown>
           )}
           defaultFilteredValue={getDefaultFilter(
-            "feedback_type",
+            "feedback_type_id",
             filters,
             "eq",
           )}
