@@ -1,7 +1,7 @@
 import { publicProcedure, protectedProcedure } from "@shared/api";
 import { db, type Database } from "@shared/database";
 import upload from "@shared/upload";
-import { sendCitizenEmail } from "@shared/queue";
+import { sendCitizenEmail, sendOfficialEmail } from "@shared/queue";
 
 function prepareBaseQuery(databaseInstance: typeof db) {
   return databaseInstance
@@ -198,14 +198,56 @@ const feedbackRouter = {
             .select(["email", "first_name", "last_name", "middle_name"])
             .executeTakeFirstOrThrow();
 
-          const name = citizen.middle_name
+          const citizenFullName = citizen.middle_name
             ? `${citizen.first_name} ${citizen.middle_name}`
             : `${citizen.first_name}`;
+
           await sendCitizenEmail(
             citizen.email,
-            name,
+            citizenFullName,
             result.feedback_status === "approved",
           );
+        }
+
+        if (body.feedback_status_id) {
+          const official = await context.db
+            .selectFrom("official_responsibility")
+            .innerJoin(
+              "administrative_unit",
+              "administrative_unit.id",
+              "official_responsibility.administrative_unit_id",
+            )
+            .where("administrative_unit.title", "=", result.administrative_unit)
+            .select("official_responsibility.official_id")
+            .executeTakeFirst();
+
+          if (official) {
+            const officialContact = await context.db
+              .selectFrom("person_contact")
+              .innerJoin("person", "person.contact_id", "person_contact.id")
+              .where("person.id", "=", official.official_id)
+              .select([
+                "person_contact.email",
+                "person.first_name",
+                "person.last_name",
+                "person.middle_name",
+              ])
+              .executeTakeFirstOrThrow();
+
+            const officialName = officialContact.middle_name
+              ? `${officialContact.first_name} ${officialContact.middle_name}`
+              : officialContact.first_name;
+
+            const categoryTopic = result.topic !== null ? result.topic : undefined;
+            
+            await sendOfficialEmail({
+              officialName,
+              categoryTopic,
+              description: result.description,
+              email: officialContact.email,
+              createdAt: result.created_at,
+            })
+          }
         }
 
         return {

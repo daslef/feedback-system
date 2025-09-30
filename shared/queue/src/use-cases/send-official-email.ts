@@ -2,18 +2,19 @@ import { render } from "@react-email/components";
 import logger from "../logger";
 import * as emailTemplates from "../mail/templates";
 import buildQueue from "../lib/buildQueue";
-import { type JobType } from "../types";
+import { type JobType, type OfficialRequest } from "../types";
 
-export default async function sendOfficialEmail(
-  email: string,
-  officialName: string,
-  message: string,
-): Promise<string | undefined> {
+export default async function sendOfficialEmail({
+  officialName,
+  email,
+  description,
+  categoryTopic,
+  createdAt,
+}: OfficialRequest): Promise<string | undefined> {
   try {
     logger.info(
       {
         email: email,
-        message: message,
       },
       "Creating official email job",
     );
@@ -24,9 +25,20 @@ export default async function sendOfficialEmail(
       "official-request",
       {
         to: email,
-        subject: "Вместе47. Новое обращение от жителя",
+        subject: "Вместе47. Зарегистрировано новое предложение от жителя",
+        text: emailTemplates.officialRequestText({
+          officialName,
+          description,
+          createdAt,
+          categoryTopic,
+        }),
         html: await render(
-          emailTemplates.OfficialRequestEmail({ message, name: officialName }),
+          emailTemplates.OfficialRequestEmail({
+            officialName,
+            description,
+            createdAt,
+            categoryTopic,
+          }),
         ),
       },
       {
@@ -36,7 +48,7 @@ export default async function sendOfficialEmail(
 
     return job.id;
   } catch (error) {
-    logger.error({ error, email }, "Error creating welcome email");
+    logger.error({ error, email }, "Error creating official email");
     throw error;
   }
 }

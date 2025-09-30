@@ -9,10 +9,10 @@ export default class State {
 
   public async init() {
     this.projects = await apiClient.project.all({
-      filter: "administrative_unit_type[eq]town",
+      filter: "administrative_unit_type.title[eq]town",
     });
     this.cities = await apiClient.administrativeUnit.all({
-      filter: "unit_type[eq]town",
+      filter: "administrative_unit_type.title[eq]town",
       sort: "title.asc",
     });
     this.categories = await apiClient.topicCategory.all();
