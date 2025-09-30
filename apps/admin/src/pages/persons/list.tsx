@@ -2,16 +2,14 @@ import { useMany } from "@refinedev/core";
 import {
   EditButton,
   getDefaultSortOrder,
-  getDefaultFilter,
   FilterDropdown,
-  useSelect,
   List,
   useEditableTable,
   TextField,
   SaveButton,
 } from "@refinedev/antd";
 
-import { Table, Form, Space, Input, Select, Button } from "antd";
+import { Table, Form, Space, Input, Button } from "antd";
 
 type PersonContact = {
   email: string | null;
@@ -29,11 +27,6 @@ type PersonRecord = {
   contact?: PersonContact | null;
 };
 
-type PersonType = {
-  id: number;
-  title: string;
-};
-
 export const ListPersons = () => {
   const {
     tableProps,
@@ -44,7 +37,6 @@ export const ListPersons = () => {
     cancelButtonProps,
     editButtonProps,
     sorters,
-    filters,
   } = useEditableTable({
     pagination: { currentPage: 1, pageSize: 24 },
     sorters: {
@@ -67,7 +59,7 @@ export const ListPersons = () => {
   });
 
   return (
-    <List title="Пользователи">
+    <List title="Респонденты">
       <Form {...formProps}>
         <Table
           {...tableProps}
@@ -79,11 +71,6 @@ export const ListPersons = () => {
             title="Фамилия"
             sorter
             defaultSortOrder={getDefaultSortOrder("last_name", sorters)}
-            filterDropdown={(props) => (
-              <FilterDropdown {...props}>
-                <Input />
-              </FilterDropdown>
-            )}
             render={(value: string, record: PersonRecord) => {
               return isEditing(record.id) ? (
                 <Form.Item name="last_name" style={{ margin: 0 }}>
@@ -100,11 +87,6 @@ export const ListPersons = () => {
             title="Имя"
             sorter
             defaultSortOrder={getDefaultSortOrder("first_name", sorters)}
-            filterDropdown={(props) => (
-              <FilterDropdown {...props}>
-                <Input />
-              </FilterDropdown>
-            )}
             render={(value: string, record: PersonRecord) => {
               return isEditing(record.id) ? (
                 <Form.Item name="first_name" style={{ margin: 0 }}>
@@ -121,11 +103,6 @@ export const ListPersons = () => {
             title="Отчество"
             sorter
             defaultSortOrder={getDefaultSortOrder("middle_name", sorters)}
-            filterDropdown={(props) => (
-              <FilterDropdown {...props}>
-                <Input />
-              </FilterDropdown>
-            )}
             render={(value: string, record: PersonRecord) => {
               return isEditing(record.id) ? (
                 <Form.Item name="middle_name" style={{ margin: 0 }}>
@@ -142,11 +119,6 @@ export const ListPersons = () => {
             title="Телефон"
             sorter
             defaultSortOrder={getDefaultSortOrder("phone", sorters)}
-            filterDropdown={(props) => (
-              <FilterDropdown {...props}>
-                <Input />
-              </FilterDropdown>
-            )}
             render={(value: string, record: PersonRecord) => {
               return isEditing(record.id) ? (
                 <Form.Item name="phone" style={{ margin: 0 }}>
@@ -163,35 +135,9 @@ export const ListPersons = () => {
             title="Почта"
             sorter
             defaultSortOrder={getDefaultSortOrder("email", sorters)}
-            filterDropdown={(props) => (
-              <FilterDropdown {...props}>
-                <Input />
-              </FilterDropdown>
-            )}
             render={(value: string, record: PersonRecord) => {
               return isEditing(record.id) ? (
                 <Form.Item name="email" style={{ margin: 0 }}>
-                  <Input autoFocus size="small" />
-                </Form.Item>
-              ) : (
-                <TextField value={value || "—"} style={{ cursor: "pointer" }} />
-              );
-            }}
-          />
-
-          <Table.Column
-            dataIndex="social"
-            title="Соцсети"
-            sorter
-            defaultSortOrder={getDefaultSortOrder("social", sorters)}
-            filterDropdown={(props) => (
-              <FilterDropdown {...props}>
-                <Input />
-              </FilterDropdown>
-            )}
-            render={(value: string, record: PersonRecord) => {
-              return isEditing(record.id) ? (
-                <Form.Item name="social" style={{ margin: 0 }}>
                   <Input autoFocus size="small" />
                 </Form.Item>
               ) : (

@@ -5,7 +5,7 @@ const topicCategoryTopicRouter = {
   all: publicProcedure.topicCategoryTopic.all.handler(
     async ({ context, input, errors }) => {
       try {
-        const { filter, sort } = input;
+        const { filter, sort, limit, offset } = input;
 
         let query = context.db
           .selectFrom("topic_category_topic")
@@ -88,6 +88,17 @@ const topicCategoryTopicRouter = {
               );
             }
           }
+        }
+
+        const total = (await query.execute()).length;
+        context.resHeaders?.set("x-total-count", String(total));
+
+        if (limit !== undefined) {
+          query = query.limit(limit);
+        }
+
+        if (offset !== undefined) {
+          query = query.offset(offset);
         }
 
         return await query.execute();

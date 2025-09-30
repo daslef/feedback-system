@@ -10,21 +10,16 @@ import {
   List,
 } from "@refinedev/antd";
 
-import { Table, Space, Input, Select } from "antd";
+import { Table, Select } from "antd";
 
 export const ListTopicCategoryTopics = () => {
-  // const {
-  //   result,
-  //   query: { isLoading },
-  // } = useList({
-  //   resource: "topic_category_topics",
-  // });
-
   const { tableProps, sorters, filters } = useTable({
-    resource: "topic_category_topics",
-    pagination: { currentPage: 1, pageSize: 24 },
+    pagination: { currentPage: 1, pageSize: 12 },
     sorters: {
       initial: [{ field: "topic_category_id", order: "asc" }],
+    },
+    filters: {
+      initial: [],
     },
   });
 
@@ -54,12 +49,7 @@ export const ListTopicCategoryTopics = () => {
 
   return (
     <List title="Категории">
-      <Table
-        {...tableProps}
-        rowKey="id"
-        sticky={true}
-        pagination={{ hideOnSinglePage: true }}
-      >
+      <Table {...tableProps} rowKey="id" sticky={true}>
         <Table.Column
           dataIndex="topic_category_id"
           title="Категория"

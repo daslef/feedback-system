@@ -62,7 +62,7 @@ const apiContract = oc
     administrativeUnitType: administrativeUnitTypeContract,
 
     project: projectContract,
-    
+
     officialResponsibility: officialResponsibilityContract,
   });
 

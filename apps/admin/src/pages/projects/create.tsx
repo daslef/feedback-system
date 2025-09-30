@@ -6,6 +6,9 @@ export const CreateProject = () => {
 
   const { selectProps: administrativeUnitProps } = useSelect({
     resource: "administrative_units",
+    pagination: {
+      pageSize: 48,
+    },
   });
 
   return (

@@ -7,7 +7,7 @@ import {
   createTopicCategoryTopicSchema,
 } from "@shared/schema/topic_category_topic";
 
-import { baseFilterInput, baseSortInput } from "@shared/schema/base";
+import { baseInputAll } from "@shared/schema/base";
 
 const topicCategoryTopicContract = oc
   .tag("Categories & Topics")
@@ -21,12 +21,7 @@ const topicCategoryTopicContract = oc
         description:
           "Get topic-categories pairs filtered by category id or topic id",
       })
-      .input(
-        v.object({
-          filter: baseFilterInput,
-          sort: baseSortInput,
-        }),
-      )
+      .input(baseInputAll)
       .output(getManyTopicCategoryTopicSchema),
 
     create: oc

@@ -9,12 +9,16 @@ export const CreateTopicCategoryTopic = () => {
 
   const { options: topicsOptions } = useSelect({
     resource: "topics",
-    // optionLabel: "title", // Default value is "title" so we don't need to provide it.
-    // optionValue: "id", // Default value is "id" so we don't need to provide it.
+    pagination: {
+      pageSize: 48,
+    },
   });
 
   const { options: categoriesOptions } = useSelect({
     resource: "topic_categories",
+    pagination: {
+      pageSize: 48,
+    },
     // optionLabel: "title", // Default value is "title" so we don't need to provide it.
     // optionValue: "id", // Default value is "id" so we don't need to provide it.
   });

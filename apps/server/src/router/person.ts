@@ -10,7 +10,7 @@ function getBasePersonQuery(databaseInstance: typeof db) {
       "person.id",
       "person.first_name",
       "person.last_name",
-      "person.middle_name", 
+      "person.middle_name",
       "person.person_type_id",
       "person.contact_id",
       "person_type.title as person_type",
