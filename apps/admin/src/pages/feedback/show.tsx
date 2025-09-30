@@ -137,6 +137,26 @@ export const ShowFeedback = () => {
           <TextField
             value={new Date(feedback?.created_at).toLocaleString("ru-RU")}
           />
+
+          <Divider />
+
+          <Typography.Title level={4}>Информация об обратившемся</Typography.Title>
+          
+          <Typography.Title level={5}>ФИО</Typography.Title>
+          <TextField value={feedback?.person_full_name || "—"} />
+
+          <Typography.Title level={5}>Email</Typography.Title>
+          <TextField value={feedback?.person_email || "—"} />
+
+          <Typography.Title level={5}>Телефон</Typography.Title>
+          <TextField value={feedback?.person_phone || "—"} />
+
+          <Divider />
+
+          <Typography.Title level={4}>Ответственное лицо</Typography.Title>
+          
+          <Typography.Title level={5}>Ответственный за территорию</Typography.Title>
+          <TextField value={feedback?.responsible_person_full_name || "—"} />
         </Card>
 
         <Card

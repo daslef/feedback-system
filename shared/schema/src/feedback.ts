@@ -25,6 +25,10 @@ export const getFeedbackSchema = v.object({
   feedback_type: v.string(),
   feedback_status: v.picklist(["pending", "approved", "declined"]),
   image_links: v.optional(v.array(v.string()), []),
+  person_full_name: v.string(),
+  person_email: v.string(),
+  person_phone: v.nullable(v.string()),
+  responsible_person_full_name: v.nullable(v.string()),
 });
 
 export const getManyFeedbackSchema = v.array(

@@ -3,6 +3,65 @@ import { db, type Database } from "@shared/database";
 import upload from "@shared/upload";
 import { sendCitizenEmail } from "@shared/queue";
 
+function formatFullName(
+  lastName: string,
+  firstName: string,
+  middleName?: string | null,
+) {
+  return [lastName, firstName, middleName].filter(Boolean).join(" ");
+}
+
+async function getResponsiblePerson(
+  databaseInstance: typeof db,
+  administrativeUnitId: number,
+) {
+  const responsiblePerson = await databaseInstance
+    .selectFrom("official_responsibility")
+    .innerJoin("person", "official_responsibility.official_id", "person.id")
+    .select([
+      "person.first_name as official_first_name",
+      "person.last_name as official_last_name",
+      "person.middle_name as official_middle_name",
+    ])
+    .where(
+      "official_responsibility.administrative_unit_id",
+      "=",
+      administrativeUnitId,
+    )
+    .executeTakeFirst();
+
+  return responsiblePerson
+    ? formatFullName(
+        responsiblePerson.official_last_name,
+        responsiblePerson.official_first_name,
+        responsiblePerson.official_middle_name,
+      )
+    : null;
+}
+
+async function enrichFeedbackData(
+  databaseInstance: typeof db,
+  feedbackData: any,
+) {
+  const personFullName = formatFullName(
+    feedbackData.person_last_name,
+    feedbackData.person_first_name,
+    feedbackData.person_middle_name,
+  );
+
+  const responsiblePersonFullName = await getResponsiblePerson(
+    databaseInstance,
+    feedbackData.administrative_unit_id,
+  );
+
+  return {
+    ...feedbackData,
+    person_full_name: personFullName,
+    person_phone: feedbackData.person_phone || null,
+    responsible_person_full_name: responsiblePersonFullName,
+  };
+}
+
 function prepareBaseQuery(databaseInstance: typeof db) {
   return databaseInstance
     .selectFrom("feedback")
@@ -25,6 +84,8 @@ function prepareBaseQuery(databaseInstance: typeof db) {
       "feedback.feedback_status_id",
       "feedback_status.id",
     )
+    .innerJoin("person", "feedback.person_id", "person.id")
+    .innerJoin("person_contact", "person.contact_id", "person_contact.id")
     .select([
       "feedback.id",
       "feedback.project_id",
@@ -34,11 +95,17 @@ function prepareBaseQuery(databaseInstance: typeof db) {
       "feedback.person_id",
       "feedback.feedback_status_id",
       "project.title as project",
+      "project.administrative_unit_id",
       "administrative_unit.title as administrative_unit",
       "feedback_type.title as feedback_type",
       "topic.title as topic",
       "feedback_status.title as feedback_status",
       "feedback.created_at",
+      "person.first_name as person_first_name",
+      "person.last_name as person_last_name",
+      "person.middle_name as person_middle_name",
+      "person_contact.email as person_email",
+      "person_contact.phone as person_phone",
     ]);
 }
 
@@ -132,10 +199,17 @@ const feedbackRouter = {
 
         const results = await query.execute();
 
-        return results.map((result) => ({
-          ...result,
-          created_at: new Date(result.created_at).toISOString(),
-        }));
+        const enrichedResults = await Promise.all(
+          results.map(async (result) => {
+            const enrichedData = await enrichFeedbackData(context.db, {
+              ...result,
+              created_at: new Date(result.created_at).toISOString(),
+            });
+            return enrichedData;
+          }),
+        );
+
+        return enrichedResults;
       } catch (error) {
         console.error(error);
         throw errors.INTERNAL_SERVER_ERROR();
@@ -157,9 +231,13 @@ const feedbackRouter = {
           .where("feedback.id", "=", Number(input.id))
           .execute();
 
-        return {
+        const enrichedData = await enrichFeedbackData(context.db, {
           ...project,
           created_at: new Date(project.created_at).toISOString(),
+        });
+
+        return {
+          ...enrichedData,
           image_links: feedbackImages.map(({ link_to_s3 }) => link_to_s3),
         };
       } catch (error) {
@@ -208,10 +286,12 @@ const feedbackRouter = {
           );
         }
 
-        return {
+        const enrichedData = await enrichFeedbackData(context.db, {
           ...result,
           created_at: new Date(result.created_at).toISOString(),
-        };
+        });
+
+        return enrichedData;
       } catch (error) {
         console.error(error);
         throw errors.NOT_FOUND({
