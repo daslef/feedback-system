@@ -31,18 +31,18 @@ const CitizenRejectionEmail = ({ name }: Props) => {
           Уважаемый житель, Ваше обращение нуждается в уточнении
         </Preview>
         <Body className="bg-[#f2f2fa] py-[40px] font-sans">
-          <Container className="mx-auto max-w-[600px] rounded-[8px] bg-white px-[40px] py-[40px]">
+          <Container className="mx-auto max-w-[720px] rounded-[8px] bg-white px-[40px] py-[40px]">
             <Section className="mb-[32px] text-center">
               <Img
-                alt="Foneflip"
-                className="mx-auto h-auto w-full max-w-[200px]"
-                src="https://di867tnz6fwga.cloudfront.net/brand-kits/453a191a-fef2-4ba6-88fe-b9e7a16650cd/primary/a14c98ef-2a94-4c00-91e4-6e1dedfcd261.png"
+                alt="вместе47"
+                className="mx-auto h-auto w-full max-w-[120px]"
+                src="https://xn--47-dlcma4bxbi.xn--p1ai/templates/vote/img/logo_2022_black.svg"
               />
             </Section>
 
             <Section>
-              <Heading className="mb-[24px] text-center font-bold text-[#0b0917] text-[28px]">
-                Уважаемый житель!
+              <Heading className="mb-[24px] text-center text-[#0b0917] text-[18px]">
+                {name}!
               </Heading>
 
               <Text className="mb-[20px] text-[#0b0917] text-[16px] leading-[24px]">
@@ -51,56 +51,45 @@ const CitizenRejectionEmail = ({ name }: Props) => {
                 с требованиями, указанными ниже
               </Text>
 
-              <Section className="mb-[24px] rounded-[8px] border-[#e6e6f0] border-[1px] border-solid bg-[#f8f8ff] p-[24px]">
-                <Heading className="mb-[16px] font-bold text-[#0b0917] text-[20px]">
+              <Section className="mb-[24px] rounded-[0px] border-[#e6e6f0] border-[1px] border-solid bg-[#f8f8ff] p-[18px]">
+                <Heading className="mb-[16px] font-bold text-[#0b0917] text-[16px]">
                   Требования к обратной связи по благоустройству
                 </Heading>
                 <Text className="m-0 mb-[12px] text-[#0b0917] text-[14px] leading-[20px]">
-                  • Требование раз
+                  • предложение относится к сфере благоустройства городов
+                  Ленинградской области;
                 </Text>
                 <Text className="m-0 mb-[12px] text-[#0b0917] text-[14px] leading-[20px]">
-                  • Требование два
+                  • предложение относится к территории, благоустроенной в рамках
+                  государственной программы «Формирование городской среды и
+                  обеспечение качественным жильем граждан на территории
+                  Ленинградской области», утвержденной постановлением
+                  Правительства Ленинградской области от 14.11.2013 №407;
                 </Text>
                 <Text className="m-0 mb-[12px] text-[#0b0917] text-[14px] leading-[20px]">
-                  • Требование три
+                  • соблюдение этических норм общения — использование
+                  ненормативной лексики и оскорбительных выражений не
+                  допускается;
+                </Text>
+                <Text className="m-0 mb-[12px] text-[#0b0917] text-[14px] leading-[20px]">
+                  • описание предложения максимально подробно, избегая общих
+                  фраз («У нас всё плохо», «Сделайте красиво», «Здесь
+                  некомфортно» и т.п.).
                 </Text>
               </Section>
-
-              <Text className="mb-[20px] text-[#0b0917] text-[16px] leading-[24px]">
-                Our team is here to support you every step of the way. If you
-                have any questions about getting started, product listings, or
-                platform features, don't hesitate to reach out.
-              </Text>
-
-              <Text className="text-[#0b0917] text-[16px] leading-[24px]">
-                С наилучшими пожеланиями,
-                <br />
-                команда Вместе47
-              </Text>
             </Section>
 
             <Hr className="my-[32px] border-[#e6e6f0]" />
 
-            <Section>
-              <Row>
-                <Column className="text-right">
-                  <Link
-                    className="mr-[8px] inline-block"
-                    href="https://вместе47.рф/"
-                  >
-                    <Img
-                      alt="Instagram"
-                      className="h-[24px] w-[24px]"
-                      src="https://new.email/static/emails/social/social-instagram.png"
-                    />
-                  </Link>
-                </Column>
-              </Row>
+            <Text className="text-[#0b0917] text-[16px] leading-[24px]">
+              С наилучшими пожеланиями,
+              <br />
+              команда Вместе47
+            </Text>
 
-              <Text className="m-0 mt-[16px] text-[#666666] text-[12px] leading-[16px]">
-                © Вместе47.рф
-              </Text>
-            </Section>
+            <Text className="m-0 mt-[16px] text-[#666666] text-[12px] leading-[16px]">
+              © Вместе47.рф
+            </Text>
           </Container>
         </Body>
       </Tailwind>
@@ -109,7 +98,7 @@ const CitizenRejectionEmail = ({ name }: Props) => {
 };
 
 CitizenRejectionEmail.PreviewProps = {
-  name: "житель",
+  name: "Алексей Вячеславович",
 };
 
 export default CitizenRejectionEmail;

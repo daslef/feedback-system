@@ -67,7 +67,7 @@ export const ListFeedback = () => {
       <Table
         {...tableProps}
         rowKey="id"
-        pagination={{ hideOnSinglePage: true }}
+        pagination={{ hideOnSinglePage: true, pageSize: 12, current: 1 }}
       >
         <Table.Column
           dataIndex="description"

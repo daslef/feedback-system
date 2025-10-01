@@ -1,7 +1,7 @@
 import { publicProcedure, protectedProcedure } from "@shared/api";
 import { db, type Database } from "@shared/database";
 import upload from "@shared/upload";
-import { sendCitizenEmail } from "@shared/queue";
+import { sendCitizenEmail, sendOfficialEmail } from "@shared/queue";
 
 function formatFullName(
   lastName: string,
@@ -276,12 +276,13 @@ const feedbackRouter = {
             .select(["email", "first_name", "last_name", "middle_name"])
             .executeTakeFirstOrThrow();
 
-          const name = citizen.middle_name
+          const citizenFullName = citizen.middle_name
             ? `${citizen.first_name} ${citizen.middle_name}`
             : `${citizen.first_name}`;
+
           await sendCitizenEmail(
             citizen.email,
-            name,
+            citizenFullName,
             result.feedback_status === "approved",
           );
         }

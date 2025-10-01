@@ -20,6 +20,7 @@ export default async function sendCitizenEmail(
 
     const citizenApprovedEmailQueue =
       buildQueue<JobType.Mail>("citizen-approved");
+
     const citizenRejectedEmailQueue =
       buildQueue<JobType.Mail>("citizen-rejected");
 
@@ -27,7 +28,7 @@ export default async function sendCitizenEmail(
       const job = await citizenApprovedEmailQueue.add(
         "citizen-approved",
         {
-          to: "daslef93@gmail.com",
+          to: email,
           subject: "Вместе47. Информация по вашему обращению",
           text: emailTemplates.citizenApprovalText,
           html: await render(emailTemplates.CitizenApprovalEmail({ name })),
@@ -54,7 +55,7 @@ export default async function sendCitizenEmail(
 
     return job.id;
   } catch (error) {
-    logger.error({ error, email }, "Error creating welcome email");
+    logger.error({ error, email }, "Error creating citizen email");
     throw error;
   }
 }

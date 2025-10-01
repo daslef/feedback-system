@@ -64,7 +64,7 @@ export const ListPersons = () => {
         <Table
           {...tableProps}
           rowKey="id"
-          pagination={{ hideOnSinglePage: true }}
+          pagination={{ hideOnSinglePage: true, current: 1, pageSize: 24 }}
         >
           <Table.Column
             dataIndex="last_name"
