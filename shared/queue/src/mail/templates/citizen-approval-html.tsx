@@ -30,7 +30,7 @@ const CitizenApprovalEmail = ({ name }: Props) => {
               <Img
                 alt="логотип"
                 className="mx-auto h-auto w-full max-w-[120px]"
-                src="logo.png"
+                src="https://minio.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai/photos/2025-10-01T03:27:09.294Z_logo.png"
               />
             </Section>
 
