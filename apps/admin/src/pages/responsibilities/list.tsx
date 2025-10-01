@@ -1,5 +1,3 @@
-import React from "react";
-
 import { useMany } from "@refinedev/core";
 
 import {
@@ -208,6 +206,7 @@ export const ListResponsibilities = () => {
 
           <Table.Column
             title="Действия"
+            minWidth={120}
             render={(_, record) => (
               <EditButton hideText size="small" recordItemId={record.id} />
             )}

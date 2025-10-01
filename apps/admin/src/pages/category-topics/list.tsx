@@ -65,7 +65,7 @@ export const ListTopicCategoryTopics = () => {
 
   return (
     <>
-      <List 
+      <List
         title="Категории"
         createButtonProps={{
           hidden: true,
@@ -103,7 +103,9 @@ export const ListTopicCategoryTopics = () => {
                 {...props}
                 mapValue={(selectedKey) => {
                   if (Array.isArray(selectedKey)) return undefined;
-                  return selectedKey && selectedKey !== "" ? Number(selectedKey) : undefined;
+                  return selectedKey && selectedKey !== ""
+                    ? Number(selectedKey)
+                    : undefined;
                 }}
               >
                 <Select
@@ -132,19 +134,19 @@ export const ListTopicCategoryTopics = () => {
                 {...props}
                 mapValue={(selectedKey) => {
                   if (Array.isArray(selectedKey)) return undefined;
-                  return selectedKey && selectedKey !== "" ? Number(selectedKey) : undefined;
+                  return selectedKey && selectedKey !== ""
+                    ? Number(selectedKey)
+                    : undefined;
                 }}
               >
-                <Select 
-                  style={{ minWidth: 200 }}
-                  {...topicsSelectProps} 
-                />
+                <Select style={{ minWidth: 200 }} {...topicsSelectProps} />
               </FilterDropdown>
             )}
           />
 
           <Table.Column
             title="Действия"
+            minWidth={120}
             render={(_, record) => (
               <EditButton hideText size="small" recordItemId={record.id} />
             )}

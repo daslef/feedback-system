@@ -169,6 +169,7 @@ export const ListFeedback = () => {
         />
         <Table.Column
           title="Действия"
+          minWidth={120}
           render={(_, record) => (
             <Space>
               <ShowButton hideText size="small" recordItemId={record.id} />
