@@ -157,7 +157,10 @@ export const ListResponsibilities = () => {
               <FilterDropdown
                 {...props}
                 mapValue={(selectedKey) => {
-                  return Number(selectedKey);
+                  if (Array.isArray(selectedKey)) return undefined;
+                  return selectedKey && selectedKey !== ""
+                    ? Number(selectedKey)
+                    : undefined;
                 }}
               >
                 <Select style={{ minWidth: 200 }} {...personsSelectProps} />
@@ -184,7 +187,12 @@ export const ListResponsibilities = () => {
             filterDropdown={(props) => (
               <FilterDropdown
                 {...props}
-                mapValue={(selectedKey) => Number(selectedKey)}
+                mapValue={(selectedKey) => {
+                  if (Array.isArray(selectedKey)) return undefined;
+                  return selectedKey && selectedKey !== ""
+                    ? Number(selectedKey)
+                    : undefined;
+                }}
               >
                 <Select
                   style={{ minWidth: 200 }}

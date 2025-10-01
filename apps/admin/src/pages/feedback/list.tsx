@@ -107,7 +107,12 @@ export const ListFeedback = () => {
           filterDropdown={(props) => (
             <FilterDropdown
               {...props}
-              mapValue={(selectedKey) => Number(selectedKey)}
+              mapValue={(selectedKey) => {
+                if (Array.isArray(selectedKey)) return undefined;
+                return selectedKey && selectedKey !== ""
+                  ? Number(selectedKey)
+                  : undefined;
+              }}
             >
               <Select style={{ minWidth: 200 }} {...feedbackTypeSelectProps} />
             </FilterDropdown>
@@ -136,7 +141,12 @@ export const ListFeedback = () => {
           filterDropdown={(props) => (
             <FilterDropdown
               {...props}
-              mapValue={(selectedKey) => Number(selectedKey)}
+              mapValue={(selectedKey) => {
+                if (Array.isArray(selectedKey)) return undefined;
+                return selectedKey && selectedKey !== ""
+                  ? Number(selectedKey)
+                  : undefined;
+              }}
             >
               <Select
                 style={{ minWidth: 200 }}

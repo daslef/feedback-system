@@ -101,7 +101,10 @@ export const ListTopicCategoryTopics = () => {
             filterDropdown={(props) => (
               <FilterDropdown
                 {...props}
-                mapValue={(selectedKey) => Number(selectedKey)}
+                mapValue={(selectedKey) => {
+                  if (Array.isArray(selectedKey)) return undefined;
+                  return selectedKey && selectedKey !== "" ? Number(selectedKey) : undefined;
+                }}
               >
                 <Select
                   style={{ minWidth: 200 }}
@@ -128,10 +131,14 @@ export const ListTopicCategoryTopics = () => {
               <FilterDropdown
                 {...props}
                 mapValue={(selectedKey) => {
-                  return Number(selectedKey);
+                  if (Array.isArray(selectedKey)) return undefined;
+                  return selectedKey && selectedKey !== "" ? Number(selectedKey) : undefined;
                 }}
               >
-                <Select style={{ minWidth: 200 }} {...topicsSelectProps} />
+                <Select 
+                  style={{ minWidth: 200 }}
+                  {...topicsSelectProps} 
+                />
               </FilterDropdown>
             )}
           />
