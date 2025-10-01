@@ -10,6 +10,7 @@ export default async function sendOfficialEmail({
   description,
   categoryTopic,
   createdAt,
+  files
 }: OfficialRequest): Promise<string | undefined> {
   try {
     logger.info(
@@ -40,6 +41,7 @@ export default async function sendOfficialEmail({
             categoryTopic,
           }),
         ),
+        attachments: files
       },
       {
         priority: 1, // High

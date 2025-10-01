@@ -3,7 +3,7 @@ import { createAuthClient } from "@shared/auth";
 
 const authClient = createAuthClient({
   apiBasePath: "/api",
-  apiBaseUrl: "http://localhost:3000",
+  apiBaseUrl: "https://api.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai",
 });
 
 const authProvider: AuthProvider = {

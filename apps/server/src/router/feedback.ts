@@ -209,7 +209,7 @@ const feedbackRouter = {
           );
         }
 
-        if (body.feedback_status_id) {
+        if (body.feedback_status_id && result.feedback_status === "approved") {
           const official = await context.db
             .selectFrom("official_responsibility")
             .innerJoin(
@@ -234,18 +234,26 @@ const feedbackRouter = {
               ])
               .executeTakeFirstOrThrow();
 
+            const feedbackImages = await context.db
+              .selectFrom("feedback_image")
+              .innerJoin("feedback", "feedback_image.feedback_id", "feedback.id")
+              .select(["feedback_image.link_to_s3", "feedback_image.feedback_id"])
+              .where("feedback.id", "=", Number(result.id))
+              .execute();
+
             const officialName = officialContact.middle_name
               ? `${officialContact.first_name} ${officialContact.middle_name}`
               : officialContact.first_name;
 
             const categoryTopic = result.topic !== null ? result.topic : undefined;
-            
+
             await sendOfficialEmail({
               officialName,
               categoryTopic,
               description: result.description,
               email: officialContact.email,
               createdAt: result.created_at,
+              files: (feedbackImages ?? []).map(({ link_to_s3 }) => link_to_s3)
             })
           }
         }

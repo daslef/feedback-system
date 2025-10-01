@@ -1,4 +1,4 @@
-import buildWorker from "src/lib/buildWorker";
+import buildWorker from "../lib/buildWorker";
 import { env } from "../env";
 import { mailClient } from "./mail.client";
 import { type MailJobData } from "./mail.types";

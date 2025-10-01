@@ -17,6 +17,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    labels:
+      - traefik.enable=false
 
 
   redis:
@@ -38,7 +40,7 @@ services:
     image: venatum/bull-board
     restart: unless-stopped
     ports:
-      - "8000:3000"
+      - "7990:3000"
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
@@ -46,6 +48,11 @@ services:
       BULL_PREFIX: bull
     depends_on:
       - redis
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.bullboard.rule=Host(`bullboard.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)
+      - traefik.http.routers.bullboard.tls=true
+      - traefik.http.routers.bullboard.tls.certresolver=sample
 
 
   pgadmin:
@@ -59,6 +66,12 @@ services:
       - "5050:80"
     depends_on:
       - postgres
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.pgadmin.entrypoints=web-secure
+      - traefik.http.routers.pgadmin.rule=Host(`pgadmin.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)
+      - traefik.http.routers.pgadmin.tls=true
+      - traefik.http.routers.pgadmin.tls.certresolver=sample
 
 
   minio:
@@ -74,6 +87,21 @@ services:
       - 9001:9001 # Web console
     volumes:
       - minio-data:/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.minio.entrypoints=web-secure
+      - traefik.http.routers.minio.rule=Host(`minio.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)
+      - traefik.http.routers.minio.tls=true
+      - traefik.http.routers.minio.tls.certresolver=sample
+      - traefik.http.routers.minio.service=minio
+      - traefik.http.services.minio.loadbalancer.server.port=9000
+
+      - traefik.http.routers.minioweb.entrypoints=web-secure
+      - traefik.http.routers.minioweb.rule=Host(`minioweb.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)
+      - traefik.http.routers.minioweb.tls=true
+      - traefik.http.routers.minioweb.tls.certresolver=sample
+      - traefik.http.routers.minioweb.service=minioweb
+      - traefik.http.services.minioweb.loadbalancer.server.port=9001
 
 volumes:
   minio-data:

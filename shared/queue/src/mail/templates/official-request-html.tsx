@@ -1,3 +1,5 @@
+import React from 'react'
+
 import type { OfficialRequest } from "../../types";
 
 import {
@@ -20,7 +22,7 @@ const OfficialRequestEmail = ({
   description,
   createdAt,
   categoryTopic,
-}: Omit<OfficialRequest, "email">) => {
+}: Omit<OfficialRequest, "email" | "files">) => {
   return (
     <Html dir="ltr" lang="ru">
       <Tailwind>
@@ -33,9 +35,9 @@ const OfficialRequestEmail = ({
           <Container className="mx-auto max-w-[720px] rounded-[8px] bg-white px-[40px] py-[40px]">
             <Section className="mb-[32px] text-center">
               <Img
-                alt="вместе47"
+                alt="логотип"
                 className="mx-auto h-auto w-full max-w-[120px]"
-                src="https://xn--47-dlcma4bxbi.xn--p1ai/templates/vote/img/logo_2022_black.svg"
+                src="logo.png"
               />
             </Section>
 
@@ -70,7 +72,7 @@ const OfficialRequestEmail = ({
                   Дата и время обращения
                 </Heading>
                 <Text className="m-0 mb-[16px] text-[#0b0917] text-[14px] leading-[20px]">
-                  {createdAt}
+                  {createdAt.toString()}
                 </Text>
               </Section>
 

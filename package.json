@@ -31,7 +31,9 @@
     "pnpm": {
         "onlyBuiltDependencies": [
             "better-sqlite3",
-            "esbuild"
+            "esbuild",
+            "msgpackr-extract",
+            "sharp"
         ]
     }
 }

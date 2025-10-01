@@ -113,7 +113,7 @@ export default class MapsManager {
         },
       );
 
-      marker.events.add("click", (e: any) => {
+      marker.events.add("click", () => {
         // marker.getMap().geoObjects.forEach((currentMarker) => {
         //   currentMarker.options.set(
         //     "iconImageHref",
@@ -164,7 +164,7 @@ export default class MapsManager {
     if (selectedProjectId) {
       this.zoomToProject(selectedProjectId);
     } else if (selectedTownId) {
-      this.zoomToTown(+selectedTownId);
+      this.zoomToTown(selectedTownId);
     }
   }
 

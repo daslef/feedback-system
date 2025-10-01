@@ -28,15 +28,15 @@ const CitizenRejectionEmail = ({ name }: Props) => {
       <Tailwind>
         <Head />
         <Preview>
-          Уважаемый житель, Ваше обращение нуждается в уточнении
+          Уважаемый житель, Ваше сообщение нуждается в уточнении
         </Preview>
         <Body className="bg-[#f2f2fa] py-[40px] font-sans">
           <Container className="mx-auto max-w-[720px] rounded-[8px] bg-white px-[40px] py-[40px]">
             <Section className="mb-[32px] text-center">
               <Img
-                alt="вместе47"
+                alt="логотип"
                 className="mx-auto h-auto w-full max-w-[120px]"
-                src="https://xn--47-dlcma4bxbi.xn--p1ai/templates/vote/img/logo_2022_black.svg"
+                src="logo.png"
               />
             </Section>
 

@@ -76,12 +76,12 @@ export default class DragAndDropManager {
       }
     });
 
-    if (invalidFiles.length) {
-      const message = `Неподдерживаемый формат файлов: ${invalidFiles.join(
-        ", ",
-      )}. Пожалуйста, загружайте только изображения (JPG, PNG, WebP).`;
-      // this.showAlert(message);
-    }
+    // if (invalidFiles.length) {
+    //   const message = `Неподдерживаемый формат файлов: ${invalidFiles.join(
+    //     ", ",
+    //   )}. Пожалуйста, загружайте только изображения (JPG, PNG, WebP).`;
+    //   this.showAlert(message);
+    // }
 
     this.updateFileList();
   }

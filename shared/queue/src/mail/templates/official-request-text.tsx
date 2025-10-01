@@ -5,7 +5,7 @@ const officialRequestText = ({
   description,
   categoryTopic,
   createdAt,
-}: Omit<OfficialRequest, "email">) => {
+}: Omit<OfficialRequest, "email" | "files">) => {
   const categoryText = !categoryTopic ? "" : `Категория: ${categoryTopic}`;
 
   return `Уважаемый ${officialName}! На платформу вместе47.рф поступило новое предложение.  Просим Вас принять меры для решения обозначенных в нем вопросов.

@@ -1,6 +1,6 @@
 import type { DataProvider } from "@refinedev/core";
 
-const API_URL = "http://localhost:3000/api";
+const API_URL = "https://api.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai/api";
 
 const fetcher = async (url: string, options?: RequestInit) => {
   return fetch(url, {
