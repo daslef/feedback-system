@@ -133,17 +133,11 @@ function App() {
                   <Route path=":id/edit" element={<EditProject />} />
                   <Route path="create" element={<CreateProject />} />
                 </Route>
-                <Route path="/issues" element={<ListTopicCategoryTopics />}>
-                  {" "}
-                </Route>
+                <Route path="/issues" element={<ListTopicCategoryTopics />} />
                 <Route path="/feedback">
                   <Route index element={<ListFeedback />} />
                   <Route path=":id" element={<ShowFeedback />} />
                 </Route>
-                <Route
-                  path="/issues"
-                  element={<ListTopicCategoryTopics />}
-                ></Route>
                 <Route
                   path="/responsibilities"
                   element={<ListResponsibilities />}
