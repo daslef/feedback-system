@@ -1,4 +1,5 @@
 import { AuthPage } from "@refinedev/antd";
+import { Image } from "antd";
 
 export const Register = () => {
   return (
@@ -11,6 +12,19 @@ export const Register = () => {
         },
       }}
       title="Регистрация"
+      renderContent={(content) => (
+        <div>
+          <div style={{ textAlign: "center", marginBottom: "24px" }}>
+            <Image
+              src="/logos/logo_2022_black.svg"
+              alt="Logo"
+              style={{ maxWidth: "200px", height: "auto" }}
+              preview={false}
+            />
+          </div>
+          {content}
+        </div>
+      )}
     />
   );
 };
