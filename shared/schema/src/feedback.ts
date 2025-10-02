@@ -27,6 +27,14 @@ export const getFeedbackSchema = v.object({
   image_links: v.optional(v.array(v.string()), []),
 });
 
+export const getOneFeedbackSchema = v.object({
+  ...getFeedbackSchema.entries,
+  person_full_name: v.string(),
+  person_email: v.string(),
+  person_phone: v.nullable(v.string()),
+  responsible_person_full_name: v.nullable(v.string()),
+});
+
 export const getManyFeedbackSchema = v.array(
   v.omit(getFeedbackSchema, ["image_links"]),
 );

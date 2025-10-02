@@ -17,7 +17,7 @@ export const EditProject = () => {
   });
 
   return (
-    <Edit saveButtonProps={saveButtonProps}>
+    <Edit saveButtonProps={saveButtonProps} breadcrumb={null}>
       <Form {...formProps} layout="vertical">
         <Form.Item label="Название" name="title">
           <Input />

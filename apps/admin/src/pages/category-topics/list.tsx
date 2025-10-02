@@ -64,54 +64,6 @@ export const ListTopicCategoryTopics = () => {
   });
 
   return (
-<<<<<<< HEAD
-    <List title="Категории">
-      <Table {...tableProps} rowKey="id" sticky={true} pagination={{ ...tableProps.pagination, pageSizeOptions: [12, 24, 48] }}>
-        <Table.Column
-          dataIndex="topic_category_id"
-          title="Категория"
-          sorter
-          defaultSortOrder={getDefaultSortOrder("topic_category", sorters)}
-          render={(value) => {
-            if (topicCategoriesQuery.isLoading) {
-              return "Загрузка...";
-            }
-
-            return topicCategories?.data?.find((unit) => unit.id == value)
-              ?.title;
-          }}
-          filterDropdown={(props) => (
-            <FilterDropdown
-              {...props}
-              mapValue={(selectedKey) => Number(selectedKey)}
-            >
-              <Select
-                style={{ minWidth: 200 }}
-                {...topicCategoriesSelectProps}
-              />
-            </FilterDropdown>
-          )}
-          defaultFilteredValue={getDefaultFilter("topic_category", filters)}
-        />
-
-        <Table.Column
-          dataIndex="topic_id"
-          title="Топик"
-          sorter
-          defaultSortOrder={getDefaultSortOrder("topic", sorters)}
-          render={(value) => {
-            if (topicsQuery.isLoading) {
-              return "Загрузка...";
-            }
-
-            return topics?.data?.find((unit) => unit.id == value)?.title;
-          }}
-          filterDropdown={(props) => (
-            <FilterDropdown
-              {...props}
-              mapValue={(selectedKey) => {
-                return Number(selectedKey);
-=======
     <>
       <List
         title="Категории"
@@ -124,16 +76,23 @@ export const ListTopicCategoryTopics = () => {
             <Button
               onClick={() => {
                 createTopicCategoryTopicModalShow();
->>>>>>> 5c9a689414575a3126e58ca8f9ebd79b5195e48c
               }}
               type="default"
             >
-              Создать связь категории и топика
+              Прикрепить топик к категории
             </Button>
           </Space>
         </Row>
 
-        <Table {...tableProps} rowKey="id" sticky={true}>
+        <Table
+          {...tableProps}
+          rowKey="id"
+          sticky={true}
+          pagination={{
+            ...tableProps.pagination,
+            pageSizeOptions: [12, 24, 48],
+          }}
+        >
           <Table.Column
             dataIndex="topic_category_id"
             title="Категория"
@@ -190,14 +149,6 @@ export const ListTopicCategoryTopics = () => {
               >
                 <Select style={{ minWidth: 200 }} {...topicsSelectProps} />
               </FilterDropdown>
-            )}
-          />
-
-          <Table.Column
-            title="Действия"
-            minWidth={120}
-            render={(_, record) => (
-              <EditButton hideText size="small" recordItemId={record.id} />
             )}
           />
         </Table>

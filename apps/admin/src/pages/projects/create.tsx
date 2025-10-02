@@ -12,7 +12,7 @@ export const CreateProject = () => {
   });
 
   return (
-    <Create saveButtonProps={saveButtonProps}>
+    <Create saveButtonProps={saveButtonProps} breadcrumb={null}>
       <Form {...formProps} layout="vertical">
         <Form.Item label="Название" name="title">
           <Input />

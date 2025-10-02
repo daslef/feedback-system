@@ -3,6 +3,55 @@ import { db, type Database } from "@shared/database";
 import upload from "@shared/upload";
 import { sendCitizenEmail, sendOfficialEmail } from "@shared/queue";
 
+function formatFullName(
+  lastName: string,
+  firstName: string,
+  middleName?: string | null,
+) {
+  return [lastName, firstName, middleName].filter(Boolean).join(" ");
+}
+
+async function enrichFeedbackData(
+  databaseInstance: typeof db,
+  feedbackData: any,
+) {
+  const personFullName = formatFullName(
+    feedbackData.person_last_name,
+    feedbackData.person_first_name,
+    feedbackData.person_middle_name,
+  );
+
+  const responsiblePerson = await databaseInstance
+    .selectFrom("official_responsibility")
+    .innerJoin("person", "official_responsibility.official_id", "person.id")
+    .select([
+      "person.first_name as official_first_name",
+      "person.last_name as official_last_name",
+      "person.middle_name as official_middle_name",
+    ])
+    .where(
+      "official_responsibility.administrative_unit_id",
+      "=",
+      feedbackData.administrative_unit_id,
+    )
+    .executeTakeFirst();
+
+  const responsiblePersonFullName = responsiblePerson
+    ? formatFullName(
+        responsiblePerson.official_last_name,
+        responsiblePerson.official_first_name,
+        responsiblePerson.official_middle_name,
+      )
+    : null;
+
+  return {
+    ...feedbackData,
+    person_full_name: personFullName,
+    person_phone: feedbackData.person_phone || null,
+    responsible_person_full_name: responsiblePersonFullName,
+  };
+}
+
 function prepareBaseQuery(databaseInstance: typeof db) {
   return databaseInstance
     .selectFrom("feedback")
@@ -146,7 +195,16 @@ const feedbackRouter = {
   one: publicProcedure.feedback.one.handler(
     async ({ context, input, errors }) => {
       try {
-        const project = await prepareBaseQuery(context.db)
+        const feedback = await prepareBaseQuery(context.db)
+          .innerJoin("person", "person.id", "feedback.person_id")
+          .innerJoin("person_contact", "person.contact_id", "person_contact.id")
+          .select([
+            "person_contact.email as person_email",
+            "person_contact.phone as person_phone",
+            "person.first_name as person_first_name",
+            "person.last_name as person_last_name",
+            "person.middle_name as person_middle_name",
+          ])
           .where("feedback.id", "=", Number(input.id))
           .executeTakeFirstOrThrow();
 
@@ -157,9 +215,13 @@ const feedbackRouter = {
           .where("feedback.id", "=", Number(input.id))
           .execute();
 
+        const enrichedData = await enrichFeedbackData(context.db, {
+          ...feedback,
+          created_at: new Date(feedback.created_at).toISOString(),
+        });
+
         return {
-          ...project,
-          created_at: new Date(project.created_at).toISOString(),
+          ...enrichedData,
           image_links: feedbackImages.map(({ link_to_s3 }) => link_to_s3),
         };
       } catch (error) {
@@ -266,10 +328,12 @@ const feedbackRouter = {
           }
         }
 
-        return {
+        const enrichedData = await enrichFeedbackData(context.db, {
           ...result,
           created_at: new Date(result.created_at).toISOString(),
-        };
+        });
+
+        return enrichedData;
       } catch (error) {
         console.error(error);
         throw errors.NOT_FOUND({

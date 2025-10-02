@@ -2,7 +2,7 @@ import * as v from "valibot";
 import { oc } from "@orpc/contract";
 
 import {
-  getFeedbackSchema,
+  getOneFeedbackSchema,
   getManyFeedbackSchema,
   createFeedbackSchema,
   updateFeedbackSchema,
@@ -32,7 +32,7 @@ const feedbackContract = oc
         description: "Get full feedback information by id",
       })
       .input(baseInputOne)
-      .output(getFeedbackSchema),
+      .output(getOneFeedbackSchema),
 
     create: oc
       .route({
@@ -116,7 +116,7 @@ const feedbackContract = oc
         description: "Update feedback record (topic, status, project)",
       })
       .input(updateFeedbackSchema)
-      .output(getFeedbackSchema),
+      .output(getOneFeedbackSchema),
   });
 
 export default feedbackContract;

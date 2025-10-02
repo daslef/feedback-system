@@ -56,7 +56,14 @@ function App() {
 
   return (
     <BrowserRouter>
-      <ConfigProvider theme={RefineThemes.Blue}>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "#1677FF",
+            fontFamily: "MuseoSansCyrl",
+          },
+        }}
+      >
         <AntdApp>
           <Refine
             dataProvider={dataProvider}
@@ -113,8 +120,14 @@ function App() {
                       Title={(props) => (
                         <ThemedTitle
                           {...props}
-                          text={t("documentTitle.default") }
-                          icon={<img src="/logos/logo_2022_black.svg" alt="Logo" style={{ height: "24px", width: "auto"}} />}
+                          text={t("documentTitle.default")}
+                          icon={
+                            <img
+                              src="/logos/logo_2022_black.svg"
+                              alt="Logo"
+                              style={{ height: "24px", width: "auto" }}
+                            />
+                          }
                         />
                       )}
                       Sider={(props) => <ThemedSider {...props} />}

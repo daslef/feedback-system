@@ -10,7 +10,7 @@ export const ShowProject = () => {
   } = useShow();
 
   return (
-    <Show isLoading={isLoading}>
+    <Show isLoading={isLoading} breadcrumb={null}>
       <Typography.Title level={5}>Название</Typography.Title>
       <TextField value={project?.title} />
 
