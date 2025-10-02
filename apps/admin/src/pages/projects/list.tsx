@@ -10,7 +10,7 @@ import {
   List,
 } from "@refinedev/antd";
 
-import { Table, Space, Input, Select } from "antd";
+import { Table, Space, Select } from "antd";
 
 export const ListProjects = () => {
   const { tableProps, sorters, filters } = useTable({
@@ -66,7 +66,12 @@ export const ListProjects = () => {
           filterDropdown={(props) => (
             <FilterDropdown
               {...props}
-              mapValue={(selectedKey) => Number(selectedKey)}
+              mapValue={(selectedKey) => {
+                if (Array.isArray(selectedKey)) return undefined;
+                return selectedKey && selectedKey !== ""
+                  ? Number(selectedKey)
+                  : undefined;
+              }}
             >
               <Select
                 style={{ minWidth: 200 }}
@@ -88,7 +93,12 @@ export const ListProjects = () => {
           filterDropdown={(props) => (
             <FilterDropdown
               {...props}
-              mapValue={(selectedKey) => Number(selectedKey)}
+              mapValue={(selectedKey) => {
+                if (Array.isArray(selectedKey)) return undefined;
+                return selectedKey && selectedKey !== ""
+                  ? Number(selectedKey)
+                  : undefined;
+              }}
             >
               <Select style={{ minWidth: 200 }} />
             </FilterDropdown>
@@ -103,6 +113,7 @@ export const ListProjects = () => {
         <Table.Column dataIndex="longitude" title="Долгота" />
         <Table.Column
           title="Действия"
+          minWidth={120}
           render={(_, record) => (
             <Space>
               <ShowButton hideText size="small" recordItemId={record.id} />

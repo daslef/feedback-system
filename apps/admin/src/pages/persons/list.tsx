@@ -148,6 +148,7 @@ export const ListPersons = () => {
 
           <Table.Column
             title="Действия"
+            minWidth={120}
             render={(_, record) => {
               if (isEditing(record.id)) {
                 return (

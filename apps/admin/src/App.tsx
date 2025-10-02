@@ -113,7 +113,8 @@ function App() {
                       Title={(props) => (
                         <ThemedTitle
                           {...props}
-                          text={t("documentTitle.default")}
+                          text={t("documentTitle.default") }
+                          icon={<img src="/logos/logo_2022_black.svg" alt="Logo" style={{ height: "24px", width: "auto"}} />}
                         />
                       )}
                       Sider={(props) => <ThemedSider {...props} />}
@@ -133,17 +134,11 @@ function App() {
                   <Route path=":id/edit" element={<EditProject />} />
                   <Route path="create" element={<CreateProject />} />
                 </Route>
-                <Route path="/issues" element={<ListTopicCategoryTopics />}>
-                  {" "}
-                </Route>
+                <Route path="/issues" element={<ListTopicCategoryTopics />} />
                 <Route path="/feedback">
                   <Route index element={<ListFeedback />} />
                   <Route path=":id" element={<ShowFeedback />} />
                 </Route>
-                <Route
-                  path="/issues"
-                  element={<ListTopicCategoryTopics />}
-                ></Route>
                 <Route
                   path="/responsibilities"
                   element={<ListResponsibilities />}
