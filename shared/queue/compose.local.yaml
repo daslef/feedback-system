@@ -28,4 +28,4 @@ services:
       - redis
 
 volumes:
-  redis_data
+  redis_data:

@@ -15,4 +15,4 @@ services:
       - traefik.http.routers.bullboard.tls.certresolver=sample
 
 volumes:
-  redis_data
+  redis_data:
