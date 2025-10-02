@@ -49,7 +49,7 @@ export const ListTopicCategoryTopics = () => {
 
   return (
     <List title="Категории">
-      <Table {...tableProps} rowKey="id" sticky={true}>
+      <Table {...tableProps} rowKey="id" sticky={true} pagination={{ ...tableProps.pagination, pageSizeOptions: [12, 24, 48] }}>
         <Table.Column
           dataIndex="topic_category_id"
           title="Категория"

@@ -105,8 +105,6 @@ export const ListResponsibilities = () => {
     ],
   });
 
-  console.log(personsSelectProps);
-
   return (
     <>
       <List
@@ -137,7 +135,7 @@ export const ListResponsibilities = () => {
           </Space>
         </Row>
 
-        <Table {...tableProps} rowKey="id" sticky={true}>
+        <Table {...tableProps} rowKey="id" sticky={true} pagination={{ ...tableProps.pagination, hideOnSinglePage: true, pageSizeOptions: [12, 24, 48] }}>
           <Table.Column
             dataIndex="official_id"
             title="Ответственный"
