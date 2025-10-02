@@ -6,11 +6,9 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc",
-    "auth:generate": "pnpx @better-auth/cli generate --config ./src/cli-config.ts --output ../database/src/auth.initial.sqlite",
-    "auth:migrate": "pnpx @better-auth/cli migrate --config ./src/cli-config.ts",
-    "check-types": "tsc -b"
+    "auth:generate": "npx @better-auth/cli generate --config ./src/cli-config.ts --output ../database/src/auth.initial.sqlite",
+    "auth:migrate": "npx @better-auth/cli migrate --config ./src/cli-config.ts",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@shared/database": "workspace:*",
@@ -18,6 +16,7 @@
     "url-join": "catalog:"
   },
   "devDependencies": {
+    "@better-auth/cli": "^1.3.25",
     "@shared/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "typescript": "catalog:"

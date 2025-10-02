@@ -236,8 +236,15 @@ const feedbackRouter = {
 
             const feedbackImages = await context.db
               .selectFrom("feedback_image")
-              .innerJoin("feedback", "feedback_image.feedback_id", "feedback.id")
-              .select(["feedback_image.link_to_s3", "feedback_image.feedback_id"])
+              .innerJoin(
+                "feedback",
+                "feedback_image.feedback_id",
+                "feedback.id",
+              )
+              .select([
+                "feedback_image.link_to_s3",
+                "feedback_image.feedback_id",
+              ])
               .where("feedback.id", "=", Number(result.id))
               .execute();
 
@@ -245,7 +252,8 @@ const feedbackRouter = {
               ? `${officialContact.first_name} ${officialContact.middle_name}`
               : officialContact.first_name;
 
-            const categoryTopic = result.topic !== null ? result.topic : undefined;
+            const categoryTopic =
+              result.topic !== null ? result.topic : undefined;
 
             await sendOfficialEmail({
               officialName,
@@ -253,8 +261,8 @@ const feedbackRouter = {
               description: result.description,
               email: officialContact.email,
               createdAt: result.created_at,
-              files: (feedbackImages ?? []).map(({ link_to_s3 }) => link_to_s3)
-            })
+              files: (feedbackImages ?? []).map(({ link_to_s3 }) => link_to_s3),
+            });
           }
         }
 

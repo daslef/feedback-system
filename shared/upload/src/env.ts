@@ -8,7 +8,7 @@ export const envSchema = v.object({
   MINIO_ACCESS_KEY: v.pipe(v.string(), v.minLength(12)),
   MINIO_SECRET_KEY: v.pipe(v.string(), v.minLength(12)),
   MINIO_ENDPOINT: v.pipe(v.string(), v.nonEmpty()),
-  MINIO_PORT: v.pipe(
+  MINIO_PORT_API: v.pipe(
     v.string(),
     v.transform(Number),
     v.number(),
@@ -16,6 +16,7 @@ export const envSchema = v.object({
     v.minValue(4000),
     v.maxValue(10000),
   ),
+  MINIO_PUBLIC_URL: v.optional(v.pipe(v.string(), v.nonEmpty())),
 });
 
 export const env = v.parse(envSchema, process.env);

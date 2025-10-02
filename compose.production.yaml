@@ -1,0 +1,4 @@
+include:
+  - ./shared/database/compose.production.yaml
+  - ./shared/queue/compose.production.yaml
+  - ./shared/upload/compose.production.yaml

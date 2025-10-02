@@ -6,7 +6,7 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "check-types": "tsc -b",
+    "check-types": "tsc --noEmit",
     "dev:email": "email dev --dir ./src/mail/templates -p 3333 ",
     "dev": "tsx ./src/run.ts",
     "export": "email export --packageManager"
