@@ -1,4 +1,5 @@
 import { useMany } from "@refinedev/core";
+import { useState } from "react";
 
 import {
   useTable,
@@ -11,7 +12,19 @@ import {
   useModalForm,
 } from "@refinedev/antd";
 
-import { Table, Space, Input, Select, Form, Modal, Row, Button } from "antd";
+import {
+  Table,
+  Space,
+  Input,
+  Select,
+  Form,
+  Modal,
+  Row,
+  Button,
+  Typography,
+  Card,
+  List as AntList,
+} from "antd";
 
 type IOfficial = {
   first_name: string;
@@ -29,6 +42,8 @@ type IResponsibility = {
 };
 
 export const ListResponsibilities = () => {
+  const [listModalVisible, setListModalVisible] = useState(false);
+
   const { tableProps, sorters, filters } = useTable({
     resource: "official_responsibilities",
     pagination: { currentPage: 1, pageSize: 24 },
@@ -73,11 +88,9 @@ export const ListResponsibilities = () => {
       ) ?? [],
   });
 
-  const { selectProps: personTypesSelectProps } = useSelect({
+  const { result: personTypes } = useMany({
     resource: "person_types",
-    pagination: {
-      pageSize: 12,
-    },
+    ids: officials?.data?.map((official) => official.person_type_id) ?? [],
   });
 
   const { selectProps: administrativeUnitsSelectProps } = useSelect({
@@ -103,7 +116,12 @@ export const ListResponsibilities = () => {
     ],
   });
 
-  console.log(personsSelectProps);
+  const { selectProps: personTypesSelectProps } = useSelect({
+    resource: "person_types",
+    pagination: {
+      pageSize: 12,
+    },
+  });
 
   return (
     <>
@@ -131,6 +149,15 @@ export const ListResponsibilities = () => {
               type="default"
             >
               Назначить ответственного
+            </Button>
+
+            <Button
+              onClick={() => {
+                setListModalVisible(true);
+              }}
+              type="default"
+            >
+              Список ответственных
             </Button>
           </Space>
         </Row>
@@ -343,6 +370,53 @@ export const ListResponsibilities = () => {
             </Select>
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal
+        title="Список ответственных лиц"
+        open={listModalVisible}
+        onCancel={() => setListModalVisible(false)}
+        footer={null}
+        width={800}
+      >
+        <AntList
+          dataSource={officials?.data || []}
+          renderItem={(official) => {
+            const responsibility = tableProps?.dataSource?.find(
+              (resp) => resp.official_id === official.id,
+            );
+            const administrativeUnit = administrativeUnits?.data?.find(
+              (unit) => unit.id === responsibility?.administrative_unit_id,
+            );
+            const personType = personTypes?.data?.find(
+              (type) => type.id === official.person_type_id,
+            );
+
+            return (
+              <Card key={official.id} style={{ marginBottom: 16 }}>
+                <Typography.Title level={5}>
+                  {official.last_name} {official.first_name}{" "}
+                  {official.middle_name || ""}
+                </Typography.Title>
+                <Typography.Paragraph>
+                  <strong>Почта:</strong> {official.email}
+                </Typography.Paragraph>
+                <Typography.Paragraph>
+                  <strong>Поселение:</strong> {administrativeUnit?.title || "—"}
+                </Typography.Paragraph>
+                <Typography.Paragraph>
+                  <strong>Телефон:</strong> {official.phone || "—"}
+                </Typography.Paragraph>
+                <Typography.Paragraph>
+                  <strong>Соцсеть:</strong> {official.social || "—"}
+                </Typography.Paragraph>
+                <Typography.Paragraph>
+                  <strong>Тип:</strong> {personType?.title}
+                </Typography.Paragraph>
+              </Card>
+            );
+          }}
+        />
       </Modal>
     </>
   );
