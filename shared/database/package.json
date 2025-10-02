@@ -2,7 +2,7 @@
     "name": "@shared/database",
     "type": "module",
     "scripts": {
-        "check-types": "tsc -b",
+        "check-types": "tsc --noEmit",
         "db:reset": "tsx src/seed/index.ts reset",
         "db:seed": "tsx src/seed/index.ts seed",
         "db:check": "tsx src/check.ts",

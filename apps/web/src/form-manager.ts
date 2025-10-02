@@ -140,13 +140,13 @@ export default class FormManager {
       if (selectedOption?.dataset.title === "Замечание") {
         this.categoryContainer.style.display = "block";
         this.issueContainer.style.display = "block";
-        this.dragAndDrop.fileInput.setAttribute("required", "required")
+        this.dragAndDrop.fileInput.setAttribute("required", "required");
       } else {
         this.categoryContainer.style.display = "none";
         this.issueContainer.style.display = "none";
         this.categorySelect.value = "";
         this.issueSelect.value = "";
-        this.dragAndDrop.fileInput.removeAttribute("required")
+        this.dragAndDrop.fileInput.removeAttribute("required");
       }
     });
 

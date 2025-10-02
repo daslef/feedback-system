@@ -6,7 +6,7 @@ export type OfficialRequest = {
   description: string;
   categoryTopic: string | undefined;
   createdAt: string;
-  files: string[]
+  files: string[];
 };
 
 export enum JobType {

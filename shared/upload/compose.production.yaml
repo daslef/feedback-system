@@ -1,0 +1,23 @@
+services:
+  minio:
+    extends:
+      file: compose.local.yaml
+      service: minio
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.minio.entrypoints=web-secure
+      - traefik.http.routers.minio.rule=Host(`minio.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)
+      - traefik.http.routers.minio.tls=true
+      - traefik.http.routers.minio.tls.certresolver=sample
+      - traefik.http.routers.minio.service=minio
+      - traefik.http.services.minio.loadbalancer.server.port=9000
+
+      - traefik.http.routers.minioweb.entrypoints=web-secure
+      - traefik.http.routers.minioweb.rule=Host(`minioweb.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)
+      - traefik.http.routers.minioweb.tls=true
+      - traefik.http.routers.minioweb.tls.certresolver=sample
+      - traefik.http.routers.minioweb.service=minioweb
+      - traefik.http.services.minioweb.loadbalancer.server.port=9001
+
+volumes:
+  minio-data:
