@@ -44,7 +44,7 @@ export const ListProjects = () => {
 
   return (
     <List title="Реализованные проекты">
-      <Table {...tableProps} rowKey="id">
+      <Table {...tableProps} rowKey="id" pagination={{ ...tableProps.pagination, hideOnSinglePage: true, pageSizeOptions: [12, 24, 48] }}>
         <Table.Column
           dataIndex="title"
           title="Название"

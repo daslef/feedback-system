@@ -26,7 +26,7 @@ services:
     container_name: feedback-redis
     restart: unless-stopped
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      - "6379:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -60,8 +60,8 @@ services:
     container_name: feedback-pgadmin
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: kukuruza123
     ports:
       - "5050:80"
     depends_on:
@@ -80,8 +80,8 @@ services:
     restart: always
     command: server --console-address ":9001" /data
     environment:
-      MINIO_ROOT_USER: securedaccesskey:asddasd
-      MINIO_ROOT_PASSWORD: mostsecretkey:changemechangeme
+      MINIO_ROOT_USER: securedaccesskey:kukuruza123
+      MINIO_ROOT_PASSWORD: mostsecretkey:kukuruza123
     ports:
       - 9000:9000 # API
       - 9001:9001 # Web console
@@ -107,4 +107,3 @@ volumes:
   minio-data:
   postgres_data:
   redis_data:
-    external: false
