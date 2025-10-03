@@ -1,6 +1,5 @@
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { openAPI } from "better-auth/plugins";
-import urlJoin from "url-join";
 import { db } from "@shared/database";
 
 export interface AuthOptions {
@@ -28,7 +27,7 @@ export const createAuth = ({
 }: AuthOptions) => {
   return betterAuth({
     ...getBaseOptions(db),
-    baseURL: urlJoin(serverUrl, apiPath, "auth"),
+    baseURL: `${serverUrl}${apiPath}/auth`,
     secret: authSecret,
     trustedOrigins,
     session: {

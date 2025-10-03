@@ -3,9 +3,8 @@
     "main": "src/index.ts",
     "type": "module",
     "scripts": {
-        "check-types": "tsc -b",
-        "dev": "tsx watch src/index.ts",
-        "start": "node dist/index.js"
+        "check-types": "tsc --noEmit",
+        "dev": "tsx watch src/index.ts"
     },
     "dependencies": {
         "@shared/api": "workspace:*",
@@ -14,6 +13,8 @@
         "@shared/schema": "workspace:*",
         "@shared/upload": "workspace:*",
         "@shared/queue": "workspace:*",
+        "@orpc/openapi": "catalog:",
+        "@orpc/server": "catalog:",
         "@hono/node-server": "catalog:",
         "hono": "catalog:",
         "valibot": "catalog:",
@@ -22,7 +23,6 @@
     "devDependencies": {
         "@shared/typescript-config": "workspace:*",
         "@types/node": "catalog:",
-        "tsdown": "catalog:",
         "tsx": "catalog:",
         "typescript": "catalog:"
     },

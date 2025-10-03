@@ -5,7 +5,6 @@ import {
   Button,
   Space,
   Tag,
-  Carousel,
   Typography,
   Card,
   Divider,
@@ -69,7 +68,7 @@ export const ShowFeedback = () => {
           message.success("Обращение согласовано");
         },
         onError: () => {
-          message.error("Ошибка при согласовании обращения");
+          message.error("Ошибка при согласовании предложения");
         },
       },
     );
@@ -93,7 +92,7 @@ export const ShowFeedback = () => {
           message.success("Обращение отклонено");
         },
         onError: () => {
-          message.error("Ошибка при отклонении обращения");
+          message.error("Ошибка при отклонении предложения");
         },
       },
     );
@@ -104,7 +103,7 @@ export const ShowFeedback = () => {
   return (
     <Show
       isLoading={isLoading}
-      title="Обращения"
+      title="Предложения"
       breadcrumb={null}
       headerButtons={({ listButtonProps }) => (
         <ListButton {...listButtonProps} />

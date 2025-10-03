@@ -84,7 +84,7 @@ function App() {
                 name: "feedback",
                 list: "/feedback",
                 show: "/feedback/:id",
-                meta: { label: "Обращения" },
+                meta: { label: "Предложения" },
               },
               {
                 name: "persons",

@@ -1,11 +1,11 @@
-import apiContract from "./contracts";
+export { onError } from "@orpc/client";
+export { experimental_ValibotToJsonSchemaConverter as ValibotToJsonSchemaConverter } from "@orpc/valibot";
 
 export {
   createORPCContext,
   protectedProcedure,
   publicProcedure,
 } from "./context";
-export { type InferContractRouterOutputs } from "@orpc/contract";
-export { createAPIClient } from "./client";
-export { createApi } from "./api";
-export { apiContract };
+
+export { createAPIClient, type RouterOutput } from "./client";
+export { onErrorInterceptor } from "./interceptors";

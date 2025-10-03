@@ -66,7 +66,7 @@ export const ListFeedback = () => {
   };
 
   return (
-    <List title="Обращения граждан">
+    <List title="Предложения граждан">
       <Table
         {...tableProps}
         rowKey="id"

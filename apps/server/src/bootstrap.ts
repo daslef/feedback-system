@@ -2,12 +2,12 @@ import { Hono } from "hono";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 
-import { createApi } from "@shared/api";
 import { createAuth } from "@shared/auth";
 import { db } from "@shared/database";
 
-import { type Env } from "./env";
 import apiRouter from "./router";
+import { createApi } from "./api";
+import { type Env } from "./env";
 
 export default function createApp(env: Env) {
   const trustedOrigins = [env.PUBLIC_WEB_URL, env.PUBLIC_ADMIN_URL].map(
@@ -23,12 +23,12 @@ export default function createApp(env: Env) {
   });
 
   const api = createApi({
+    apiRouter,
     auth,
     db,
     environment: env.ENV,
     serverUrl: env.PUBLIC_SERVER_URL,
-    apiPath: env.PUBLIC_SERVER_API_PATH,
-    appRouter: apiRouter,
+    apiPath: env.PUBLIC_SERVER_API_PATH
   });
 
   const app = new Hono<{

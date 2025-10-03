@@ -1,5 +1,3 @@
-import urlJoin from "url-join";
-
 import { createORPCClient } from "@orpc/client";
 import { ResponseValidationPlugin } from "@orpc/contract/plugins";
 import { OpenAPILink } from "@orpc/openapi-client/fetch";
@@ -11,9 +9,7 @@ import type {
 
 import apiContract from "./contracts";
 
-export { isDefinedError, safe } from "@orpc/client";
-
-export interface APIClientOptions {
+interface APIClientOptions {
   serverUrl: string;
   apiPath: `/${string}`;
 }
@@ -22,7 +18,7 @@ export type RouterOutput = InferContractRouterOutputs<typeof apiContract>;
 
 export const createAPIClient = ({ serverUrl, apiPath }: APIClientOptions) => {
   const link = new OpenAPILink(apiContract, {
-    url: urlJoin(serverUrl ?? `${process.env.VITE_SERVER_URL}`, apiPath),
+    url: serverUrl + apiPath,
     plugins: [new ResponseValidationPlugin(apiContract)],
     fetch: (request, init) => {
       return globalThis.fetch(request, {
