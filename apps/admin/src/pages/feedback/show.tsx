@@ -1,5 +1,5 @@
 import { useShow, useUpdate, useList } from "@refinedev/core";
-import { TextField, Show } from "@refinedev/antd";
+import { TextField, Show, ListButton } from "@refinedev/antd";
 
 import {
   Button,
@@ -102,7 +102,14 @@ export const ShowFeedback = () => {
   const images: string[] = feedback?.image_links || [];
 
   return (
-    <Show isLoading={isLoading} title="Обращения" breadcrumb={null}>
+    <Show
+      isLoading={isLoading}
+      title="Обращения"
+      breadcrumb={null}
+      headerButtons={({ listButtonProps }) => (
+        <ListButton {...listButtonProps} />
+      )}
+    >
       <Typography.Title level={3}>Обращение №{feedback?.id}</Typography.Title>
 
       <Flex align="stretch">
@@ -128,9 +135,7 @@ export const ShowFeedback = () => {
           <Typography.Title level={5}>Проект</Typography.Title>
           <TextField value={feedback?.project} />
 
-          <Typography.Title level={5}>
-            Ответственный за территорию
-          </Typography.Title>
+          <Typography.Title level={5}>Ответственный</Typography.Title>
           <TextField value={feedback?.responsible_person_full_name || "—"} />
 
           <Typography.Title level={5}>Дата создания</Typography.Title>
@@ -168,18 +173,20 @@ export const ShowFeedback = () => {
             <Typography.Title level={4}>Фотографии</Typography.Title>
 
             {images.length > 0 ? (
-              <Image.PreviewGroup>
-                {images.map((image: string, index: number) => {
-                  return (
-                    <Image
-                      key={`image_${index}`}
-                      height={180}
-                      src={image}
-                      preview={{ getContainer: "#root" }}
-                    />
-                  );
-                })}
-              </Image.PreviewGroup>
+              <Flex gap={16}>
+                <Image.PreviewGroup>
+                  {images.map((image: string, index: number) => {
+                    return (
+                      <Image
+                        key={`image_${index}`}
+                        height={180}
+                        src={image}
+                        preview={{ getContainer: "#root" }}
+                      />
+                    );
+                  })}
+                </Image.PreviewGroup>
+              </Flex>
             ) : (
               <div
                 style={{
