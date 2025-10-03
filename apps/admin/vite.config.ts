@@ -9,4 +9,8 @@ export default defineConfig({
     port: 5174,
     strictPort: true,
   },
+  esbuild: {
+    minifyIdentifiers: false,
+    minifySyntax: false
+  }
 });

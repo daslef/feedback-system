@@ -10,14 +10,14 @@ services:
       - traefik.http.routers.minio.tls=true
       - traefik.http.routers.minio.tls.certresolver=sample
       - traefik.http.routers.minio.service=minio
-      - traefik.http.services.minio.loadbalancer.server.port=9000
+      - traefik.http.services.minio.loadbalancer.server.port=${MINIO_PORT_API}
 
       - traefik.http.routers.minioweb.entrypoints=web-secure
       - traefik.http.routers.minioweb.rule=Host(`minioweb.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)
       - traefik.http.routers.minioweb.tls=true
       - traefik.http.routers.minioweb.tls.certresolver=sample
       - traefik.http.routers.minioweb.service=minioweb
-      - traefik.http.services.minioweb.loadbalancer.server.port=9001
+      - traefik.http.services.minioweb.loadbalancer.server.port=${MINIO_PORT_CONSOLE}
 
 volumes:
   minio-data:

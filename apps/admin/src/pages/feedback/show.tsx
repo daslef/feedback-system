@@ -169,27 +169,22 @@ export const ShowFeedback = () => {
 
             {images.length > 0 ? (
               <Image.PreviewGroup>
-                <Carousel autoplay>
-                  {images.map((image: string, index: number) => {
-                    return (
-                      <Image
-                        key={`image_${index}`}
-                        wrapperStyle={{
-                          height: 180,
-                          width: 240,
-                          objectFit: "contain",
-                        }}
-                        src={image}
-                        preview={{ getContainer: "#root" }}
-                      />
-                    );
-                  })}
-                </Carousel>
+                {images.map((image: string, index: number) => {
+                  return (
+                    <Image
+                      key={`image_${index}`}
+                      height={180}
+                      src={image}
+                      preview={{ getContainer: "#root" }}
+                    />
+                  );
+                })}
               </Image.PreviewGroup>
             ) : (
               <div
                 style={{
-                  height: "400px",
+                  height: 180,
+                  width: 240,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",

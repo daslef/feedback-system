@@ -22,10 +22,7 @@ export const envSchema = v.object({
   SMTP_PASSWORD: v.pipe(v.string(), v.minLength(3)),
 
   REDIS_HOST: v.optional(v.string(), "127.0.0.1"),
-  REDIS_PORT: v.fallback(
-    v.pipe(v.string(), v.transform(Number), v.number(), v.integer()),
-    6379,
-  ),
+  REDIS_PORT: v.pipe(v.string(), v.transform(Number), v.number(), v.integer()),
   REDIS_PASSWORD: v.optional(v.string()),
 });
 
