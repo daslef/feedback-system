@@ -1,9 +1,11 @@
 import { Hono } from "hono";
-import { logger } from "hono/logger";
 import { cors } from "hono/cors";
+import { bodyLimit } from "hono/body-limit";
+import { requestId } from "hono/request-id";
 
 import { createAuth } from "@shared/auth";
 import { db } from "@shared/database";
+import { createHttpMiddleware } from "@shared/logger";
 
 import apiRouter from "./router";
 import { createApi } from "./api";
@@ -28,7 +30,7 @@ export default function createApp(env: Env) {
     db,
     environment: env.ENV,
     serverUrl: env.PUBLIC_SERVER_URL,
-    apiPath: env.PUBLIC_SERVER_API_PATH
+    apiPath: env.PUBLIC_SERVER_API_PATH,
   });
 
   const app = new Hono<{
@@ -42,7 +44,37 @@ export default function createApp(env: Env) {
     return c.text("OK");
   });
 
-  app.use(logger());
+  app.use("*", requestId());
+
+  app.use(
+    "*",
+    bodyLimit({
+      maxSize: 100 * 1024 * 1024,
+      onError: (c) => {
+        return c.json(
+          {
+            error: "Request body too large",
+          },
+          413,
+        );
+      },
+    }),
+  );
+
+  app.use("*", async (c: any, next) => {
+    // const requestId = c.var.requestId;
+
+    const pinoMiddleware = createHttpMiddleware({
+      env: env.ENV,
+      service: "server",
+    });
+
+    await new Promise<void>((resolve) =>
+      pinoMiddleware(c.env.incoming, c.env.outgoing, () => resolve()),
+    );
+
+    return next();
+  });
 
   app.use(
     `${env.PUBLIC_SERVER_API_PATH}/auth/*`,

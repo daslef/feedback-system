@@ -4,7 +4,7 @@ import { mailClient } from "./mail.client";
 import { type MailJobData } from "./mail.types";
 
 async function sendMail(options: MailJobData) {
-  const { to, subject, text } = options;
+  const { to, subject, text, attachments } = options;
 
   return await mailClient?.sendMail({
     from: `"Вместе47" <${env.SMTP_USER}>`,
@@ -12,6 +12,7 @@ async function sendMail(options: MailJobData) {
     subject,
     text,
     html: "html" in options ? options.html : undefined,
+    attachments: attachments?.map((filename) => ({ filename })),
   });
 }
 

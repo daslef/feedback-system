@@ -13,6 +13,7 @@
         "@shared/schema": "workspace:*",
         "@shared/upload": "workspace:*",
         "@shared/queue": "workspace:*",
+        "@shared/logger": "workspace:*",
         "@orpc/openapi": "catalog:",
         "@orpc/server": "catalog:",
         "@hono/node-server": "catalog:",

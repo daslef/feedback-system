@@ -1,6 +1,8 @@
+import { createLogger } from "@shared/logger";
 import { env } from "./env";
-import logger from "./logger";
 import createMinioClient from "./client";
+
+const logger = createLogger({ env: "production", service: "upload" });
 
 async function createBucket(
   minioClient: Awaited<ReturnType<typeof createMinioClient>>,

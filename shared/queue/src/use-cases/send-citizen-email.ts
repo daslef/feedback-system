@@ -1,5 +1,5 @@
 import { render } from "@react-email/components";
-import logger from "../logger";
+import { logger } from "../logger";
 import * as emailTemplates from "../mail/templates";
 import buildQueue from "../lib/buildQueue";
 import { type JobType } from "../types";

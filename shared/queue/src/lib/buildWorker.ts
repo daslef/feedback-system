@@ -1,15 +1,16 @@
 import { Job, Worker, Processor } from "bullmq";
 import { redisClient } from "../redis";
+import { logger } from "../logger";
 
 const defaultEventHandlers = {
   completed: (job: Job) => {
-    console.log(`Job ${job.name} completed`);
+    logger.info(`Job ${job.name} completed`);
   },
   failed: (job: Job | undefined, error: Error) => {
-    console.log(`Job ${job?.name} failed with <${error.name}>${error.message}`);
+    logger.info(`Job ${job?.name} failed with <${error.name}>${error.message}`);
   },
   error: (error: Error) => {
-    console.error(error);
+    logger.error(error);
   },
 };
 

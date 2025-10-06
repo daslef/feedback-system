@@ -1,5 +1,5 @@
 {
-  "name": "@shared/upload",
+  "name": "@shared/logger",
   "private": true,
   "type": "module",
   "exports": {
@@ -9,13 +9,15 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@shared/logger": "workspace:*",
-    "dotenv": "catalog:",
-    "minio": "catalog:",
-    "valibot": "catalog:"
+    "@shared/database": "workspace:*",
+    "pino": "catalog:",
+    "pino-http": "^11.0.0",
+    "pino-opentelemetry-transport": "^1.1.0"
   },
   "devDependencies": {
     "@shared/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "pino-pretty": "catalog:",
     "typescript": "catalog:"
   }
 }

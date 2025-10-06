@@ -12,14 +12,14 @@
     "export": "email export --packageManager"
   },
   "dependencies": {
+    "@shared/schema": "workspace:*",
+    "@shared/logger": "workspace:*",
     "@react-email/components": "catalog:",
     "@react-email/preview-server": "catalog:",
-    "@shared/schema": "workspace:*",
     "bullmq": "catalog:",
     "dotenv": "catalog:",
     "ioredis": "catalog:",
     "nodemailer": "catalog:",
-    "pino": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-email": "catalog:",
