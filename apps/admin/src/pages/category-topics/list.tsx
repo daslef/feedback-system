@@ -2,7 +2,6 @@ import { useMany } from "@refinedev/core";
 
 import {
   useTable,
-  EditButton,
   getDefaultSortOrder,
   getDefaultFilter,
   FilterDropdown,
@@ -11,14 +10,20 @@ import {
   useModalForm,
 } from "@refinedev/antd";
 
-import { Table, Select, Modal, Form, Button, Row, Space } from "antd";
+import Table from "antd/es/table";
+import Modal from "antd/es/modal";
+import Form from "antd/es/form";
+import Button from "antd/es/button";
+import Row from "antd/es/row";
+import Space from "antd/es/space";
+import Select from "antd/es/select";
 
 type ITopicCategoryTopic = {
   topic_category_id: number;
   topic_id: number;
 };
 
-export const ListTopicCategoryTopics = () => {
+const ListTopicCategoryTopics = () => {
   const { tableProps, sorters, filters } = useTable({
     pagination: { currentPage: 1, pageSize: 12 },
     sorters: {
@@ -70,8 +75,7 @@ export const ListTopicCategoryTopics = () => {
         createButtonProps={{
           hidden: true,
         }}
-      >
-        <Row gutter={8} justify={"end"} style={{ marginBottom: 24 }}>
+        headerButtons={() => (
           <Space>
             <Button
               onClick={() => {
@@ -82,8 +86,8 @@ export const ListTopicCategoryTopics = () => {
               Прикрепить топик к категории
             </Button>
           </Space>
-        </Row>
-
+        )}
+      >
         <Table
           {...tableProps}
           rowKey="id"
@@ -201,3 +205,5 @@ export const ListTopicCategoryTopics = () => {
     </>
   );
 };
+
+export default ListTopicCategoryTopics;

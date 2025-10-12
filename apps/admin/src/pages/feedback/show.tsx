@@ -1,24 +1,22 @@
 import { useShow, useUpdate, useList } from "@refinedev/core";
 import { TextField, Show, ListButton } from "@refinedev/antd";
 
-import {
-  Button,
-  Space,
-  Tag,
-  Typography,
-  Card,
-  Divider,
-  message,
-  Flex,
-  Image,
-} from "antd";
+import Tag from "antd/es/tag";
+import Space from "antd/es/space";
+import Button from "antd/es/button";
+import Typography from "antd/es/typography";
+import Card from "antd/es/card";
+import Divider from "antd/es/divider";
+import message from "antd/es/message";
+import Flex from "antd/es/flex";
+import Image from "antd/es/image";
 
 type Status = {
   id: number;
   title: "pending" | "approved" | "declined";
 };
 
-export const ShowFeedback = () => {
+const ShowFeedback = () => {
   const {
     result: feedback,
     query: { isLoading },
@@ -223,3 +221,5 @@ export const ShowFeedback = () => {
     </Show>
   );
 };
+
+export default ShowFeedback;

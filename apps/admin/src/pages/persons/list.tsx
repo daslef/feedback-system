@@ -1,43 +1,14 @@
-import { useMany } from "@refinedev/core";
 import {
-  EditButton,
   getDefaultSortOrder,
-  FilterDropdown,
   List,
-  useEditableTable,
+  useTable,
   TextField,
-  SaveButton,
 } from "@refinedev/antd";
 
-import { Table, Form, Space, Input, Button } from "antd";
+import Table from "antd/es/table";
 
-type PersonContact = {
-  email: string | null;
-  phone: string | null;
-  social: string | null;
-};
-
-type PersonRecord = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  middle_name: string;
-  person_type: string;
-  created_at?: string | null;
-  contact?: PersonContact | null;
-};
-
-export const ListPersons = () => {
-  const {
-    tableProps,
-    formProps,
-    isEditing,
-    setId: setEditId,
-    saveButtonProps,
-    cancelButtonProps,
-    editButtonProps,
-    sorters,
-  } = useEditableTable({
+const ListPersons = () => {
+  const { tableProps, sorters } = useTable({
     pagination: { currentPage: 1, pageSize: 24 },
     sorters: {
       initial: [
@@ -59,118 +30,68 @@ export const ListPersons = () => {
   });
 
   return (
-    <List title="Респонденты">
-      <Form {...formProps}>
-        <Table
-          {...tableProps}
-          rowKey="id"
-          pagination={{ ...tableProps.pagination, hideOnSinglePage: true, pageSizeOptions: [12, 24, 48] }}
-        >
-          <Table.Column
-            dataIndex="last_name"
-            title="Фамилия"
-            sorter
-            defaultSortOrder={getDefaultSortOrder("last_name", sorters)}
-            render={(value: string, record: PersonRecord) => {
-              return isEditing(record.id) ? (
-                <Form.Item name="last_name" style={{ margin: 0 }}>
-                  <Input autoFocus size="small" />
-                </Form.Item>
-              ) : (
-                <TextField value={value || "—"} style={{ cursor: "pointer" }} />
-              );
-            }}
-          />
+    <List title="Респонденты" breadcrumb={null}>
+      <Table
+        {...tableProps}
+        rowKey="id"
+        pagination={{
+          ...tableProps.pagination,
+          hideOnSinglePage: true,
+          pageSizeOptions: [12, 24, 48],
+        }}
+      >
+        <Table.Column
+          dataIndex="last_name"
+          title="Фамилия"
+          sorter
+          defaultSortOrder={getDefaultSortOrder("last_name", sorters)}
+          render={(value: string) => (
+            <TextField value={value || "—"} style={{ cursor: "pointer" }} />
+          )}
+        />
 
-          <Table.Column
-            dataIndex="first_name"
-            title="Имя"
-            sorter
-            defaultSortOrder={getDefaultSortOrder("first_name", sorters)}
-            render={(value: string, record: PersonRecord) => {
-              return isEditing(record.id) ? (
-                <Form.Item name="first_name" style={{ margin: 0 }}>
-                  <Input autoFocus size="small" />
-                </Form.Item>
-              ) : (
-                <TextField value={value || "—"} style={{ cursor: "pointer" }} />
-              );
-            }}
-          />
+        <Table.Column
+          dataIndex="first_name"
+          title="Имя"
+          sorter
+          defaultSortOrder={getDefaultSortOrder("first_name", sorters)}
+          render={(value: string) => (
+            <TextField value={value || "—"} style={{ cursor: "pointer" }} />
+          )}
+        />
 
-          <Table.Column
-            dataIndex="middle_name"
-            title="Отчество"
-            sorter
-            defaultSortOrder={getDefaultSortOrder("middle_name", sorters)}
-            render={(value: string, record: PersonRecord) => {
-              return isEditing(record.id) ? (
-                <Form.Item name="middle_name" style={{ margin: 0 }}>
-                  <Input autoFocus size="small" />
-                </Form.Item>
-              ) : (
-                <TextField value={value || "—"} style={{ cursor: "pointer" }} />
-              );
-            }}
-          />
+        <Table.Column
+          dataIndex="middle_name"
+          title="Отчество"
+          sorter
+          defaultSortOrder={getDefaultSortOrder("middle_name", sorters)}
+          render={(value: string) => (
+            <TextField value={value || "—"} style={{ cursor: "pointer" }} />
+          )}
+        />
 
-          <Table.Column
-            dataIndex="phone"
-            title="Телефон"
-            sorter
-            defaultSortOrder={getDefaultSortOrder("phone", sorters)}
-            render={(value: string, record: PersonRecord) => {
-              return isEditing(record.id) ? (
-                <Form.Item name="phone" style={{ margin: 0 }}>
-                  <Input autoFocus size="small" />
-                </Form.Item>
-              ) : (
-                <TextField value={value || "—"} style={{ cursor: "pointer" }} />
-              );
-            }}
-          />
+        <Table.Column
+          dataIndex="phone"
+          title="Телефон"
+          sorter
+          defaultSortOrder={getDefaultSortOrder("phone", sorters)}
+          render={(value: string) => (
+            <TextField value={value || "—"} style={{ cursor: "pointer" }} />
+          )}
+        />
 
-          <Table.Column
-            dataIndex="email"
-            title="Почта"
-            sorter
-            defaultSortOrder={getDefaultSortOrder("email", sorters)}
-            render={(value: string, record: PersonRecord) => {
-              return isEditing(record.id) ? (
-                <Form.Item name="email" style={{ margin: 0 }}>
-                  <Input autoFocus size="small" />
-                </Form.Item>
-              ) : (
-                <TextField value={value || "—"} style={{ cursor: "pointer" }} />
-              );
-            }}
-          />
-
-          <Table.Column
-            title="Действия"
-            minWidth={120}
-            render={(_, record) => {
-              if (isEditing(record.id)) {
-                return (
-                  <Space>
-                    <SaveButton {...saveButtonProps} hideText size="small" />
-                    <Button {...cancelButtonProps} size="small">
-                      Отменить
-                    </Button>
-                  </Space>
-                );
-              }
-              return (
-                <EditButton
-                  {...editButtonProps(record.id)}
-                  hideText
-                  size="small"
-                />
-              );
-            }}
-          />
-        </Table>
-      </Form>
+        <Table.Column
+          dataIndex="email"
+          title="Почта"
+          sorter
+          defaultSortOrder={getDefaultSortOrder("email", sorters)}
+          render={(value: string) => (
+            <TextField value={value || "—"} style={{ cursor: "pointer" }} />
+          )}
+        />
+      </Table>
     </List>
   );
 };
+
+export default ListPersons;

@@ -98,7 +98,7 @@
     "warnWhenUnsavedChanges": "Вы уверены, что хотите уйти? У вас есть несохраненные изменения.",
     "notifications": {
         "success": "Успешно",
-        "error": "Ошибка (код состояния: {{statusCode}})",
+        "error": "Ошибка",
         "undoable": "У вас есть {{seconds}} секунд для отмены",
         "createSuccess": "Запись успешно создана",
         "createError": "Произошла ошибка при создании {{resource}}",

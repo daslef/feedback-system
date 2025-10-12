@@ -1,39 +1,19 @@
-import { BrowserRouter, Routes, Route, Outlet } from "react-router";
-import { ConfigProvider, App as AntdApp } from "antd";
+import { BrowserRouter } from "react-router";
+import AntdApp from "antd/es/app";
+import ConfigProvider from "antd/es/config-provider";
 import { useTranslation } from "react-i18next";
 
-import { Refine, Authenticated } from "@refinedev/core";
-import routerProvider, { NavigateToResource } from "@refinedev/react-router";
-import {
-  RefineThemes,
-  ThemedLayout,
-  ThemedTitle,
-  ThemedSider,
-  useNotificationProvider,
-} from "@refinedev/antd";
+import { Refine } from "@refinedev/core";
+import routerProvider from "@refinedev/react-router";
+import { useNotificationProvider } from "@refinedev/antd";
 
 import "./i18n";
 
 import { dataProvider } from "./providers/data-provider";
 import { authProvider } from "./providers/auth-provider";
 
-import { ShowProject } from "./pages/projects/show";
-import { EditProject } from "./pages/projects/edit";
-import { ListProjects } from "./pages/projects/list";
-import { CreateProject } from "./pages/projects/create";
-
-import { ListTopicCategoryTopics } from "./pages/category-topics/list";
-import { ListResponsibilities } from "./pages/responsibilities/list";
-
-import { ListPersons } from "./pages/persons/list";
-
-import { ListFeedback } from "./pages/feedback/list";
-import { ShowFeedback } from "./pages/feedback/show";
-
-import { Login } from "./pages/auth/login";
-import { Register } from "./pages/auth/register";
-
 import "antd/dist/reset.css";
+import AppRoutes from "./routes";
 
 interface I18nProvider {
   translate: (key: string, params?: any) => string;
@@ -90,7 +70,16 @@ function App() {
                 name: "persons",
                 list: "/persons",
                 meta: {
+                  parent: "Пользователи",
                   label: "Респонденты",
+                },
+              },
+              {
+                name: "officials",
+                list: "/officials",
+                meta: {
+                  parent: "Пользователи",
+                  label: "Администрация",
                 },
               },
               {
@@ -101,74 +90,15 @@ function App() {
                 },
               },
               {
-                name: "official_responsibilities",
-                list: "/responsibilities",
+                name: "administrative_units",
+                list: "/administrative_units",
                 meta: {
-                  label: "Ответственные",
+                  label: "Поселения",
                 },
               },
             ]}
           >
-            <Routes>
-              <Route
-                element={
-                  <Authenticated
-                    key="authenticated-routes"
-                    redirectOnFail="/login"
-                  >
-                    <ThemedLayout
-                      Title={(props) => (
-                        <ThemedTitle
-                          {...props}
-                          text={t("documentTitle.default")}
-                          icon={
-                            <img
-                              src="/logos/logo_2022_black.svg"
-                              alt="Logo"
-                              style={{ height: "24px", width: "auto" }}
-                            />
-                          }
-                        />
-                      )}
-                      Sider={(props) => <ThemedSider {...props} />}
-                    >
-                      <Outlet />
-                    </ThemedLayout>
-                  </Authenticated>
-                }
-              >
-                <Route
-                  index
-                  element={<NavigateToResource resource="projects" />}
-                />
-                <Route path="/projects">
-                  <Route index element={<ListProjects />} />
-                  <Route path=":id" element={<ShowProject />} />
-                  <Route path=":id/edit" element={<EditProject />} />
-                  <Route path="create" element={<CreateProject />} />
-                </Route>
-                <Route path="/issues" element={<ListTopicCategoryTopics />} />
-                <Route path="/feedback">
-                  <Route index element={<ListFeedback />} />
-                  <Route path=":id" element={<ShowFeedback />} />
-                </Route>
-                <Route
-                  path="/responsibilities"
-                  element={<ListResponsibilities />}
-                ></Route>
-                <Route path="/persons" element={<ListPersons />} />
-              </Route>
-              <Route
-                element={
-                  <Authenticated key="auth-pages" fallback={<Outlet />}>
-                    <NavigateToResource resource="projects" />
-                  </Authenticated>
-                }
-              >
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-              </Route>
-            </Routes>
+            <AppRoutes />
           </Refine>
         </AntdApp>
       </ConfigProvider>

@@ -2,3 +2,22 @@ include:
   - ./shared/database/compose.local.yaml
   - ./shared/queue/compose.local.yaml
   - ./shared/upload/compose.local.yaml
+
+services:
+  logspout-signoz:
+    image: pavanputhra/logspout-signoz
+    container_name: logspout-signoz
+    restart: unless-stopped
+    environment:
+      - SIGNOZ_LOG_ENDPOINT=http://otel-collector:8082
+      - ENV=prod
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: signoz://otel-collector:8082
+    networks:
+      - default
+      - signoz-net
+
+networks:
+  signoz-net:
+    external: true

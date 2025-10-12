@@ -10,9 +10,11 @@ import {
   List,
 } from "@refinedev/antd";
 
-import { Table, Space, Select } from "antd";
+import Table from "antd/es/table";
+import Select from "antd/es/select";
+import Space from "antd/es/space";
 
-export const ListProjects = () => {
+const ListProjects = () => {
   const { tableProps, sorters, filters } = useTable({
     pagination: { currentPage: 1, pageSize: 12 },
     sorters: {
@@ -43,8 +45,16 @@ export const ListProjects = () => {
   });
 
   return (
-    <List title="Реализованные проекты">
-      <Table {...tableProps} rowKey="id" pagination={{ ...tableProps.pagination, hideOnSinglePage: true, pageSizeOptions: [12, 24, 48] }}>
+    <List title="Реализованные проекты" breadcrumb={null}>
+      <Table
+        {...tableProps}
+        rowKey="id"
+        pagination={{
+          ...tableProps.pagination,
+          hideOnSinglePage: true,
+          pageSizeOptions: [12, 24, 48],
+        }}
+      >
         <Table.Column
           dataIndex="title"
           title="Название"
@@ -53,7 +63,7 @@ export const ListProjects = () => {
         />
         <Table.Column
           dataIndex={"administrative_unit_id"}
-          title="Территория"
+          title="Поселение"
           sorter
           render={(value) => {
             if (query.isLoading) {
@@ -125,3 +135,5 @@ export const ListProjects = () => {
     </List>
   );
 };
+
+export default ListProjects;

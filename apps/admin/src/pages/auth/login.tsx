@@ -1,7 +1,7 @@
 import { AuthPage } from "@refinedev/antd";
-import { Image } from "antd";
+import Image from "antd/es/image";
 
-export const Login = () => {
+const Login = () => {
   return (
     <AuthPage
       type="login"
@@ -17,7 +17,7 @@ export const Login = () => {
             <Image
               src="/logos/logo_2022_black.svg"
               alt="Logo"
-              style={{ width: "100px", height: "100px" }}
+              style={{ maxWidth: "140px", height: "auto" }}
               preview={false}
             />
           </div>
@@ -27,3 +27,5 @@ export const Login = () => {
     />
   );
 };
+
+export default Login;

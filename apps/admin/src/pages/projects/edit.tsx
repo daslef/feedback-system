@@ -1,7 +1,11 @@
-import { Form, Input, Select, InputNumber } from "antd";
+import Form from "antd/es/form";
+import Input from "antd/es/input";
+import Select from "antd/es/select";
+import InputNumber from "antd/es/input-number";
+
 import { useForm, useSelect, Edit } from "@refinedev/antd";
 
-export const EditProject = () => {
+const EditProject = () => {
   const { formProps, saveButtonProps, query } = useForm({
     redirect: "show",
   });
@@ -38,3 +42,5 @@ export const EditProject = () => {
     </Edit>
   );
 };
+
+export default EditProject;

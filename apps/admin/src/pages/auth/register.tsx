@@ -1,7 +1,7 @@
 import { AuthPage } from "@refinedev/antd";
-import { Image } from "antd";
+import Image from "antd/es/image";
 
-export const Register = () => {
+const Register = () => {
   return (
     <AuthPage
       type="register"
@@ -18,7 +18,7 @@ export const Register = () => {
             <Image
               src="/logos/logo_2022_black.svg"
               alt="Logo"
-              style={{ maxWidth: "200px", height: "auto" }}
+              style={{ maxWidth: "140px", height: "auto" }}
               preview={false}
             />
           </div>
@@ -28,3 +28,5 @@ export const Register = () => {
     />
   );
 };
+
+export default Register

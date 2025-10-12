@@ -1,7 +1,11 @@
-import { Form, Input, Select, InputNumber } from "antd";
+import Form from "antd/es/form";
+import Input from "antd/es/input";
+import Select from "antd/es/select";
+import InputNumber from "antd/es/input-number";
+
 import { useForm, useSelect, Create } from "@refinedev/antd";
 
-export const CreateProject = () => {
+const CreateProject = () => {
   const { formProps, saveButtonProps } = useForm();
 
   const { selectProps: administrativeUnitProps } = useSelect({
@@ -13,7 +17,7 @@ export const CreateProject = () => {
 
   return (
     <Create saveButtonProps={saveButtonProps} breadcrumb={null}>
-      <Form {...formProps} layout="vertical">
+      <Form {...formProps} layout="vertical" style={{ maxWidth: 480 }}>
         <Form.Item label="Название" name="title">
           <Input />
         </Form.Item>
@@ -33,3 +37,5 @@ export const CreateProject = () => {
     </Create>
   );
 };
+
+export default CreateProject;

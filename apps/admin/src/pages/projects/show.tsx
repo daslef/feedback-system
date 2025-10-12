@@ -1,9 +1,9 @@
 import { useShow } from "@refinedev/core";
 import { TextField, NumberField, Show } from "@refinedev/antd";
 
-import { Typography } from "antd";
+import Typography from "antd/es/typography";
 
-export const ShowProject = () => {
+const ShowProject = () => {
   const {
     result: project,
     query: { isLoading },
@@ -28,3 +28,5 @@ export const ShowProject = () => {
     </Show>
   );
 };
+
+export default ShowProject;

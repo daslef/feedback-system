@@ -1,13 +1,17 @@
 # feedback-system
 
-## Available Scripts
+## Ports
 
-- `pnpm dev`: Start all applications in development mode
-- `pnpm build`: Build all applications
-- `pnpm dev:web`: Start only the web application
-- `pnpm dev:server`: Start only the server
-- `pnpm check-types`: Check TypeScript types across all apps
-- `pnpm db:push`: Push schema changes to database
-- `pnpm db:studio`: Open database studio UI
-- `cd apps/server && pnpm db:local`: Start the local SQLite database
-- `pnpm check`: Run Biome formatting and linting
+| Service | Inner Port | Outer Port |
+| --- | --- | --- |
+| Postgres | 5432 | ${POSTGRES_PORT} |
+| Pgadmin | 80 | 5050 |
+| Redis | 6379 | ${REDIS_PORT} |
+| Bullboard | 3000 | ${BULLBOARD_PORT} |
+| Minio | 9000 | ${MINIO_PORT_API} |
+| Minio Console | 9001 | ${MINIO_PORT_CONSOLE} |
+| Zookeeper |  |  |
+| Clickhouse | 9000 | 9000 |
+| Signoz | 8080 | 8080 |
+| OTLP gRPC | 4317 | 4317 |
+| OTLP HTTP | 4318 | 4318 |
