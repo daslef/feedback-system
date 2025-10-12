@@ -2,6 +2,8 @@
 <!--
   NOTE: User and query level settings are set up in "users.xml" file.
   If you have accidentally specified user-level settings here, server won't start.
+  You can either move the settings to the right place inside "users.xml" file
+   or add <skip_check_for_incorrect_settings>1</skip_check_for_incorrect_settings> here.
 -->
 <clickhouse>
     <logger>
@@ -16,6 +18,7 @@
           - information
           - debug
           - trace
+          - test (not for production usage)
 
             [1]: https://github.com/pocoproject/poco/blob/poco-1.9.4-release/Foundation/include/Poco/Logger.h#L105-L114
         -->
@@ -31,6 +34,17 @@
         <size>1000M</size>
         <count>10</count>
         <!-- <console>1</console> --> <!-- Default behavior is autodetection (log to console if not daemon mode and is tty) -->
+
+        <!-- Per level overrides (legacy):
+
+        For example to suppress logging of the ConfigReloader you can use:
+        NOTE: levels.logger is reserved, see below.
+        -->
+        <!--
+        <levels>
+          <ConfigReloader>none</ConfigReloader>
+        </levels>
+        -->
 
         <!-- Per level overrides:
 
@@ -90,7 +104,7 @@
          (this protocol is also informally called as "the TCP protocol");
          See also 'tcp_port_secure' for secure connections.
     -->
-    <tcp_port>9040</tcp_port>
+    <tcp_port>9000</tcp_port>
 
     <!-- Compatibility with MySQL protocol.
          ClickHouse will pretend to be MySQL for applications connecting to this port.
@@ -305,10 +319,6 @@
       -->
     <total_memory_tracker_sample_probability>0</total_memory_tracker_sample_probability>
 
-    <!-- Set limit on number of open files (default: maximum). This setting makes sense on Mac OS X because getrlimit() fails to retrieve
-         correct maximum value. -->
-    <!-- <max_open_files>262144</max_open_files> -->
-
     <!-- Size of cache of uncompressed blocks of data, used in tables of MergeTree family.
          In bytes. Cache is single for server. Memory is allocated only on demand.
          Cache is used when 'use_uncompressed_cache' user setting turned on (off by default).
@@ -326,23 +336,6 @@
       -->
     <mark_cache_size>5368709120</mark_cache_size>
 
-
-    <!-- If you enable the `min_bytes_to_use_mmap_io` setting,
-         the data in MergeTree tables can be read with mmap to avoid copying from kernel to userspace.
-         It makes sense only for large files and helps only if data reside in page cache.
-         To avoid frequent open/mmap/munmap/close calls (which are very expensive due to consequent page faults)
-         and to reuse mappings from several threads and queries,
-         the cache of mapped files is maintained. Its size is the number of mapped regions (usually equal to the number of mapped files).
-         The amount of data in mapped files can be monitored
-         in system.metrics, system.metric_log by the MMappedFiles, MMappedFileBytes metrics
-         and in system.asynchronous_metrics, system.asynchronous_metrics_log by the MMapCacheCells metric,
-         and also in system.events, system.processes, system.query_log, system.query_thread_log, system.query_views_log by the
-         CreatedReadBufferMMap, CreatedReadBufferMMapFailed, MMappedFileCacheHits, MMappedFileCacheMisses events.
-         Note that the amount of data in mapped files does not consume memory directly and is not accounted
-         in query or server memory usage - because this memory can be discarded similar to OS page cache.
-         The cache is dropped (the files are closed) automatically on removal of old parts in MergeTree,
-         also it can be dropped manually by the SYSTEM DROP MMAP CACHE query.
-      -->
     <mmap_cache_size>1000</mmap_cache_size>
 
     <!-- Cache size in bytes for compiled expressions.-->
@@ -376,73 +369,7 @@
     <user_files_path>/var/lib/clickhouse/user_files/</user_files_path>
 
     <!-- LDAP server definitions. -->
-    <ldap_servers>
-        <!-- List LDAP servers with their connection parameters here to later 1) use them as authenticators for dedicated local users,
-              who have 'ldap' authentication mechanism specified instead of 'password', or to 2) use them as remote user directories.
-             Parameters:
-                host - LDAP server hostname or IP, this parameter is mandatory and cannot be empty.
-                port - LDAP server port, default is 636 if enable_tls is set to true, 389 otherwise.
-                bind_dn - template used to construct the DN to bind to.
-                        The resulting DN will be constructed by replacing all '{user_name}' substrings of the template with the actual
-                         user name during each authentication attempt.
-                user_dn_detection - section with LDAP search parameters for detecting the actual user DN of the bound user.
-                        This is mainly used in search filters for further role mapping when the server is Active Directory. The
-                         resulting user DN will be used when replacing '{user_dn}' substrings wherever they are allowed. By default,
-                         user DN is set equal to bind DN, but once search is performed, it will be updated with to the actual detected
-                         user DN value.
-                    base_dn - template used to construct the base DN for the LDAP search.
-                            The resulting DN will be constructed by replacing all '{user_name}' and '{bind_dn}' substrings
-                             of the template with the actual user name and bind DN during the LDAP search.
-                    scope - scope of the LDAP search.
-                            Accepted values are: 'base', 'one_level', 'children', 'subtree' (the default).
-                    search_filter - template used to construct the search filter for the LDAP search.
-                            The resulting filter will be constructed by replacing all '{user_name}', '{bind_dn}', and '{base_dn}'
-                             substrings of the template with the actual user name, bind DN, and base DN during the LDAP search.
-                            Note, that the special characters must be escaped properly in XML.
-                verification_cooldown - a period of time, in seconds, after a successful bind attempt, during which a user will be assumed
-                         to be successfully authenticated for all consecutive requests without contacting the LDAP server.
-                        Specify 0 (the default) to disable caching and force contacting the LDAP server for each authentication request.
-                enable_tls - flag to trigger use of secure connection to the LDAP server.
-                        Specify 'no' for plain text (ldap://) protocol (not recommended).
-                        Specify 'yes' for LDAP over SSL/TLS (ldaps://) protocol (recommended, the default).
-                        Specify 'starttls' for legacy StartTLS protocol (plain text (ldap://) protocol, upgraded to TLS).
-                tls_minimum_protocol_version - the minimum protocol version of SSL/TLS.
-                        Accepted values are: 'ssl2', 'ssl3', 'tls1.0', 'tls1.1', 'tls1.2' (the default).
-                tls_require_cert - SSL/TLS peer certificate verification behavior.
-                        Accepted values are: 'never', 'allow', 'try', 'demand' (the default).
-                tls_cert_file - path to certificate file.
-                tls_key_file - path to certificate key file.
-                tls_ca_cert_file - path to CA certificate file.
-                tls_ca_cert_dir - path to the directory containing CA certificates.
-                tls_cipher_suite - allowed cipher suite (in OpenSSL notation).
-             Example:
-                <my_ldap_server>
-                    <host>localhost</host>
-                    <port>636</port>
-                    <bind_dn>uid={user_name},ou=users,dc=example,dc=com</bind_dn>
-                    <verification_cooldown>300</verification_cooldown>
-                    <enable_tls>yes</enable_tls>
-                    <tls_minimum_protocol_version>tls1.2</tls_minimum_protocol_version>
-                    <tls_require_cert>demand</tls_require_cert>
-                    <tls_cert_file>/path/to/tls_cert_file</tls_cert_file>
-                    <tls_key_file>/path/to/tls_key_file</tls_key_file>
-                    <tls_ca_cert_file>/path/to/tls_ca_cert_file</tls_ca_cert_file>
-                    <tls_ca_cert_dir>/path/to/tls_ca_cert_dir</tls_ca_cert_dir>
-                    <tls_cipher_suite>ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:AES256-GCM-SHA384</tls_cipher_suite>
-                </my_ldap_server>
-             Example (typical Active Directory with configured user DN detection for further role mapping):
-                <my_ad_server>
-                    <host>localhost</host>
-                    <port>389</port>
-                    <bind_dn>EXAMPLE\{user_name}</bind_dn>
-                    <user_dn_detection>
-                        <base_dn>CN=Users,DC=example,DC=com</base_dn>
-                        <search_filter>(&amp;(objectClass=user)(sAMAccountName={user_name}))</search_filter>
-                    </user_dn_detection>
-                    <enable_tls>no</enable_tls>
-                </my_ad_server>
-        -->
-    </ldap_servers>
+    <!-- <ldap_servers></ldap_servers> -->
 
     <!-- Sources to read users, roles, access rights, profiles of settings, quotas. -->
     <user_directories>
@@ -502,33 +429,6 @@
     <!-- Reallocate memory for machine code ("text") using huge pages. Highly experimental. -->
     <remap_executable>false</remap_executable>
 
-    <![CDATA[
-         Uncomment below in order to use JDBC table engine and function.
-
-         To install and run JDBC bridge in background:
-         * [Debian/Ubuntu]
-           export MVN_URL=https://repo1.maven.org/maven2/ru/yandex/clickhouse/clickhouse-jdbc-bridge
-           export PKG_VER=$(curl -sL $MVN_URL/maven-metadata.xml | grep '<release>' | sed -e 's|.*>\(.*\)<.*|\1|')
-           wget https://github.com/ClickHouse/clickhouse-jdbc-bridge/releases/download/v$PKG_VER/clickhouse-jdbc-bridge_$PKG_VER-1_all.deb
-           apt install --no-install-recommends -f ./clickhouse-jdbc-bridge_$PKG_VER-1_all.deb
-           clickhouse-jdbc-bridge &
-
-         * [CentOS/RHEL]
-           export MVN_URL=https://repo1.maven.org/maven2/ru/yandex/clickhouse/clickhouse-jdbc-bridge
-           export PKG_VER=$(curl -sL $MVN_URL/maven-metadata.xml | grep '<release>' | sed -e 's|.*>\(.*\)<.*|\1|')
-           wget https://github.com/ClickHouse/clickhouse-jdbc-bridge/releases/download/v$PKG_VER/clickhouse-jdbc-bridge-$PKG_VER-1.noarch.rpm
-           yum localinstall -y clickhouse-jdbc-bridge-$PKG_VER-1.noarch.rpm
-           clickhouse-jdbc-bridge &
-
-         Please refer to https://github.com/ClickHouse/clickhouse-jdbc-bridge#usage for more information.
-    ]]>
-    <!--
-    <jdbc_bridge>
-        <host>127.0.0.1</host>
-        <port>9019</port>
-    </jdbc_bridge>
-    -->
-
     <!-- The list of hosts allowed to use in URL-related storage engines and table functions.
         If this section is not present in configuration, all hosts are allowed.
     -->
@@ -550,11 +450,6 @@
         -->
     <!--</remote_url_allow_hosts>-->
 
-    <!-- If element has 'incl' attribute, then for it's value will be used corresponding substitution from another file.
-         By default, path to file with substitutions is /etc/metrika.xml. It could be changed in config in 'include_from' element.
-         Values for substitutions are specified in /clickhouse/name_of_substitution elements in that file.
-      -->
-
     <!-- Substitutions for parameters of replicated tables.
           Optional. If you don't use replicated tables, you could omit that.
 
@@ -563,77 +458,17 @@
 
     <macros>
         <shard>01</shard>
-        <replica>example01-01-1</replica>
+        <replica>replica01-1</replica>
     </macros>
-
-
 
     <!-- Reloading interval for embedded dictionaries, in seconds. Default: 3600. -->
     <builtin_dictionaries_reload_interval>3600</builtin_dictionaries_reload_interval>
-
 
     <!-- Maximum session timeout, in seconds. Default: 3600. -->
     <max_session_timeout>3600</max_session_timeout>
 
     <!-- Default session timeout, in seconds. Default: 60. -->
     <default_session_timeout>60</default_session_timeout>
-
-    <!-- Sending data to Graphite for monitoring. Several sections can be defined. -->
-    <!--
-        interval - send every X second
-        root_path - prefix for keys
-        hostname_in_path - append hostname to root_path (default = true)
-        metrics - send data from table system.metrics
-        events - send data from table system.events
-        asynchronous_metrics - send data from table system.asynchronous_metrics
-    -->
-    <!--
-    <graphite>
-        <host>localhost</host>
-        <port>42000</port>
-        <timeout>0.1</timeout>
-        <interval>60</interval>
-        <root_path>one_min</root_path>
-        <hostname_in_path>true</hostname_in_path>
-
-        <metrics>true</metrics>
-        <events>true</events>
-        <events_cumulative>false</events_cumulative>
-        <asynchronous_metrics>true</asynchronous_metrics>
-    </graphite>
-    <graphite>
-        <host>localhost</host>
-        <port>42000</port>
-        <timeout>0.1</timeout>
-        <interval>1</interval>
-        <root_path>one_sec</root_path>
-
-        <metrics>true</metrics>
-        <events>true</events>
-        <events_cumulative>false</events_cumulative>
-        <asynchronous_metrics>false</asynchronous_metrics>
-    </graphite>
-    -->
-
-    <!-- Serve endpoint for Prometheus monitoring. -->
-    <!--
-        endpoint - mertics path (relative to root, statring with "/")
-        port - port to setup server. If not defined or 0 than http_port used
-        metrics - send data from table system.metrics
-        events - send data from table system.events
-        asynchronous_metrics - send data from table system.asynchronous_metrics
-        status_info - send data from different component from CH, ex: Dictionaries status
-    -->
-
-    <prometheus>
-        <endpoint>/metrics</endpoint>
-        <port>9363</port>
-
-        <metrics>true</metrics>
-        <events>true</events>
-        <asynchronous_metrics>true</asynchronous_metrics>
-        <status_info>true</status_info>
-    </prometheus>
 
     <!-- Query log. Used only for queries with setting log_queries = 1. -->
     <query_log>
@@ -818,24 +653,6 @@
     <user_defined_executable_functions_config>*function.xml</user_defined_executable_functions_config>
     <user_scripts_path>/var/lib/clickhouse/user_scripts/</user_scripts_path>
 
-    <!-- Uncomment if you want data to be compressed 30-100% better.
-         Don't do that if you just started using ClickHouse.
-      -->
-    <!--
-    <compression>
-        <!- - Set of variants. Checked in order. Last matching case wins. If nothing matches, lz4 will be used. - ->
-        <case>
-
-            <!- - Conditions. All must be satisfied. Some conditions may be omitted. - ->
-            <min_part_size>10000000000</min_part_size>        <!- - Min part size in bytes. - ->
-            <min_part_size_ratio>0.01</min_part_size_ratio>   <!- - Min size of part relative to whole table size. - ->
-
-            <!- - What compression method to use. - ->
-            <method>zstd</method>
-        </case>
-    </compression>
-    -->
-
     <!-- Configuration of encryption. The server executes a command to
          obtain an encryption key at startup if such a command is
          defined, or encryption codecs will be disabled otherwise. The
@@ -1018,29 +835,6 @@
 
     <!-- Uncomment to disable ClickHouse internal DNS caching. -->
     <!-- <disable_internal_dns_cache>1</disable_internal_dns_cache> -->
-
-    <!-- You can also configure rocksdb like this: -->
-    <!--
-    <rocksdb>
-        <options>
-            <max_background_jobs>8</max_background_jobs>
-        </options>
-        <column_family_options>
-            <num_levels>2</num_levels>
-        </column_family_options>
-        <tables>
-            <table>
-                <name>TABLE</name>
-                <options>
-                    <max_background_jobs>8</max_background_jobs>
-                </options>
-                <column_family_options>
-                    <num_levels>2</num_levels>
-                </column_family_options>
-            </table>
-        </tables>
-    </rocksdb>
-    -->
 
     <!-- Uncomment if enable merge tree metadata cache -->
     <merge_tree_metadata_cache>

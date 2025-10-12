@@ -3,66 +3,20 @@ receivers:
     collection_interval: 30s
     root_path: /hostfs
     scrapers:
-      cpu: {}
-      load: {}
-      memory: {}
-      disk: {}
-      filesystem: {}
-      network: {}
+      cpu:
+      load:
+      memory:
+      disk:
+      filesystem:
+      network:
+
   otlp:
     protocols:
       grpc:
         endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
-  prometheus:
-    config:
-      global:
-        scrape_interval: 60s
-      scrape_configs:
-        - job_name: otel-collector
-          static_configs:
-          - targets:
-              - localhost:8888
-            labels:
-              job_name: otel-collector
-        # For Docker daemon metrics to be scraped, it must be configured to expose
-        # Prometheus metrics, as documented here: https://docs.docker.com/config/daemon/prometheus/
-        # - job_name: docker-daemon
-        #   static_configs:
-        #   - targets:
-        #       - host.docker.internal:9323
-        #     labels:
-        #       job_name: docker-daemon
-        - job_name: docker-container
-          docker_sd_configs:
-            - host: unix:///var/run/docker.sock
-          relabel_configs:
-            - action: keep
-              regex: true
-              source_labels:
-                - __meta_docker_container_label_signoz_io_scrape
-            - regex: true
-              source_labels:
-                - __meta_docker_container_label_signoz_io_path
-              target_label: __metrics_path__
-            - regex: (.+)
-              source_labels:
-                - __meta_docker_container_label_signoz_io_path
-              target_label: __metrics_path__
-            - separator: ":"
-              source_labels:
-                - __meta_docker_network_ip
-                - __meta_docker_container_label_signoz_io_port
-              target_label: __address__
-            - regex: '/(.*)'
-              replacement: '$1'
-              source_labels:
-                - __meta_docker_container_name
-              target_label: container_name
-            - regex: __meta_docker_container_label_signoz_io_(.+)
-              action: labelmap
-              replacement: $1
+
   tcplog/docker:
     listen_address: "0.0.0.0:2255"
     operators:
@@ -80,6 +34,7 @@ receivers:
       - type: filter
         id: signoz_logs_filter
         expr: 'attributes.container_name matches "^signoz|(signoz-(|otel-collector|clickhouse|zookeeper))|(infra-(logspout|otel-agent)-.*)"'
+
 processors:
   batch:
     send_batch_size: 10000
@@ -94,11 +49,13 @@ processors:
       - env
       - system
     timeout: 2s
+
 extensions:
   health_check:
     endpoint: 0.0.0.0:13133
   pprof:
     endpoint: 0.0.0.0:1777
+
 exporters:
   otlp:
     endpoint: ${env:SIGNOZ_COLLECTOR_ENDPOINT}
@@ -107,6 +64,7 @@ exporters:
     headers:
       signoz-access-token: ${env:SIGNOZ_ACCESS_TOKEN}
   # debug: {}
+
 service:
   telemetry:
     logs:
@@ -127,10 +85,6 @@ service:
       exporters: [otlp]
     metrics/hostmetrics:
       receivers: [hostmetrics]
-      processors: [resourcedetection, batch]
-      exporters: [otlp]
-    metrics/prometheus:
-      receivers: [prometheus]
       processors: [resourcedetection, batch]
       exporters: [otlp]
     logs:

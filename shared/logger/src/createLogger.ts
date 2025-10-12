@@ -14,7 +14,7 @@ export default function createLogger<
   const isTest = env === "test";
 
   const baseLogger = pino<T, false>({
-    transport: createTransport({ isDevelopment }),
+    transport: createTransport({ isDevelopment, service }),
     enabled: !isTest,
     formatters: {
       bindings: (bindings) => ({

@@ -10,6 +10,14 @@
             <host>zookeeper-1</host>
             <port>2181</port>
         </node>
+        <!-- <node index="2">
+            <host>zookeeper-2</host>
+            <port>2181</port>
+        </node>
+        <node index="3">
+            <host>zookeeper-3</host>
+            <port>2181</port>
+        </node> -->
     </zookeeper>
 
     <!-- Configuration of clusters that could be used in Distributed tables.
@@ -45,17 +53,11 @@
                 <!-- <weight>1</weight> -->
                 <replica>
                     <host>clickhouse</host>
-                    <port>9040</port>
+                    <port>9000</port>
                     <!-- Optional. Priority of the replica for load_balancing. Default: 1 (less value has more priority). -->
                     <!-- <priority>1</priority> -->
                 </replica>
             </shard>
-            <!-- <shard>
-                <replica>
-                    <host>clickhouse-2</host>
-                    <port>9000</port>
-                </replica>
-            </shard> -->
         </cluster>
     </remote_servers>
 </clickhouse>
