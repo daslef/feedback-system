@@ -167,7 +167,7 @@ const ShowFeedback = () => {
 
             <Divider />
 
-            <Typography.Title level={4}>Фотографии</Typography.Title>
+            <Typography.Title style={{ marginBottom: 24 }} level={4}>Фотографии</Typography.Title>
 
             {images.length > 0 ? (
               <Flex gap={16}>
@@ -176,7 +176,7 @@ const ShowFeedback = () => {
                     return (
                       <Image
                         key={`image_${index}`}
-                        height={180}
+                        height={140}
                         src={image}
                         preview={{ getContainer: "#root" }}
                       />
