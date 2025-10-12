@@ -9,7 +9,7 @@ const personRouter = {
   one: onePerson,
   create: createPerson,
   update: updatePerson,
-  delete: deletePerson
+  delete: deletePerson,
 };
 
 export default personRouter;

@@ -58,7 +58,6 @@ const administrativeUnitContract = oc
         summary: "Delete administrative unit by ID",
       })
       .input(baseInputOne),
-
   });
 
 export default administrativeUnitContract;

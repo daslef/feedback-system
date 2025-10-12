@@ -3,7 +3,7 @@ import { env } from "./env";
 import createApp from "./bootstrap";
 import { createTracer } from "@shared/logger";
 
-const { onSigTerm } = createTracer()
+const { onSigTerm } = createTracer();
 
 const server = serve(
   {
@@ -33,7 +33,7 @@ const shutdown = () => {
     }
     onSigTerm().then(() => {
       process.exit(0);
-    })
+    });
   });
 };
 

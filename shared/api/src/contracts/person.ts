@@ -67,7 +67,6 @@ const personContract = oc
         summary: "Delete person by ID",
       })
       .input(baseInputOne),
-
   });
 
 export default personContract;

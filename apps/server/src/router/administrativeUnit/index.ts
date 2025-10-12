@@ -9,7 +9,7 @@ const administrativeUnitRouter = {
   create: createAdministrativeUnit,
   update: updateAdministrativeUnit,
   delete: deleteAdministrativeUnit,
-  one: oneAdministrativeUnit
+  one: oneAdministrativeUnit,
 };
 
 export default administrativeUnitRouter;

@@ -8,7 +8,7 @@ const deleteProject = protectedProcedure.project.delete.handler(
         .deleteFrom("project")
         .where("project.id", "=", Number(input.id))
         .executeTakeFirstOrThrow();
-      return { status: "ok" }
+      return { status: "ok" };
     } catch (error) {
       console.error(error);
       throw errors.CONFLICT({

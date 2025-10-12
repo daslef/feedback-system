@@ -8,7 +8,7 @@ const deletePerson = protectedProcedure.person.delete.handler(
         .deleteFrom("person")
         .where("person.id", "=", Number(input.id))
         .executeTakeFirstOrThrow();
-      return { status: "ok" }
+      return { status: "ok" };
     } catch (error) {
       console.error(error);
       throw errors.CONFLICT({

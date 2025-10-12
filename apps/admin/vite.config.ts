@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { analyzer } from 'vite-bundle-analyzer'
+import { analyzer } from "vite-bundle-analyzer";
 
 export default defineConfig({
   plugins: [react(), analyzer()],
@@ -11,9 +11,9 @@ export default defineConfig({
   },
   esbuild: {
     minifyIdentifiers: false,
-    minifySyntax: false
+    minifySyntax: false,
   },
   build: {
-    rollupOptions: {}
-  }
+    rollupOptions: {},
+  },
 });

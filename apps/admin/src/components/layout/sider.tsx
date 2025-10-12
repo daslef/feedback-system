@@ -8,12 +8,10 @@ import {
   useMenu,
   useLink,
   useWarnAboutChange,
-  useGetIdentity
+  useGetIdentity,
 } from "@refinedev/core";
 import { ThemedTitle, useThemedLayoutContext } from "@refinedev/antd";
-import {
-  BarsOutlined,
-} from "@ant-design/icons";
+import { BarsOutlined } from "@ant-design/icons";
 import {
   Layout,
   Menu,
@@ -23,7 +21,7 @@ import {
   theme,
   ConfigProvider,
 } from "antd";
-import Typography from 'antd/es/typography'
+import Typography from "antd/es/typography";
 
 import type { RefineThemedLayoutSiderProps } from "@refinedev/antd";
 import type { CSSProperties } from "react";
@@ -47,10 +45,7 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
   const { token } = theme.useToken();
   const { data: user } = useGetIdentity();
 
-  const {
-    mobileSiderOpen,
-    setMobileSiderOpen,
-  } = useThemedLayoutContext();
+  const { mobileSiderOpen, setMobileSiderOpen } = useThemedLayoutContext();
 
   const isExistAuthentication = useIsExistAuthentication();
   const direction = useContext(ConfigProvider.ConfigContext)?.direction;
@@ -84,11 +79,7 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
               resource: item,
             }}
           >
-            <Menu.SubMenu
-              key={item.key}
-              icon={null}
-              title={label}
-            >
+            <Menu.SubMenu key={item.key} icon={null} title={label}>
               {renderTreeView(children, selectedKey)}
             </Menu.SubMenu>
           </CanAccess>
@@ -117,9 +108,7 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
             <Link to={route ?? ""} style={linkStyle}>
               {label}
             </Link>
-            {isSelected && (
-              <div className="ant-menu-tree-arrow" />
-            )}
+            {isSelected && <div className="ant-menu-tree-arrow" />}
           </Menu.Item>
         </CanAccess>
       );
@@ -131,8 +120,8 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
       const confirm = window.confirm(
         translate(
           "warnWhenUnsavedChanges",
-          "Уверены, что хотите выйти из системы? Несохраненные изменения будут утеряны"
-        )
+          "Уверены, что хотите выйти из системы? Несохраненные изменения будут утеряны",
+        ),
       );
 
       if (confirm) {
@@ -146,7 +135,11 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
 
   const logout = isExistAuthentication && (
     <div style={{ marginTop: "auto" }}>
-      {user?.name && <Typography.Paragraph strong style={{ textAlign: "center" }}>{user.name}</Typography.Paragraph>}
+      {user?.name && (
+        <Typography.Paragraph strong style={{ textAlign: "center" }}>
+          {user.name}
+        </Typography.Paragraph>
+      )}
       <Menu.Item
         key="logout"
         onClick={() => handleLogout()}
@@ -188,7 +181,7 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
           overflow: "auto",
           height: "calc(100% - 72px)",
           display: "flex",
-          flexDirection: "column"
+          flexDirection: "column",
         }}
         onClick={() => {
           setMobileSiderOpen(false);
@@ -276,10 +269,7 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
           }}
         />
       )}
-      <Layout.Sider
-        style={siderStyles}
-        breakpoint="lg"
-      >
+      <Layout.Sider style={siderStyles} breakpoint="lg">
         <div
           style={{
             width: "200px",

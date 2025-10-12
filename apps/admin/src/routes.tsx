@@ -4,9 +4,9 @@ import { Routes, Route, Outlet } from "react-router";
 import { Authenticated } from "@refinedev/core";
 import { NavigateToResource } from "@refinedev/react-router";
 
-import {ThemedLayout} from './components/layout' 
-import { ThemedSider } from "./components/layout/sider";                                     
-import { ThemedTitle } from "./components/layout/title"; 
+import { ThemedLayout } from "./components/layout";
+import { ThemedSider } from "./components/layout/sider";
+import { ThemedTitle } from "./components/layout/title";
 
 const ShowProject = React.lazy(() => import("./pages/projects/show"));
 const EditProject = React.lazy(() => import("./pages/projects/edit"));
