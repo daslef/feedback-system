@@ -59,6 +59,15 @@ const personContract = oc
       })
       .input(createPersonSchema)
       .output(getPersonSchema),
+
+    delete: oc
+      .route({
+        method: "DELETE",
+        path: "/{id}",
+        summary: "Delete person by ID",
+      })
+      .input(baseInputOne),
+
   });
 
 export default personContract;

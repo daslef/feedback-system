@@ -3,20 +3,24 @@ import { type ResponseHeadersPluginContext } from "@orpc/server/plugins";
 
 import type { AuthInstance } from "@shared/auth";
 import { db as dbInstance } from "@shared/database";
+import { createLogger } from "@shared/logger";
 import apiContract from "./contracts";
 
 export const createORPCContext = async ({
   auth,
   db,
+  logger,
   environment,
   headers,
 }: {
   auth: AuthInstance;
   db: typeof dbInstance;
+  logger: ReturnType<typeof createLogger>;
   environment: "production" | "development";
   headers: Headers;
 }): Promise<{
   db: typeof dbInstance;
+  logger: ReturnType<typeof createLogger>;
   session: AuthInstance["$Infer"]["Session"] | null;
   environment: "production" | "development";
 }> => {
@@ -27,16 +31,18 @@ export const createORPCContext = async ({
     db,
     session,
     environment,
+    logger,
   };
 };
 
 const timingMiddleware = os.middleware(async ({ next, path }) => {
+  const logger = createLogger({ env: "development", service: "server" });
   const start = Date.now();
   let waitMsDisplay = "";
   const result = await next();
   const end = Date.now();
 
-  console.log(
+  logger.info(
     `\t[RPC] /${path.join("/")} executed after ${end - start}ms${waitMsDisplay}`,
   );
   return result;

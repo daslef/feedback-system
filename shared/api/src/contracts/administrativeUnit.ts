@@ -1,6 +1,6 @@
 import { oc } from "@orpc/contract";
 
-import { baseInputAll } from "@shared/schema/base";
+import { baseInputAll, baseInputOne } from "@shared/schema/base";
 import {
   getAdministrativeUnitSchema,
   createAdministrativeUnitSchema,
@@ -22,6 +22,16 @@ const administrativeUnitContract = oc
       .input(baseInputAll)
       .output(getManyAdministrativeUnitSchema),
 
+    one: oc
+      .route({
+        method: "GET",
+        path: "/{id}",
+        summary: "Get an administrative unit",
+        description: "Get administrative unit information by id",
+      })
+      .input(baseInputOne)
+      .output(getAdministrativeUnitSchema),
+
     update: oc
       .route({
         method: "PATCH",
@@ -40,6 +50,15 @@ const administrativeUnitContract = oc
       })
       .input(createAdministrativeUnitSchema)
       .output(getAdministrativeUnitSchema),
+
+    delete: oc
+      .route({
+        method: "DELETE",
+        path: "/{id}",
+        summary: "Delete administrative unit by ID",
+      })
+      .input(baseInputOne),
+
   });
 
 export default administrativeUnitContract;

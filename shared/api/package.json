@@ -6,12 +6,13 @@
         "check-types": "tsc --noEmit"
     },
     "exports": {
-        ".": "./src/index.ts"
+        ".": "./src/index.ts",
+        "./client": "./src/client.ts"
     },
     "dependencies": {
-        "@shared/typescript-config": "workspace:*",
         "@shared/database": "workspace:*",
         "@shared/auth": "workspace:*",
+        "@shared/logger": "workspace:*",
         "@shared/schema": "workspace:*",
         "@orpc/client": "catalog:",
         "@orpc/contract": "catalog:",
@@ -21,6 +22,7 @@
         "valibot": "catalog:"
     },
     "devDependencies": {
+        "@shared/typescript-config": "workspace:*",
         "@types/node": "catalog:",
         "typescript": "catalog:"
     },

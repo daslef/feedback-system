@@ -1,6 +1,9 @@
 import { serve } from "@hono/node-server";
 import { env } from "./env";
 import createApp from "./bootstrap";
+import { createTracer } from "@shared/logger";
+
+const { onSigTerm } = createTracer()
 
 const server = serve(
   {
@@ -28,7 +31,9 @@ const shutdown = () => {
     } else {
       console.log("\nServer has stopped gracefully.");
     }
-    process.exit(0);
+    onSigTerm().then(() => {
+      process.exit(0);
+    })
   });
 };
 

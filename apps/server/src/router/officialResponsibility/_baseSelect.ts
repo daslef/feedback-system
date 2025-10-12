@@ -16,6 +16,6 @@ export default function _baseSelect(dbInstance: typeof db) {
       "administrative_unit.title as administrative_unit",
       "person.first_name as official_first_name",
       "person.last_name as official_last_name",
-      "person.middle_name as as official_middle_name",
+      "person.middle_name as official_middle_name",
     ]);
 }
