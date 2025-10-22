@@ -4,27 +4,28 @@
     "type": "module",
     "scripts": {
         "check": "oxlint",
-        "dev": "turbo dev",
-        "build": "turbo build",
-        "check-types": "turbo check-types",
+        "dev": "pnpm -r dev",
+        "build": "pnpm -r build",
+        "check-types": "pnpm -r check-types",
         "format": "pnpm exec biome format --fix --json-formatter-enabled=false",
-        "build:web": "turbo -F web build",
-        "build:admin": "turbo -F admin build",
-        "dev:admin": "turbo -F admin dev",
-        "dev:web": "turbo -F web dev",
-        "dev:server": "turbo -F server dev",
-        "dev:workers": "turbo -F @shared/queue dev",
-        "auth:generate": "turbo -F @shared/auth auth:generate",
-        "auth:migrate": "turbo -F @shared/auth auth:migrate",
-        "db:reset": "turbo -F @shared/database db:reset",
-        "db:seed": "turbo -F @shared/database db:seed",
-        "db:check": "turbo db:check",
-        "db:migrate": "turbo -F @shared/database db:migrate"
+        "start": "pnpm -r start",
+        "start:server": "pnpm -F server start",
+        "start:workers": "pnpm -F server start:workers",
+        "build:web": "pnpm -F web build",
+        "build:admin": "pnpm -F admin build",
+        "dev:admin": "pnpm -F admin dev",
+        "dev:web": "pnpm -F web dev",
+        "dev:server": "pnpm -F server dev",
+        "auth:generate": "pnpm -F @shared/auth auth:generate",
+        "auth:migrate": "pnpm -F @shared/auth auth:migrate",
+        "db:reset": "pnpm -F @shared/database db:reset",
+        "db:seed": "pnpm -F @shared/database db:seed",
+        "db:check": "pnpm db:check",
+        "db:migrate": "pnpm -F @shared/database db:migrate"
     },
     "devDependencies": {
         "@biomejs/biome": "catalog:",
-        "oxlint": "catalog:",
-        "turbo": "catalog:"
+        "oxlint": "catalog:"
     },
     "packageManager": "pnpm@10.4.1",
     "engines": {
@@ -32,9 +33,13 @@
     },
     "pnpm": {
         "onlyBuiltDependencies": [
+            "@prisma/client",
+            "@prisma/engines",
             "better-sqlite3",
             "esbuild",
             "msgpackr-extract",
+            "prisma",
+            "protobufjs",
             "sharp"
         ]
     }

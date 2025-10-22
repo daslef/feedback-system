@@ -1,12 +1,6 @@
 **/node_modules/
 **/dist/
-**/out/
-
+**/.git
 **/.cache/
-**/.turbo/
 **/.vscode/
-
 **/.DS_Store
-
-
-**/.env*

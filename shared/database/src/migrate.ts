@@ -319,7 +319,7 @@ async function migratePostgres() {
 }
 
 const migrateFunction =
-  env.ENV === "production" ? migratePostgres : migrateSqlite;
+  env.ENV === "development" ? migrateSqlite : migratePostgres;
 
 migrateFunction().catch((error) => {
   console.error(error);

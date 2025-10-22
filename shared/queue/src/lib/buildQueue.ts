@@ -1,6 +1,6 @@
 import { Queue } from "bullmq";
 import { redisClient } from "../redis";
-import { JobType, JobData } from "../types";
+import { type JobType, type JobData } from "../types";
 
 const defaultJobOptions = {
   attempts: 50,

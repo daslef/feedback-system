@@ -9,20 +9,17 @@ import apiContract from "./contracts";
 export const createORPCContext = async ({
   auth,
   db,
-  logger,
   environment,
   headers,
 }: {
   auth: AuthInstance;
   db: typeof dbInstance;
-  logger: ReturnType<typeof createLogger>;
-  environment: "production" | "development";
+  environment: "production" | "development" | "staging";
   headers: Headers;
 }): Promise<{
   db: typeof dbInstance;
-  logger: ReturnType<typeof createLogger>;
   session: AuthInstance["$Infer"]["Session"] | null;
-  environment: "production" | "development";
+  environment: "production" | "development" | "staging";
 }> => {
   const session = await auth.api.getSession({
     headers,
@@ -31,12 +28,11 @@ export const createORPCContext = async ({
     db,
     session,
     environment,
-    logger,
   };
 };
 
 const timingMiddleware = os.middleware(async ({ next, path }) => {
-  const logger = createLogger({ env: "development", service: "server" });
+  const logger = createLogger({ env: "development" });
   const start = Date.now();
   let waitMsDisplay = "";
   const result = await next();
@@ -52,7 +48,7 @@ const base = implement(apiContract);
 
 export interface Context
   extends Awaited<ReturnType<typeof createORPCContext>>,
-    ResponseHeadersPluginContext {}
+  ResponseHeadersPluginContext { }
 
 export const publicProcedure = base.$context<Context>().use(timingMiddleware);
 

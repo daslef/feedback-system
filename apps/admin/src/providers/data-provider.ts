@@ -1,7 +1,7 @@
 import type { DataProvider } from "@refinedev/core";
 
 const API_URL =
-  import.meta.env.VITE_API_BASE_URL! + import.meta.env.VITE_API_PREFIX!;
+  import.meta.env.VITE_API_BASE_URL! + "/api";
 
 const fetcher = async (url: string, options?: RequestInit) => {
   return fetch(url, {

@@ -1,2 +1,2 @@
 import { createLogger } from "@shared/logger";
-export const logger = createLogger({ env: "production", service: "queue" });
+export const logger = createLogger({ env: "production" });

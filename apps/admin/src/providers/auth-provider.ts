@@ -2,7 +2,7 @@ import { type AuthProvider } from "@refinedev/core";
 import { createAuthClient } from "@shared/auth";
 
 const authClient = createAuthClient({
-  apiBasePath: import.meta.env.VITE_API_PREFIX!,
+  apiBasePath: "/api",
   apiBaseUrl: import.meta.env.VITE_API_BASE_URL!,
 });
 

@@ -18,7 +18,7 @@ type CreateApi = {
   apiRouter: any;
   auth: AuthInstance;
   db: typeof dbInstance;
-  environment: "production" | "development";
+  environment: "production" | "staging" | "development";
   serverUrl: string;
   apiPath: `/${string}`;
 };

@@ -6,7 +6,7 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "auth:generate": "npx @better-auth/cli generate --config ./src/cli-config.ts --output ../database/src/auth.initial.sqlite",
+    "auth:generate": "npx @better-auth/cli generate --config ./src/cli-config.ts --output ../database/src/auth.initial.sql",
     "auth:migrate": "npx @better-auth/cli migrate --config ./src/cli-config.ts",
     "check-types": "tsc --noEmit"
   },

@@ -14,12 +14,12 @@ import { type Env } from "./env";
 export default function createApp(env: Env) {
   const trustedOrigins = [env.PUBLIC_WEB_URL, env.PUBLIC_ADMIN_URL].map(
     (url) => new URL(url).origin,
-  );
+  ).concat(['localhost']);
 
   const auth = createAuth({
     trustedOrigins,
     serverUrl: env.PUBLIC_SERVER_URL,
-    apiPath: env.PUBLIC_SERVER_API_PATH,
+    apiPath: '/api',
     authSecret: env.SERVER_AUTH_SECRET,
     db,
   });
@@ -30,7 +30,7 @@ export default function createApp(env: Env) {
     db,
     environment: env.ENV,
     serverUrl: env.PUBLIC_SERVER_URL,
-    apiPath: env.PUBLIC_SERVER_API_PATH,
+    apiPath: "/api",
   });
 
   const app = new Hono<{
@@ -66,7 +66,6 @@ export default function createApp(env: Env) {
 
     const pinoMiddleware = createHttpMiddleware({
       env: env.ENV,
-      service: "server",
     });
 
     await new Promise<void>((resolve) =>
@@ -77,7 +76,7 @@ export default function createApp(env: Env) {
   });
 
   app.use(
-    `${env.PUBLIC_SERVER_API_PATH}/auth/*`,
+    `/api/auth/*`,
     cors({
       origin: trustedOrigins,
       credentials: true,
@@ -88,12 +87,12 @@ export default function createApp(env: Env) {
     }),
   );
 
-  app.on(["POST", "GET"], `${env.PUBLIC_SERVER_API_PATH}/auth/*`, (c) =>
+  app.on(["POST", "GET"], `/api/auth/*`, (c) =>
     auth.handler(c.req.raw),
   );
 
   app.use(
-    `${env.PUBLIC_SERVER_API_PATH}/*`,
+    `/api/*`,
     cors({
       origin: trustedOrigins,
       credentials: true,

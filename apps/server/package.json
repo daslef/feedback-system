@@ -4,7 +4,9 @@
     "type": "module",
     "scripts": {
         "check-types": "tsc --noEmit",
-        "dev": "tsx watch src/index.ts"
+        "dev": "tsx watch src/index.ts",
+        "start:workers": "tsx src/workers.ts",
+        "start": "tsx src/index.ts"
     },
     "dependencies": {
         "@shared/api": "workspace:*",

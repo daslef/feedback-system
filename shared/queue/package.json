@@ -8,7 +8,6 @@
   "scripts": {
     "check-types": "tsc --noEmit",
     "dev:email": "email dev --dir ./src/mail/templates -p 3333 ",
-    "dev": "tsx ./src/run.ts",
     "export": "email export --packageManager"
   },
   "dependencies": {
@@ -31,7 +30,6 @@
     "@types/nodemailer": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "pino-pretty": "catalog:",
     "typescript": "catalog:"
   },
   "peerDependencies": {

@@ -1,4 +1,4 @@
-import buildMailWorker from "./mail/mail.worker";
+import { buildMailWorker } from "@shared/queue";
 
 ["citizen-approved", "citizen-rejected", "official-request"].forEach(
   (queueName) => {

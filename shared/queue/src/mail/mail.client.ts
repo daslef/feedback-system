@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import { env, type Env } from "../env";
+import { logger } from "../logger";
 
 interface ClientProps {
   env: Env;
@@ -20,7 +21,7 @@ async function createMailClient({ env }: ClientProps) {
       },
     });
   } catch (error) {
-    console.error(error);
+    logger.error(error);
   }
 }
 
@@ -28,6 +29,6 @@ export const mailClient = await createMailClient({ env });
 
 mailClient?.verify((error) => {
   if (error) {
-    console.error("SMTP configuration error:", error);
+    logger.error("SMTP configuration error:" + error);
   }
 });

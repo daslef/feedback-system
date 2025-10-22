@@ -1,8 +1,6 @@
 node_modules
-.turbo
 .alchemy
 .env
-shared/logs/*
 **/dist
 **/.cache
 .DS_Store

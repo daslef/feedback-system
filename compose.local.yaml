@@ -4,20 +4,129 @@ include:
   - ./shared/upload/compose.local.yaml
 
 services:
-  logspout-signoz:
-    image: pavanputhra/logspout-signoz
-    container_name: logspout-signoz
-    restart: unless-stopped
-    environment:
-      - SIGNOZ_LOG_ENDPOINT=http://otel-collector:8082
-      - ENV=prod
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: signoz://otel-collector:8082
-    networks:
-      - default
-      - signoz-net
+  traefik:
+    image: traefik:v3.5.3
+    container_name: traefik
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedByDefault=false"
 
-networks:
-  signoz-net:
-    external: true
+      - "--api.dashboard=true"
+      - "--api.insecure=false"
+
+      - "--log=true"
+      - "--log.level=INFO"
+      - "--accessLog=true"
+
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web-secure.address=:443"
+
+      - "--certificatesresolvers.tlsresolver.acme.email=daslef93@gmail.com"
+      - "--certificatesresolvers.tlsresolver.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.tlsresolver.acme.tlschallenge=true"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "letsencrypt:/letsencrypt"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$xw8aes7u$$ed45kE7ddGE8orfdxg84R1"
+
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.sainthubs.tech`)"
+      - "traefik.http.routers.dashboard.tls.certresolver=tlsresolver"
+      - "traefik.http.routers.dashboard.entrypoints=web-secure"
+      - "traefik.http.routers.dashboard.middlewares=auth"
+      - "traefik.http.services.dashboard.loadbalancer.server.port=8080"
+
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    restart: unless-stopped
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./dozzle:/data"
+    ports:
+      - 8080:8080
+    environment:
+      - DOZZLE_LEVEL=info
+      - DOZZLE_TAILSIZE=300
+      - DOZZLE_FILTER="status=running"
+      - DOZZLE_ENABLE_ACTIONS=true
+      - DOZZLE_ENABLE_SHELL=true
+      - DOZZLE_AUTH_PROVIDER=simple
+
+  server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: prod-server
+      args:
+        - SERVER_HOST=localhost
+        - SERVER_PORT=3001
+    command: "pnpm start" 
+    env_file:
+      - ./apps/server/.env
+    container_name: server
+    restart: unless-stopped
+    ports:
+      - 3001:3001
+    healthcheck:
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      test:
+        [
+          "CMD-SHELL",
+          "wget --quiet --spider http://$$SERVER_HOST:$$SERVER_PORT/healthcheck",
+        ]
+    depends_on:
+      - postgres
+
+  workers:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: prod-server
+      args:
+        - SERVER_HOST=localhost
+        - SERVER_PORT=3001
+    command: "pnpm start:workers" 
+    env_file:
+      - ./apps/server/.env
+    container_name: workers
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+  admin:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:3001
+      target: prod-admin
+    env_file:
+      - ./apps/admin/.env
+    container_name: admin
+    restart: unless-stopped
+    ports:
+      - 5174:5174
+    command: --brotli --port 5174
+    healthcheck:
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.admin.rule=Host(`sainthubs.tech`)"
+      - "traefik.http.routers.admin.entrypoints=web-secure"
+      - "traefik.http.routers.admin.tls.certresolver=tlsresolver"
+      - "traefik.http.services.admin.loadbalancer.server.port=5174"
+    depends_on:
+      - server
+
+volumes:
+  letsencrypt:

@@ -2,6 +2,11 @@ packages:
   - 'apps/*'
   - 'shared/*'
 
+syncInjectedDepsAfterScripts:
+  - build
+
+injectWorkspacePackages: true
+
 catalog:
   '@types/node': ^22.10.0
   '@types/better-sqlite3': ^7.6.13
@@ -40,8 +45,8 @@ catalog:
   nodemailer: ^7.0.6
   pg: ^8.16.3
   pino: ^9.9.5
+  pino-http: ^11.0.0
   pino-pretty: ^13.1.1
-  turbo: ^2.5.6
   react: ^19.1.1
   react-dom: ^19.1.1
   react-router: ^7.9.1

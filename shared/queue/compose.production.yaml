@@ -12,7 +12,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.bullboard.rule=Host(`bullboard.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)
       - traefik.http.routers.bullboard.tls=true
-      - traefik.http.routers.bullboard.tls.certresolver=sample
+      - traefik.http.routers.bullboard.tls.certresolver=tlsresolver
 
 volumes:
   redis_data:

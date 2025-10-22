@@ -2,9 +2,7 @@ services:
   postgres:
     extends:
       file: compose.local.yaml
-      service: postgres  
-    labels:
-      - traefik.enable=false
+      service: postgres
 
   pgadmin:
     extends:

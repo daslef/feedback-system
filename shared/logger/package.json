@@ -10,20 +10,14 @@
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.51.0",
-    "@opentelemetry/auto-instrumentations-node": "^0.65.0",
-    "@opentelemetry/exporter-trace-otlp-http": "^0.206.0",
-    "@opentelemetry/resources": "^2.1.0",
-    "@opentelemetry/sdk-node": "^0.206.0",
-    "@opentelemetry/semantic-conventions": "^1.37.0",
     "@shared/database": "workspace:*",
     "pino": "catalog:",
-    "pino-http": "^11.0.0",
-    "pino-opentelemetry-transport": "^1.1.0"
+    "pino-http": "catalog:",
+    "pino-pretty": "catalog:"
   },
   "devDependencies": {
     "@shared/typescript-config": "workspace:*",
     "@types/node": "catalog:",
-    "pino-pretty": "catalog:",
     "typescript": "catalog:"
   }
 }

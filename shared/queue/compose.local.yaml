@@ -3,6 +3,7 @@ services:
     image: redis:8.2-alpine
     container_name: feedback-redis
     restart: unless-stopped
+    env_file: .env
     ports:
       - "${REDIS_PORT}:6379"
     volumes:
@@ -17,12 +18,13 @@ services:
     container_name: feedback-bullboard
     image: venatum/bull-board
     restart: unless-stopped
+    env_file: .env
     ports:
       - "${BULLBOARD_PORT}:3000"
     environment:
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
-      REDIS_USE_TLS: '${REDIS_SECURE}'
+      REDIS_USE_TLS: ${REDIS_SECURE}
       BULL_PREFIX: ${BULL_PREFIX}
     depends_on:
       - redis

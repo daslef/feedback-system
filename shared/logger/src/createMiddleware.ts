@@ -5,7 +5,7 @@ export const createHttpMiddleware = ({
   env,
 }: Parameters<typeof createLogger>[0]) =>
   pinoHttp({
-    logger: createLogger({ env, service: "server" }),
+    logger: createLogger({ env }),
     customLogLevel: (_, res, err) => {
       if (res.statusCode >= 400 && res.statusCode < 500) return "warn";
       if (res.statusCode >= 500 || err) return "error";

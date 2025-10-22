@@ -1,28 +1,27 @@
 import pino, { type LoggerOptions } from "pino";
-import createTransport from "./transport";
+import pretty from 'pino-pretty'
 
 type Env = {
-  env: "development" | "production" | "test";
-  service: "admin" | "server" | "web" | "auth" | "queue" | "upload";
+  env: "development" | "production" | "staging" | "test";
   serializers?: LoggerOptions["serializers"];
 };
 
 export default function createLogger<
   T extends "error" | "warn" | "info" | "silent",
->({ env, service, serializers }: Env) {
+>({ env, serializers }: Env) {
   const isDevelopment = env === "development";
   const isTest = env === "test";
 
+  const stream = pretty({
+    levelFirst: true,
+    colorize: true,
+    ignore: "pid",
+    translateTime: "dd.mm.yyyy HH:MM:ss"
+  });
+
   const baseLogger = pino<T, false>({
-    transport: createTransport({ isDevelopment, service }),
+    level: isDevelopment ? "debug" : "info",
     enabled: !isTest,
-    formatters: {
-      bindings: (bindings) => ({
-        pid: bindings.pid,
-        hostname: bindings.hostname,
-        env,
-      }),
-    },
     serializers,
     redact: {
       paths: [
@@ -37,7 +36,7 @@ export default function createLogger<
       ],
       remove: true,
     },
-  });
+  }, stream);
 
-  return baseLogger.child({ service });
+  return baseLogger;
 }

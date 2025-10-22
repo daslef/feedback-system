@@ -2,3 +2,19 @@ include:
   - ./shared/database/compose.production.yaml
   - ./shared/queue/compose.production.yaml
   - ./shared/upload/compose.production.yaml
+
+services:
+  traefik:
+    extends: 
+      file: compose.local.yaml
+      service: traefik
+
+  server:
+    extends:
+      file: compose.local.yaml
+      service: server
+
+  admin:
+    extends:
+      file: compose.local.yaml
+      service: admin

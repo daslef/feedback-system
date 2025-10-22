@@ -1,23 +1,20 @@
 import { serve } from "@hono/node-server";
+import { createLogger } from "@shared/logger";
 import { env } from "./env";
 import createApp from "./bootstrap";
-import { createTracer } from "@shared/logger";
 
-const { onSigTerm } = createTracer();
+const logger = createLogger({ env: env.ENV })
 
 const server = serve(
   {
     fetch: createApp(env).fetch,
-    port: env.SERVER_PORT,
-    hostname: env.SERVER_HOST,
+    port: 3001,
   },
-  (info) => {
-    const host = info.address;
+  (_) => {
     console.log(`
 Hono
-- internal server url: http://${host}:${info.port}
+- internal server url: http://localhost:3001
 - external server url: ${env.PUBLIC_SERVER_URL}
-- public web url: ${env.PUBLIC_WEB_URL}
 - api reference: ${env.PUBLIC_SERVER_URL}/api
 - api reference (auth): ${env.PUBLIC_SERVER_URL}/api/auth/reference
     `);
@@ -27,13 +24,11 @@ Hono
 const shutdown = () => {
   server.close((error) => {
     if (error) {
-      console.error(error);
+      logger.error(error)
     } else {
-      console.log("\nServer has stopped gracefully.");
+      logger.info("\nServer has stopped gracefully.");
     }
-    onSigTerm().then(() => {
-      process.exit(0);
-    });
+    process.exit(0);
   });
 };
 

@@ -7,7 +7,7 @@ const defaultEventHandlers = {
     logger.info(`Job ${job.name} completed`);
   },
   failed: (job: Job | undefined, error: Error) => {
-    logger.info(`Job ${job?.name} failed with <${error.name}>${error.message}`);
+    logger.error(`Job ${job?.name} failed with <${error.name}>${error.message}`);
   },
   error: (error: Error) => {
     logger.error(error);
