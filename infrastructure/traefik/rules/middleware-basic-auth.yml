@@ -1,0 +1,7 @@
+http:
+  middlewares:
+    middleware-basic-auth:
+      basicAuth:
+        users:
+          - "admin:$$apr1$$xw8aes7u$$ed45kE7ddGE8orfdxg84R1"
+        realm: "Traefik Basic Auth"

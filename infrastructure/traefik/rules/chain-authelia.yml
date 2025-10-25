@@ -1,0 +1,8 @@
+http:
+  middlewares:
+    chain-authelia:
+      chain:
+        middlewares:
+          - middleware-rate-limit
+          - middleware-secure-headers
+          - middleware-authelia

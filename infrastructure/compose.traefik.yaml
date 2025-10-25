@@ -1,0 +1,57 @@
+services:
+  traefik:
+    image: traefik:v3.5.3
+    container_name: traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    command:
+      - "--global.checkNewVersion=true"
+      - "--global.sendAnonymousUsage=false"
+
+      - "--providers.docker=true"
+      - "--providers.docker.exposedByDefault=false"
+      - "--providers.file.directory=/rules" # Load dynamic configuration from one or more .toml or .yml files in a directory
+      - "--providers.file.watch=true" # Only works on top level files in the rules folder
+
+      - "--api.dashboard=true"
+      - "--api.insecure=false"
+
+      - "--log=true"
+      - "--log.level=DEBUG"
+      - "--accessLog=true"
+
+      - "--entrypoints.web-secure.address=:443"
+      - "--entrypoints.web-secure.http.tls=true"
+      - "--entrypoints.web-secure.http.tls.options=tls-options@file"
+      - "--entrypoints.web-secure.http.tls.certresolver=tlsresolver"
+      - "--entrypoints.web-secure.http3=true"
+      # Allow these IPs to set the X-Forwarded-* headers - Cloudflare IPs: https://www.cloudflare.com/ips/
+      # - --entrypoints.web-secure.forwardedHeaders.trustedIPs=$CLOUDFLARE_IPS,$LOCAL_IPS
+
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=web-secure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+
+      - "--certificatesresolvers.tlsresolver.acme.email=info@sainthubs.tech"
+      - "--certificatesresolvers.tlsresolver.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.tlsresolver.acme.tlschallenge=true"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik/rules:/rules" 
+      - "letsencrypt:/letsencrypt"
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)"
+      - "traefik.http.routers.dashboard.entrypoints=web-secure"
+      - "traefik.http.routers.dashboard.middlewares=chain-authelia@file"
+      - "traefik.http.services.dashboard.loadbalancer.server.port=8080"
+
+volumes:
+  letsencrypt:

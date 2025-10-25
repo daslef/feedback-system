@@ -2,13 +2,11 @@ include:
   - ./shared/database/compose.production.yaml
   - ./shared/queue/compose.production.yaml
   - ./shared/upload/compose.production.yaml
+  - ./infrastructure/compose.traefik.yaml
+  - ./infrastructure/compose.dozzle.yaml
+  - ./infrastructure/compose.authelia.yaml
 
 services:
-  traefik:
-    extends: 
-      file: compose.local.yaml
-      service: traefik
-
   server:
     extends:
       file: compose.local.yaml
@@ -18,3 +16,19 @@ services:
     extends:
       file: compose.local.yaml
       service: admin
+
+  workers:
+    extends:
+      file: compose.local.yaml
+      service: workers
+
+volumes:
+  letsencrypt:
+
+secrets:
+  authelia_jwt_secret:
+    file: ./infrastructure/secrets/authelia_jwt_secret
+  authelia_session_secret:
+    file: ./infrastructure/secrets/authelia_session_secret
+  authelia_storage_encryption_key:
+    file: ./infrastructure/secrets/authelia_storage_encryption_key

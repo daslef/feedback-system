@@ -4,3 +4,9 @@ node_modules
 **/dist
 **/.cache
 .DS_Store
+
+infrastructure/secrets/*
+
+infrastructure/authelia/*
+!infrastructure/authelia/configuration.yml
+!infrastructure/authelia/users.example.yml

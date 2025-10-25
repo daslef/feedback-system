@@ -1,0 +1,79 @@
+server:
+  address: tcp://0.0.0.0:9091/
+  buffers:
+    read: 4096
+    write: 4096
+  endpoints:
+    enable_pprof: false
+    enable_expvars: false
+  disable_healthcheck: false
+  tls:
+    key: ""
+    certificate: ""
+ 
+log:
+  level: info
+  format: text
+  file_path: /config/authelia.log
+  keep_stdout: true
+ 
+totp:
+  issuer: example.com
+  period: 30
+  skew: 1
+  
+authentication_backend:
+  password_reset:
+    disable: true
+  refresh_interval: 5m
+  file:
+    path: /config/users.yml
+    password:
+      algorithm: argon2id
+      iterations: 1
+      salt_length: 16
+      parallelism: 2
+      memory: 256
+ 
+access_control:
+  default_policy: deny
+  rules:
+    - domain:
+        - "*.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai"
+        - "xn--47-dlckcacbiv4afwllqms4x.xn--p1ai"
+      policy: bypass
+      networks: # bypass authentication for local networks
+        - 10.0.0.0/8
+        - 192.168.0.0/16
+        - 172.16.0.0/12
+    - domain:
+        - "*.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai"
+        - "xn--47-dlckcacbiv4afwllqms4x.xn--p1ai"
+      policy: two_factor
+ 
+session:
+  name: authelia_session
+  same_site: lax
+  expiration: 7h
+  inactivity: 5m
+  remember_me: 1M
+  cookies:
+    - domain: 'xn--47-dlckcacbiv4afwllqms4x.xn--p1ai'
+      authelia_url: 'https://authelia.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai'
+      default_redirection_url: 'https://admin.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai'
+ 
+regulation:
+  max_retries: 10
+  find_time: 5m
+  ban_time: 12h
+
+storage:
+  local:
+   path: /config/db.sqlite3
+ 
+# https://www.authelia.com/configuration/notifications/introduction/
+notifier:
+  disable_startup_check: false
+  # For testing purposes, notifications can be sent in a file. Be sure to map the volume in docker-compose.
+  filesystem:
+    filename: /config/notifications.txt
