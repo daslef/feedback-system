@@ -14,11 +14,19 @@ services:
       service: server
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.server.rule=Host(`api.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)"
-      - "traefik.http.routers.server.entrypoints=web-secure"
-      - "traefik.http.routers.server.tls.certresolver=tlsresolver"
-      # - "traefik.http.routers.server.middlewares=chain-no-auth@file"
-      - "traefik.http.routers.server.middlewares=chain-authelia@file"
+
+      - "traefik.http.routers.server-external.rule=Host(`api.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)"
+      - "traefik.http.routers.server-external.entrypoints=web-secure"
+      - "traefik.http.routers.server-external.tls.certresolver=tlsresolver"
+      - "traefik.http.routers.server-external.middlewares=chain-authelia@file"
+      - "traefik.http.routers.server-external.service=server"
+
+      - "traefik.http.routers.server-internal.rule=Host(`api.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`) && HeaderRegexp(`X-Real-Ip`, `(^127\\.)|(^10\\.)|(^172\\.1[6-9]\\.)|(^172\\.2[0-9]\\.)|(^172\\.3[0-1]\\.)|(^192\\.168\\.)`)"
+      - "traefik.http.routers.server-internal.entrypoints=web-secure"
+      - "traefik.http.routers.server-internal.tls.certresolver=tlsresolver"
+      - "traefik.http.routers.server-internal.middlewares=chain-no-auth@file"
+      - "traefik.http.routers.server-internal.service=server"
+
       - "traefik.http.services.server.loadbalancer.server.port=3001"
 
   admin:
