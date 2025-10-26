@@ -29,13 +29,6 @@ services:
           "CMD-SHELL",
           "wget --quiet --spider http://$$SERVER_HOST:$$SERVER_PORT/healthcheck",
         ]
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.server.rule=Host(`api.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)"
-      - "traefik.http.routers.server.entrypoints=web-secure"
-      - "traefik.http.routers.server.tls.certresolver=tlsresolver"
-      - "traefik.http.routers.server.middlewares=chain-authelia@file"
-      - "traefik.http.services.server.loadbalancer.server.port=3001"
     depends_on:
       - postgres
 
@@ -60,7 +53,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
       args:
-        VITE_API_BASE_URL: https://admin.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai
+        VITE_API_BASE_URL: http://localhost:3001
       target: prod-admin
     env_file:
       - ./apps/admin/.env
@@ -73,11 +66,5 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.admin.rule=Host(`admin.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)"
-      - "traefik.http.routers.admin.entrypoints=web-secure"
-      - "traefik.http.routers.admin.tls.certresolver=tlsresolver"
-      - "traefik.http.services.admin.loadbalancer.server.port=5174"
     depends_on:
       - server

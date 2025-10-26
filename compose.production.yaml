@@ -5,17 +5,39 @@ include:
   - ./infrastructure/compose.traefik.yaml
   - ./infrastructure/compose.dozzle.yaml
   - ./infrastructure/compose.authelia.yaml
+  - ./infrastructure/compose.crowdsec.yaml
 
 services:
   server:
     extends:
       file: compose.local.yaml
       service: server
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.server.rule=Host(`api.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)"
+      - "traefik.http.routers.server.entrypoints=web-secure"
+      - "traefik.http.routers.server.tls.certresolver=tlsresolver"
+      # - "traefik.http.routers.server.middlewares=chain-no-auth@file"
+      - "traefik.http.routers.server.middlewares=chain-authelia@file"
+      - "traefik.http.services.server.loadbalancer.server.port=3001"
 
   admin:
     extends:
       file: compose.local.yaml
       service: admin
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        VITE_API_BASE_URL: https://api.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai
+      target: prod-admin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.admin.rule=Host(`admin.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)"
+      - "traefik.http.routers.admin.entrypoints=web-secure"
+      - "traefik.http.routers.admin.tls.certresolver=tlsresolver"
+      - "traefik.http.routers.admin.middlewares=chain-no-auth@file"
+      - "traefik.http.services.admin.loadbalancer.server.port=5174"
 
   workers:
     extends:

@@ -7,8 +7,9 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "./dozzle:/data"
     ports:
-      - 8080:8080
+      - 10201:10201
     environment:
+      - DOZZLE_ADDR=:10201
       - DOZZLE_LEVEL=info
       - DOZZLE_TAILSIZE=300
       - DOZZLE_FILTER="status=running"
@@ -21,4 +22,4 @@ services:
       - "traefik.http.routers.dozzle.entrypoints=web-secure"
       - "traefik.http.routers.dozzle.tls.certresolver=tlsresolver"
       - "traefik.http.routers.dozzle.middlewares=chain-authelia@file"
-      - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
+      - "traefik.http.services.dozzle.loadbalancer.server.port=10201"

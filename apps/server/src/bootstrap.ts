@@ -16,6 +16,8 @@ export default function createApp(env: Env) {
     (url) => new URL(url).origin,
   ).concat(['localhost']);
 
+  console.log(trustedOrigins)
+
   const auth = createAuth({
     trustedOrigins,
     serverUrl: env.PUBLIC_SERVER_URL,

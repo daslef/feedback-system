@@ -20,23 +20,27 @@ services:
       - "--log=true"
       - "--log.level=DEBUG"
       - "--accessLog=true"
+      - "--accessLog.filters.statusCodes=204-299,400-499,500-599"
 
       - "--entrypoints.web-secure.address=:443"
       - "--entrypoints.web-secure.http.tls=true"
       - "--entrypoints.web-secure.http.tls.options=tls-options@file"
       - "--entrypoints.web-secure.http.tls.certresolver=tlsresolver"
       - "--entrypoints.web-secure.http3=true"
-      # Allow these IPs to set the X-Forwarded-* headers - Cloudflare IPs: https://www.cloudflare.com/ips/
-      # - --entrypoints.web-secure.forwardedHeaders.trustedIPs=$CLOUDFLARE_IPS,$LOCAL_IPS
+      - "--entryPoints.web-secure.forwardedHeaders.trustedIPs=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,fc00::/7"
 
       - "--entrypoints.web.address=:80"
       - "--entrypoints.web.http.redirections.entrypoint.to=web-secure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      - "--entryPoints.web.forwardedHeaders.trustedIPs=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,fc00::/7"
 
       - "--certificatesresolvers.tlsresolver.acme.email=info@sainthubs.tech"
       - "--certificatesresolvers.tlsresolver.acme.storage=/letsencrypt/acme.json"
       - "--certificatesresolvers.tlsresolver.acme.tlschallenge=true"
+
+      - "--experimental.plugins.bouncer.modulename=github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
+      - "--experimental.plugins.bouncer.version=v1.4.5"
     ports:
       - "80:80"
       - "443:443"
@@ -47,10 +51,11 @@ services:
     labels:
       - "traefik.enable=true"
 
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       - "traefik.http.routers.dashboard.service=api@internal"
-      - "traefik.http.routers.dashboard.rule=Host(`traefik.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)"
       - "traefik.http.routers.dashboard.entrypoints=web-secure"
       - "traefik.http.routers.dashboard.middlewares=chain-authelia@file"
+      - "traefik.http.routers.dashboard.tls.certresolver=tlsresolver"
       - "traefik.http.services.dashboard.loadbalancer.server.port=8080"
 
 volumes:

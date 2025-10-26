@@ -9,7 +9,6 @@ http:
       service: web
       tls:
         certResolver: tlsresolver
-        options: tls-options@file
   services:
     web:
       loadBalancer:
