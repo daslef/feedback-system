@@ -68,3 +68,16 @@ services:
       retries: 3
     depends_on:
       - server
+
+  web:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: prod-web
+    ports:
+      - 5175:5175
+    command: "pnpm dlx serve -p 5175"
+    container_name: web
+    restart: unless-stopped
+    depends_on:
+      - server

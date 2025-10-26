@@ -37,6 +37,18 @@ RUN pnpm build
 
 # =========================================================================== #
 
+FROM installer AS deploy-web
+
+RUN pnpm -F web deploy --legacy ./prod/web
+
+WORKDIR /app/prod/web
+
+RUN pnpm build
+
+RUN pnpm i --global serve
+
+# =========================================================================== #
+
 FROM installer AS deploy-server
 
 RUN pnpm -F server deploy --legacy ./prod/server
@@ -52,4 +64,11 @@ COPY --from=deploy-admin /app/prod/admin/dist .
 FROM base AS prod-server
 
 COPY --from=deploy-server /app/prod/server /app
+WORKDIR /app
+
+# =========================================================================== #
+
+FROM base AS prod-web
+
+COPY --from=deploy-web /app/prod/web/dist /app
 WORKDIR /app

@@ -18,7 +18,7 @@ services:
       - "--api.insecure=false"
 
       - "--log=true"
-      - "--log.level=DEBUG"
+      - "--log.level=INFO"
       - "--accessLog=true"
       - "--accessLog.filters.statusCodes=204-299,400-499,500-599"
 

@@ -44,6 +44,18 @@ services:
       file: compose.local.yaml
       service: workers
 
+  web:
+    extends:
+      file: compose.local.yaml
+      service: web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=Host(`xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)"
+      - "traefik.http.routers.web.entrypoints=web-secure"
+      - "traefik.http.routers.web.tls.certresolver=tlsresolver"
+      - "traefik.http.routers.web.middlewares=chain-no-auth@file"
+      - "traefik.http.services.web.loadbalancer.server.port=5175"
+
 volumes:
   letsencrypt:
 
