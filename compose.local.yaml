@@ -1,7 +1,7 @@
 include:
   - ./shared/database/compose.local.yaml
   - ./shared/queue/compose.local.yaml
-  - ./shared/upload/compose.local.yaml
+  - ./shared/minio/compose.local.yaml
 
 services:
 

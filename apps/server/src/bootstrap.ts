@@ -60,7 +60,11 @@ export default function createApp(env: Env) {
       servers: [
         {
           url: env.PUBLIC_SERVER_URL + "/api",
-          description: "Feedback System API",
+          description: "oRPC API",
+        },
+        {
+          url: env.PUBLIC_SERVER_URL + "/api/auth",
+          description: "Auth API",
         },
       ],
       sources: [

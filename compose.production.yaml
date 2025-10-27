@@ -1,7 +1,7 @@
 include:
   - ./shared/database/compose.production.yaml
   - ./shared/queue/compose.production.yaml
-  - ./shared/upload/compose.production.yaml
+  - ./shared/minio/compose.production.yaml
   - ./infrastructure/compose.traefik.yaml
   - ./infrastructure/compose.dozzle.yaml
   - ./infrastructure/compose.authelia.yaml
