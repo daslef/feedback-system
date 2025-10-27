@@ -8,6 +8,10 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
       LC_LANG: ru_RU.UTF-8
+    deploy:
+      resources:
+        limits:
+          memory: 2000M
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:

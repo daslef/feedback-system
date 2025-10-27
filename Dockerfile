@@ -17,6 +17,7 @@ COPY . /app
 WORKDIR /app
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --global serve
 
 # =========================================================================== #
 
@@ -38,8 +39,6 @@ WORKDIR /app/prod/web
 
 RUN pnpm build
 
-RUN pnpm i --global serve
-
 # =========================================================================== #
 
 FROM installer AS deploy-server
@@ -54,9 +53,10 @@ COPY --from=deploy-admin /app/prod/admin/dist .
 
 # =========================================================================== #
 
-FROM base AS prod-server
+FROM installer AS prod-server
 
 COPY --from=deploy-server /app/prod/server /app
+COPY ./apps/server/.env /app
 WORKDIR /app
 
 # =========================================================================== #

@@ -14,6 +14,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.pgadmin.entrypoints=web-secure
       - traefik.http.routers.pgadmin.rule=Host(`pgadmin.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)
+      - traefik.http.routers.pgadmin.middlewares=chain-authelia@file
       - traefik.http.routers.pgadmin.tls=true
       - traefik.http.routers.pgadmin.tls.certresolver=tlsresolver
 

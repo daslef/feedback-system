@@ -3,9 +3,7 @@ import * as v from "valibot";
 import dotenv from "@dotenvx/dotenvx";
 
 dotenv.config({
-  path: [
-    path.join(import.meta.dirname, "..", ".env"),
-  ]
+  path: path.join(import.meta.dirname, "..", ".env")
 });
 
 export const envSchema = v.object({

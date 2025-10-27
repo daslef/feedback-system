@@ -19,16 +19,16 @@ services:
       - "traefik.http.routers.server-external.entrypoints=web-secure"
       - "traefik.http.routers.server-external.tls.certresolver=tlsresolver"
       - "traefik.http.routers.server-external.middlewares=chain-authelia@file"
-      - "traefik.http.routers.server-external.service=server"
+      - "traefik.http.routers.server-external.service=server-external"
 
       - "traefik.http.routers.server-internal.rule=Host(`api.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)"
       - "traefik.http.routers.server-internal.entrypoints=web-secure"
       - "traefik.http.routers.server-internal.tls.certresolver=tlsresolver"
       - "traefik.http.routers.server-internal.middlewares=chain-no-auth@file"
-      - "traefik.http.routers.server-internal.service=server"
+      - "traefik.http.routers.server-internal.service=server-internal"
 
-
-      - "traefik.http.services.server.loadbalancer.server.port=3001"
+      - "traefik.http.services.server-external.loadbalancer.server.port=3001"
+      - "traefik.http.services.server-internal.loadbalancer.server.port=3001"
 
   admin:
     extends:

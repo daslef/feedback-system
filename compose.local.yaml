@@ -4,7 +4,6 @@ include:
   - ./shared/minio/compose.local.yaml
 
 services:
-
   server:
     build:
       context: .

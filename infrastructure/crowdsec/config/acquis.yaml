@@ -10,6 +10,9 @@ labels:
 source: docker
 container_name:
  - traefik
+ - feedback-postgres
+ - feedback-redis
+ - feedback-minio
 labels:
   type: log_type
 ---
