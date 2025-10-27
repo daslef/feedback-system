@@ -58,7 +58,6 @@ const ListAdministrativeUnits = () => {
     formProps,
     isEditing,
     sorters,
-    id: editId,
     setId: setEditId,
     saveButtonProps,
     cancelButtonProps,

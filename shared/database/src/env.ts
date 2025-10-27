@@ -1,7 +1,7 @@
 import path from "node:path";
 
 import * as v from "valibot";
-import dotenv from "dotenv";
+import dotenv from "@dotenvx/dotenvx";
 
 dotenv.config({
   path: path.join(import.meta.dirname, "..", ".env"),

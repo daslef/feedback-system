@@ -16,7 +16,7 @@
     "@react-email/components": "catalog:",
     "@react-email/preview-server": "catalog:",
     "bullmq": "catalog:",
-    "dotenv": "catalog:",
+    "@dotenvx/dotenvx": "catalog:",
     "ioredis": "catalog:",
     "nodemailer": "catalog:",
     "react": "catalog:",

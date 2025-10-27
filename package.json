@@ -4,11 +4,8 @@
     "type": "module",
     "scripts": {
         "check": "oxlint",
-        "dev": "pnpm -r dev",
-        "build": "pnpm -r build",
         "check-types": "pnpm -r check-types",
         "format": "pnpm exec biome format --fix --json-formatter-enabled=false",
-        "start": "pnpm -r start",
         "start:server": "pnpm -F server start",
         "start:workers": "pnpm -F server start:workers",
         "build:web": "pnpm -F web build",

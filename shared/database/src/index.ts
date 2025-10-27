@@ -13,8 +13,14 @@ import type { Database } from "./interface";
 
 function getDialect() {
   if (env.ENV === "production" || env.ENV === "staging") {
-    const { POSTGRES_HOST, POSTGRES_PORT, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB } = env
-    const POSTGRES_DATABASE_URI = `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}`
+    const {
+      POSTGRES_HOST,
+      POSTGRES_PORT,
+      POSTGRES_USER,
+      POSTGRES_PASSWORD,
+      POSTGRES_DB,
+    } = env;
+    const POSTGRES_DATABASE_URI = `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}`;
 
     return new PostgresDialect({
       pool: new Pool({
@@ -25,7 +31,9 @@ function getDialect() {
   }
 
   return new SqliteDialect({
-    database: new SqliteDatabase(env.ENV === "development" ? env.SQLITE_DATABASE_URI : "data.db")
+    database: new SqliteDatabase(
+      env.ENV === "development" ? env.SQLITE_DATABASE_URI : "data.db",
+    ),
   });
 }
 

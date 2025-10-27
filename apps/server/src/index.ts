@@ -3,7 +3,7 @@ import { createLogger } from "@shared/logger";
 import { env } from "./env";
 import createApp from "./bootstrap";
 
-const logger = createLogger({ env: env.ENV })
+const logger = createLogger({ env: env.ENV });
 
 const server = serve(
   {
@@ -24,7 +24,7 @@ Hono
 const shutdown = () => {
   server.close((error) => {
     if (error) {
-      logger.error(error)
+      logger.error(error);
     } else {
       logger.info("\nServer has stopped gracefully.");
     }

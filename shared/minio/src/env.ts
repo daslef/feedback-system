@@ -1,6 +1,6 @@
 import path from "node:path";
 import * as v from "valibot";
-import { config } from "dotenv";
+import { config } from "@dotenvx/dotenvx";
 
 config({ path: path.join(import.meta.dirname, "..", ".env") });
 

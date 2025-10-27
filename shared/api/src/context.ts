@@ -48,7 +48,7 @@ const base = implement(apiContract);
 
 export interface Context
   extends Awaited<ReturnType<typeof createORPCContext>>,
-  ResponseHeadersPluginContext { }
+    ResponseHeadersPluginContext {}
 
 export const publicProcedure = base.$context<Context>().use(timingMiddleware);
 

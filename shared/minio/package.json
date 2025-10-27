@@ -1,5 +1,5 @@
 {
-  "name": "@shared/upload",
+  "name": "@shared/minio",
   "private": true,
   "type": "module",
   "exports": {
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@shared/logger": "workspace:*",
-    "dotenv": "catalog:",
+    "@dotenvx/dotenvx": "catalog:",
     "minio": "catalog:",
     "valibot": "catalog:"
   },

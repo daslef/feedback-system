@@ -31,7 +31,7 @@ const authProvider: AuthProvider = {
     return { success: false };
   },
   login: async ({ email, password }) => {
-    const { data, error } = await authClient.signIn.email({
+    const { data } = await authClient.signIn.email({
       email,
       password,
       rememberMe: true,

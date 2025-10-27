@@ -1,5 +1,4 @@
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
-import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import {
   StrictGetMethodPlugin,
   ResponseHeadersPlugin,
@@ -7,19 +6,13 @@ import {
 
 import type { AuthInstance } from "@shared/auth";
 import { db as dbInstance } from "@shared/database";
-import {
-  createORPCContext,
-  onErrorInterceptor,
-  ValibotToJsonSchemaConverter,
-  onError,
-} from "@shared/api";
+import { createORPCContext, onErrorInterceptor, onError } from "@shared/api";
 
 type CreateApi = {
   apiRouter: any;
   auth: AuthInstance;
   db: typeof dbInstance;
   environment: "production" | "staging" | "development";
-  serverUrl: string;
   apiPath: `/${string}`;
 };
 
@@ -28,14 +21,10 @@ export const createApi = ({
   auth,
   db,
   environment,
-  serverUrl,
   apiPath,
 }: CreateApi) => {
   const handler = new OpenAPIHandler(apiRouter, {
-    plugins: [
-      new ResponseHeadersPlugin(),
-      new StrictGetMethodPlugin()
-    ],
+    plugins: [new ResponseHeadersPlugin(), new StrictGetMethodPlugin()],
     clientInterceptors: [onError(onErrorInterceptor)],
   });
   return {

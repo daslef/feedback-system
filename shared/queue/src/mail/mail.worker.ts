@@ -17,7 +17,7 @@ async function sendMail(options: MailJobData) {
       attachments: attachments?.map((filename) => ({ filename })),
     });
   } catch (error) {
-    logger.error("Error on send mail" + error)
+    logger.error("Error on send mail" + error);
   }
 }
 

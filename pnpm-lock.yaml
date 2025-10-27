@@ -9,6 +9,9 @@ catalogs:
     '@biomejs/biome':
       specifier: 2.2.3
       version: 2.2.3
+    '@dotenvx/dotenvx':
+      specifier: ^1.51.0
+      version: 1.51.0
     '@hono/node-server':
       specifier: ^1.19.2
       version: 1.19.2
@@ -81,9 +84,6 @@ catalogs:
     bullmq:
       specifier: ^5.58.9
       version: 5.58.9
-    dotenv:
-      specifier: ^17.2.1
-      version: 17.2.2
     hono:
       specifier: ^4.9.7
       version: 4.9.7
@@ -213,6 +213,9 @@ importers:
 
   apps/server:
     dependencies:
+      '@dotenvx/dotenvx':
+        specifier: 'catalog:'
+        version: 1.51.0
       '@hono/node-server':
         specifier: 'catalog:'
         version: 1.19.2(hono@4.9.7)
@@ -237,18 +240,15 @@ importers:
       '@shared/logger':
         specifier: workspace:*
         version: link:../../shared/logger
+      '@shared/minio':
+        specifier: workspace:*
+        version: link:../../shared/minio
       '@shared/queue':
         specifier: workspace:*
         version: link:../../shared/queue
       '@shared/schema':
         specifier: workspace:*
         version: link:../../shared/schema
-      '@shared/upload':
-        specifier: workspace:*
-        version: link:../../shared/upload
-      dotenv:
-        specifier: 'catalog:'
-        version: 17.2.2
       hono:
         specifier: 'catalog:'
         version: 4.9.7
@@ -352,15 +352,15 @@ importers:
 
   shared/database:
     dependencies:
+      '@dotenvx/dotenvx':
+        specifier: 'catalog:'
+        version: 1.51.0
       '@shared/schema':
         specifier: workspace:*
         version: link:../schema
       better-sqlite3:
         specifier: 'catalog:'
         version: 12.2.0
-      dotenv:
-        specifier: 'catalog:'
-        version: 17.2.2
       kysely:
         specifier: 'catalog:'
         version: 0.28.6
@@ -418,8 +418,33 @@ importers:
         specifier: 'catalog:'
         version: 5.9.2
 
+  shared/minio:
+    dependencies:
+      '@dotenvx/dotenvx':
+        specifier: 'catalog:'
+        version: 1.51.0
+      '@shared/logger':
+        specifier: workspace:*
+        version: link:../logger
+      minio:
+        specifier: 'catalog:'
+        version: 8.0.6
+      valibot:
+        specifier: 'catalog:'
+        version: 1.1.0(typescript@5.9.2)
+    devDependencies:
+      '@shared/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.2
+
   shared/queue:
     dependencies:
+      '@dotenvx/dotenvx':
+        specifier: 'catalog:'
+        version: 1.51.0
       '@react-email/components':
         specifier: 'catalog:'
         version: 0.5.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -435,9 +460,6 @@ importers:
       bullmq:
         specifier: 'catalog:'
         version: 5.58.9
-      dotenv:
-        specifier: 'catalog:'
-        version: 17.2.2
       ioredis:
         specifier: 'catalog:'
         version: 5.8.0
@@ -490,28 +512,6 @@ importers:
         version: 5.9.2
 
   shared/typescript-config: {}
-
-  shared/upload:
-    dependencies:
-      '@shared/logger':
-        specifier: workspace:*
-        version: link:../logger
-      dotenv:
-        specifier: 'catalog:'
-        version: 17.2.2
-      minio:
-        specifier: 'catalog:'
-        version: 8.0.6
-      valibot:
-        specifier: 'catalog:'
-        version: 1.1.0(typescript@5.9.2)
-    devDependencies:
-      '@shared/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.2
 
 packages:
 

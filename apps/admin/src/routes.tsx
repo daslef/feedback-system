@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { Routes, Route, Outlet } from "react-router";
 
 import { Authenticated } from "@refinedev/core";

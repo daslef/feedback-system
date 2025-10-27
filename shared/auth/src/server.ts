@@ -15,7 +15,7 @@ export type AuthInstance = ReturnType<typeof createAuth>;
 export const getBaseOptions = (databaseInstance: typeof db) =>
   ({
     database: { db: databaseInstance },
-    plugins: [openAPI()],
+    plugins: [openAPI({ disableDefaultReference: true })],
   }) satisfies BetterAuthOptions;
 
 export const createAuth = ({

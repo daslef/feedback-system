@@ -9,20 +9,20 @@
         "start": "tsx src/index.ts"
     },
     "dependencies": {
-        "@hono/node-server": "catalog:",
-        "@orpc/openapi": "catalog:",
-        "@orpc/server": "catalog:",
-        "@scalar/hono-api-reference": "^0.9.22",
         "@shared/api": "workspace:*",
         "@shared/auth": "workspace:*",
         "@shared/database": "workspace:*",
         "@shared/logger": "workspace:*",
+        "@shared/minio": "workspace:*",
         "@shared/queue": "workspace:*",
         "@shared/schema": "workspace:*",
-        "@shared/upload": "workspace:*",
-        "dotenv": "catalog:",
         "hono": "catalog:",
-        "valibot": "catalog:"
+        "valibot": "catalog:",
+        "@dotenvx/dotenvx": "catalog:",
+        "@hono/node-server": "catalog:",
+        "@orpc/openapi": "catalog:",
+        "@orpc/server": "catalog:",
+        "@scalar/hono-api-reference": "^0.9.22"
     },
     "devDependencies": {
         "@shared/typescript-config": "workspace:*",

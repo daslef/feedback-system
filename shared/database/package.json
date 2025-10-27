@@ -13,8 +13,8 @@
     },
     "dependencies": {
         "@shared/schema": "workspace:*",
+        "@dotenvx/dotenvx": "catalog:",
         "better-sqlite3": "catalog:",
-        "dotenv": "catalog:",
         "kysely": "catalog:",
         "pg": "catalog:",
         "valibot": "catalog:"
