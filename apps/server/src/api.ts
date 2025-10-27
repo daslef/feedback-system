@@ -34,19 +34,7 @@ export const createApi = ({
   const handler = new OpenAPIHandler(apiRouter, {
     plugins: [
       new ResponseHeadersPlugin(),
-      new StrictGetMethodPlugin(),
-      new OpenAPIReferencePlugin({
-        docsTitle: "Feedback System | API Reference",
-        docsProvider: "scalar",
-        schemaConverters: [new ValibotToJsonSchemaConverter()],
-        specGenerateOptions: {
-          info: {
-            title: "Feedback System API",
-            version: "1.0.0",
-          },
-          servers: [{ url: serverUrl + apiPath }],
-        },
-      }),
+      new StrictGetMethodPlugin()
     ],
     clientInterceptors: [onError(onErrorInterceptor)],
   });

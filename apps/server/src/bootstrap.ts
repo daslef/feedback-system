@@ -3,6 +3,16 @@ import { cors } from "hono/cors";
 import { bodyLimit } from "hono/body-limit";
 import { requestId } from "hono/request-id";
 
+import { OpenAPIGenerator } from "@orpc/openapi"
+import { Scalar } from "@scalar/hono-api-reference"
+
+import {
+  createORPCContext,
+  onErrorInterceptor,
+  onError,
+  ValibotToJsonSchemaConverter
+} from "@shared/api";
+
 import { createAuth } from "@shared/auth";
 import { db } from "@shared/database";
 import { createHttpMiddleware } from "@shared/logger";
@@ -11,12 +21,23 @@ import apiRouter from "./router";
 import { createApi } from "./api";
 import { type Env } from "./env";
 
+// new OpenAPIReferencePlugin({
+//   docsTitle: "Feedback System | API Reference",
+//   docsProvider: "scalar",
+//   schemaConverters: [new ValibotToJsonSchemaConverter()],
+//   specGenerateOptions: {
+//     info: {
+//       title: "Feedback System API",
+//       version: "1.0.0",
+//     },
+//     servers: [{ url: serverUrl + apiPath }],
+//   },
+// }),
+
 export default function createApp(env: Env) {
   const trustedOrigins = [env.PUBLIC_WEB_URL, env.PUBLIC_ADMIN_URL].map(
     (url) => new URL(url).origin,
   ).concat(['localhost']);
-
-  console.log(trustedOrigins)
 
   const auth = createAuth({
     trustedOrigins,
@@ -41,6 +62,30 @@ export default function createApp(env: Env) {
       session: typeof auth.$Infer.Session.session | null;
     };
   }>();
+
+  app.get("/openapi.json", async (context) => {
+    const generator = new OpenAPIGenerator({
+      schemaConverters: [new ValibotToJsonSchemaConverter()],
+    })
+
+    const spec = await generator.generate(apiRouter)
+
+    return context.json(spec)
+  })
+
+  app.get(
+    "/docs",
+    Scalar({
+      defaultOpenAllTags: true,
+      hideClientButton: false,
+      url: "/openapi.json",
+      servers: [
+        {
+          url: `/api`,
+          description: "Current API Server",
+        }]
+    }),
+  )
 
   app.get("/healthcheck", (c) => {
     return c.text("OK");
