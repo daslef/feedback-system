@@ -1,0 +1,9 @@
+http:
+  middlewares:
+    middleware-whitelist:
+      ipAllowList:
+        sourceRange:
+          - 127.0.0.1/32 # localhost
+          - 10.0.0.0/8 # private class A
+          - 172.16.0.0/12 # private class B
+          - 192.168.0.0/16 # private class C

@@ -6,9 +6,17 @@ http:
           - GET
           - OPTIONS
           - PUT
+          - POST
+          - PATCH
+        accessControlAllowHeaders: "*"
+        accessControlAllowOriginList:
+          - https://xn--47-dlckcacbiv4afwllqms4x.xn--p1ai
+          - https://admin.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai
         accessControlMaxAge: 100
-        hostsProxyHeaders:
-          - "X-Forwarded-Host"
+        addVaryHeader: true
+        accessControlAllowCredentials: true
+        sslProxyHeaders:
+          X-Forwarded-Proto: "https"
         stsSeconds: 63072000
         stsIncludeSubdomains: true
         stsPreload: true
@@ -20,4 +28,6 @@ http:
         permissionsPolicy: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), vr=()"
         customResponseHeaders:
           X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex," # disable search engines from indexing home server
-          server: "" # hide server info from visitors
+          X-Forwarded-Proto: "https"
+          X-Powered-By: ""
+          Server: ""
