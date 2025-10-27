@@ -2,7 +2,11 @@ import path from "node:path";
 import * as v from "valibot";
 import dotenv from "@dotenvx/dotenvx";
 
-dotenv.config({ path: path.join(import.meta.dirname, "..", ".env") });
+dotenv.config({
+  path: [
+    path.join(import.meta.dirname, "..", ".env"),
+  ]
+});
 
 export const envSchema = v.object({
   ENV: v.picklist(["development", "production", "staging"]),
