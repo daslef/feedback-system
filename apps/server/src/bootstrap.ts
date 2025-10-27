@@ -102,8 +102,6 @@ export default function createApp(env: Env) {
   );
 
   app.use("*", async (c: any, next) => {
-    // const requestId = c.var.requestId;
-
     const pinoMiddleware = createHttpMiddleware({
       env: env.ENV,
     });
