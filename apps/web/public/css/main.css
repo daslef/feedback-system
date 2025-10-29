@@ -162,33 +162,24 @@ section {
   opacity: 0.3;
 }
 
-.btn.btn-regular {
-  padding: 0 1.78em;
-  font-size: 1.8rem;
-  line-height: 1.8rem;
-  font-weight: 600;
-}
-
-.btn.btn-green {
+.btn-green {
   color: #ffffff;
   background-color: #18a763;
 }
 
-.btn.btn-white {
-  color: #34404c;
-  background-color: #ffffff;
-}
-
-.btn.btn-blue {
+.btn-blue {
   color: #ffffff;
   background-color: #48c5df;
   height: 42px;
   padding: 0 2rem;
 }
 
-.btn.btn-black {
-  color: #ffffff;
-  background-color: #34404c;
+.btn-green:not(.disabled):not([disabled]):hover {
+  background-color: #11854e;
+}
+
+.btn-blue:not(.disabled):not([disabled]):hover {
+  background-color: #47b4cb;
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not(ymaps input) {
@@ -243,22 +234,10 @@ textarea {
   border-radius: 8px;
 }
 
-textarea::-webkit-input-placeholder {
-  color: rgba(52, 64, 76, 0.5);
-}
-
-textarea::-moz-placeholder {
-  color: rgba(52, 64, 76, 0.5);
-}
-
-textarea:-ms-input-placeholder {
-  color: rgba(52, 64, 76, 0.5);
-}
-
-textarea::-ms-input-placeholder {
-  color: rgba(52, 64, 76, 0.5);
-}
-
+textarea::-webkit-input-placeholder,
+textarea::-moz-placeholder,
+textarea::-ms-input-placeholder,
+textarea:-ms-input-placeholder,
 textarea::placeholder {
   color: rgba(52, 64, 76, 0.5);
 }
@@ -346,7 +325,7 @@ textarea[disabled] {
   background-color: #34404c;
 }
 
-body h1 {
+h1 {
   margin-top: 20px;
   margin-bottom: 48px;
 }
