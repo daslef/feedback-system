@@ -10,5 +10,10 @@ export default defineConfig({
   build: {
     outDir: "dist",
   },
+  esbuild: {
+    minifyIdentifiers: false,
+    minifySyntax: false,
+    minifyWhitespace: false
+  },
   plugins: [],
 });
