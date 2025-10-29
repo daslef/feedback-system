@@ -15,7 +15,7 @@ services:
     labels:
       - "traefik.enable=true"
 
-      - "traefik.http.routers.server-external.rule=Host(`api.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`) && (PathPrefix(`/docs`)"
+      - "traefik.http.routers.server-external.rule=Host(`api.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`) && (PathPrefix(`/docs`))"
       - "traefik.http.routers.server-external.entrypoints=web-secure"
       - "traefik.http.routers.server-external.tls.certresolver=tlsresolver"
       - "traefik.http.routers.server-external.middlewares=chain-authelia@file"

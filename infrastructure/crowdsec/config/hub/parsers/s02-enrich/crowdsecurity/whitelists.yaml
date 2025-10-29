@@ -9,6 +9,6 @@ whitelist:
     - "192.168.0.0/16"
     - "10.0.0.0/8"
     - "172.16.0.0/12"
-  # expression:
-  #   - "'foo.com' in evt.Meta.source_ip.reverse" 
+  expression:
+    - "'xn--47-dlckcacbiv4afwllqms4x.xn--p1ai' in evt.Meta.source_ip.reverse" 
 

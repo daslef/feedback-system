@@ -33,5 +33,5 @@ api:
     online_client: # Central API
       credentials_path: /etc/crowdsec/online_api_credentials.yaml
 prometheus:
-  enabled: true
+  enabled: false
   level: full
