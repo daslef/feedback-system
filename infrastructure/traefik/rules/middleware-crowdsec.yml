@@ -4,16 +4,16 @@ http:
       plugin:
         bouncer:
           enabled: true
-          crowdsecMode: live
+          crowdsecMode: stream
           crowdsecAppsecEnabled: true
           crowdsecAppsecHost: crowdsec:7422
-          crowdsecAppsecFailureBlock: true
+          crowdsecAppsecFailureBlock: false
           crowdsecAppsecUnreachableBlock: false
           crowdsecAppsecBodyLimit: 10485760
-          crowdsecLapiKey: Jjzu6mJ/d4JF/j3M/k6Tj9CxwJNi25nFcxZ6hP2fNGs
+          crowdsecLapiKey: KQyWziTV9wT3cwItTzKuhf/qIPNPDyV6e7OE1C4+s4g
           crowdsecLapiHost: crowdsec:8080
           crowdsecLapiScheme: http
-          crowdsecLapiTLSInsecureVerify: false
+          crowdsecLapiTLSInsecureVerify: true
           forwardedHeadersTrustedIPs:
             - 10.0.0.0/8
             - 172.16.0.0/12

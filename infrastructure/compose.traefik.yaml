@@ -26,7 +26,7 @@ services:
       - "--entrypoints.web-secure.http.tls=true"
       - "--entrypoints.web-secure.http.tls.options=tls-options@file"
       - "--entrypoints.web-secure.http.tls.certresolver=tlsresolver"
-      # - "--entrypoints.web-secure.http.middlewares=middleware-crowdsec@file"
+      - "--entrypoints.web-secure.http.middlewares=middleware-crowdsec@file"
       - "--entrypoints.web-secure.http3=true"
       - "--entryPoints.web-secure.forwardedHeaders.trustedIPs=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,fc00::/7"
 
