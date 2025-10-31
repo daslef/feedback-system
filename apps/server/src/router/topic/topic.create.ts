@@ -5,7 +5,7 @@ const createTopic = protectedProcedure.topic.create.handler(
     try {
       let topicId;
 
-      if (context.environment === "development") {
+      if (context.environment.ENV === "development") {
         const { insertId } = await context.db
           .insertInto("topic")
           .values(input)

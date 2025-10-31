@@ -12,7 +12,7 @@ const createTopicCategoryTopic =
         };
 
         let tctId;
-        if (context.environment === "development") {
+        if (context.environment.ENV === "development") {
           const { insertId } = await context.db
             .insertInto("topic_category_topic")
             .values(tctValues)

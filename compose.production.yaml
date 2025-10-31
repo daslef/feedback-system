@@ -1,11 +1,12 @@
 include:
-  - ./shared/database/compose.production.yaml
-  - ./shared/queue/compose.production.yaml
-  - ./shared/minio/compose.production.yaml
+  - ./infrastructure/compose.postgres.yaml
+  - ./infrastructure/compose.pgadmin.yaml
+  - ./infrastructure/compose.minio.production.yaml
   - ./infrastructure/compose.traefik.yaml
   - ./infrastructure/compose.dozzle.yaml
   - ./infrastructure/compose.authelia.yaml
   - ./infrastructure/compose.crowdsec.yaml
+  - ./shared/queue/compose.production.yaml
 
 services:
   server:
@@ -75,3 +76,7 @@ secrets:
     file: ./infrastructure/secrets/authelia_session_secret
   authelia_storage_encryption_key:
     file: ./infrastructure/secrets/authelia_storage_encryption_key
+  pgadmin_default_email:
+    file: ./infrastructure/secrets/pgadmin_default_email
+  pgadmin_default_password:
+    file: ./infrastructure/secrets/pgadmin_default_password

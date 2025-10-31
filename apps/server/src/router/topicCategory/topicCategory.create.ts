@@ -5,7 +5,7 @@ const createTopicCategory = protectedProcedure.topicCategory.create.handler(
     try {
       let topicCategoryId;
 
-      if (context.environment === "development") {
+      if (context.environment.ENV === "development") {
         const { insertId } = await context.db
           .insertInto("topic_category")
           .values(input)

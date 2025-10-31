@@ -6,20 +6,34 @@ import { db as dbInstance } from "@shared/database";
 import { createLogger } from "@shared/logger";
 import apiContract from "./contracts";
 
+type Env = {
+  ENV: "production" | "staging" | "development";
+  SERVER_AUTH_SECRET: string;
+  PUBLIC_SERVER_URL: string;
+  PUBLIC_WEB_URL: string;
+  PUBLIC_ADMIN_URL: string;
+  MINIO_ACCESS_KEY: string;
+  MINIO_SECRET_KEY: string;
+  MINIO_ENDPOINT: string;
+  MINIO_PUBLIC_URL?: string | undefined;
+};
+
+type CreateORPCContext = {
+  auth: AuthInstance;
+  db: typeof dbInstance;
+  environment: Env;
+  headers: Headers;
+};
+
 export const createORPCContext = async ({
   auth,
   db,
   environment,
   headers,
-}: {
-  auth: AuthInstance;
-  db: typeof dbInstance;
-  environment: "production" | "development" | "staging";
-  headers: Headers;
-}): Promise<{
+}: CreateORPCContext): Promise<{
   db: typeof dbInstance;
   session: AuthInstance["$Infer"]["Session"] | null;
-  environment: "production" | "development" | "staging";
+  environment: Env;
 }> => {
   const session = await auth.api.getSession({
     headers,

@@ -1,5 +1,5 @@
 import { publicProcedure } from "@shared/api";
-import upload from "@shared/minio";
+import { upload } from "@shared/minio";
 
 const createFeedback = publicProcedure.feedback.create.handler(
   async ({ context, input, errors }) => {
@@ -23,7 +23,7 @@ const createFeedback = publicProcedure.feedback.create.handler(
           .executeTakeFirstOrThrow();
 
         let personContactId;
-        if (context.environment === "development") {
+        if (context.environment.ENV === "development") {
           const { insertId } = await transaction
             .insertInto("person_contact")
             .values({
@@ -56,7 +56,7 @@ const createFeedback = publicProcedure.feedback.create.handler(
           contact_id: Number(personContactId),
         };
 
-        if (context.environment === "development") {
+        if (context.environment.ENV === "development") {
           const { insertId } = await transaction
             .insertInto("person")
             .values(newPersonValues)
@@ -89,7 +89,7 @@ const createFeedback = publicProcedure.feedback.create.handler(
 
       let feedbackId;
 
-      if (context.environment === "development") {
+      if (context.environment.ENV === "development") {
         const { insertId } = await transaction
           .insertInto("feedback")
           .values(newFeedbackValues)
@@ -118,7 +118,7 @@ const createFeedback = publicProcedure.feedback.create.handler(
       await Promise.all(
         images.map(async (file) => {
           try {
-            const fileUrl = await upload(file, "photos");
+            const fileUrl = await upload(file, "photos", context.environment);
             await transaction
               .insertInto("feedback_image")
               .values({

@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     env_file: .env
     ports:
-      - "${REDIS_PORT}:6379"
+      - "6379:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -20,12 +20,12 @@ services:
     restart: unless-stopped
     env_file: .env
     ports:
-      - "${BULLBOARD_PORT}:3000"
+      - "7990:3000"
     environment:
       REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
-      REDIS_USE_TLS: ${REDIS_SECURE}
-      BULL_PREFIX: ${BULL_PREFIX}
+      REDIS_PORT: 6379
+      REDIS_USE_TLS: false
+      BULL_PREFIX: bull
     depends_on:
       - redis
 

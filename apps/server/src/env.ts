@@ -13,6 +13,11 @@ export const envSchema = v.object({
   PUBLIC_SERVER_URL: v.pipe(v.string(), v.url()),
   PUBLIC_WEB_URL: v.pipe(v.string(), v.url()),
   PUBLIC_ADMIN_URL: v.pipe(v.string(), v.url()),
+
+  MINIO_ACCESS_KEY: v.pipe(v.string(), v.minLength(12)),
+  MINIO_SECRET_KEY: v.pipe(v.string(), v.minLength(12)),
+  MINIO_ENDPOINT: v.pipe(v.string(), v.nonEmpty()),
+  MINIO_PUBLIC_URL: v.optional(v.pipe(v.string(), v.nonEmpty())),
 });
 
 export const env = v.parse(envSchema, process.env);

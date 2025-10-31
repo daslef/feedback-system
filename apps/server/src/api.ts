@@ -8,11 +8,13 @@ import type { AuthInstance } from "@shared/auth";
 import { db as dbInstance } from "@shared/database";
 import { createORPCContext, onErrorInterceptor, onError } from "@shared/api";
 
+import type { Env } from "./env";
+
 type CreateApi = {
   apiRouter: any;
   auth: AuthInstance;
   db: typeof dbInstance;
-  environment: "production" | "staging" | "development";
+  environment: Env;
   apiPath: `/${string}`;
 };
 

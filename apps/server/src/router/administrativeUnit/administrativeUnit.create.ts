@@ -7,7 +7,7 @@ const createAdministrativeUnit =
       try {
         let unitId;
 
-        if (context.environment === "development") {
+        if (context.environment.ENV === "development") {
           const { insertId } = await context.db
             .insertInto("administrative_unit")
             .values(input)

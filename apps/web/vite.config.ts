@@ -13,7 +13,7 @@ export default defineConfig({
   esbuild: {
     minifyIdentifiers: false,
     minifySyntax: false,
-    minifyWhitespace: false
+    minifyWhitespace: false,
   },
   plugins: [],
 });

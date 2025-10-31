@@ -10,7 +10,7 @@ async function createRedisClient({ env }: ClientProps) {
   try {
     return new Redis({
       host: env.REDIS_HOST,
-      port: Number(env.REDIS_PORT),
+      port: 6379,
       password: env.REDIS_PASSWORD,
       maxRetriesPerRequest: null,
     });
