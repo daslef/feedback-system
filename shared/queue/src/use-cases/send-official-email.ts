@@ -39,9 +39,9 @@ export default async function sendOfficialEmail({
             description,
             createdAt,
             categoryTopic,
+            files,
           }),
         ),
-        attachments: files,
       },
       {
         priority: 1, // High

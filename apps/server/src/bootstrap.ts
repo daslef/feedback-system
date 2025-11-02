@@ -18,7 +18,7 @@ import { type Env } from "./env";
 export default function createApp(env: Env) {
   const trustedOrigins = [env.PUBLIC_WEB_URL, env.PUBLIC_ADMIN_URL, env.PUBLIC_BOT_URL]
     .map((url) => new URL(url).origin)
-    .concat(["localhost"]);
+    .concat(["localhost", "https://xn--47-dlcma4bxbi.xn--p1ai"]);
 
   const auth = createAuth({
     trustedOrigins,
@@ -118,7 +118,7 @@ export default function createApp(env: Env) {
     cors({
       origin: trustedOrigins,
       credentials: true,
-      allowHeaders: ["Content-Type", "Authorization"],
+      allowHeaders: ["x-total-count", "Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization", "Access-Control-Allow-Headers", "content-type"],
       allowMethods: ["POST", "GET", "OPTIONS"],
       exposeHeaders: ["Content-Length"],
       maxAge: 600,
@@ -132,7 +132,8 @@ export default function createApp(env: Env) {
     cors({
       origin: trustedOrigins,
       credentials: true,
-      allowHeaders: ["Content-Type", "x-total-count"],
+      allowHeaders: ["x-total-count", "Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization", "Access-Control-Allow-Headers", "content-type"],
+      allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       exposeHeaders: ["x-total-count"],
     }),
     async (c, next) => {

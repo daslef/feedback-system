@@ -2,17 +2,11 @@ http:
   middlewares:
     middleware-secure-headers:
       headers:
-        accessControlAllowMethods:
-          - GET
-          - OPTIONS
-          - PUT
-          - POST
-          - PATCH
+        accessControlAllowMethods: "*"
         accessControlAllowHeaders: "*"
         accessControlAllowOriginList:
           - https://xn--47-dlckcacbiv4afwllqms4x.xn--p1ai
           - https://admin.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai
-        accessControlMaxAge: 100
         addVaryHeader: true
         accessControlAllowCredentials: true
         sslProxyHeaders:

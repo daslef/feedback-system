@@ -1,4 +1,4 @@
-import { Job, Worker, Processor } from "bullmq";
+import { Job, Worker, type Processor } from "bullmq";
 import { redisClient } from "../redis";
 import { logger } from "../logger";
 

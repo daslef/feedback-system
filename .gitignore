@@ -7,6 +7,7 @@ node_modules
 
 infrastructure/secrets/*
 
+infrastructure/postgres/data
 infrastructure/authelia/*
 !infrastructure/authelia/configuration.yml
 !infrastructure/authelia/users.example.yml

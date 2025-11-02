@@ -15,6 +15,7 @@ import {
   Section,
   Tailwind,
   Text,
+  Link
 } from "@react-email/components";
 
 const OfficialRequestEmail = ({
@@ -22,7 +23,8 @@ const OfficialRequestEmail = ({
   description,
   createdAt,
   categoryTopic,
-}: Omit<OfficialRequest, "email" | "files">) => {
+  files,
+}: Omit<OfficialRequest, "email">) => {
   return (
     <Html dir="ltr" lang="ru">
       <Tailwind>
@@ -74,6 +76,10 @@ const OfficialRequestEmail = ({
                 <Text className="m-0 mb-[16px] text-[#0b0917] text-[14px] leading-[20px]">
                   {createdAt.toString()}
                 </Text>
+                {files.length && <Heading className="mb-[12px] font-bold text-[#0b0917] text-[18px]">
+                  Фотографии
+                </Heading>}
+                {files.map((file, index) => <Link href={file} key={`photo_${index}`}>{"Фото " + String(index + 1)}</Link>)}
               </Section>
 
               <Text className="mb-[20px] text-[#0b0917] text-[16px] leading-[24px]">

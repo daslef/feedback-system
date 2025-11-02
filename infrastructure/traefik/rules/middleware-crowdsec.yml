@@ -11,7 +11,7 @@ http:
           crowdsecAppsecUnreachableBlock: false
           crowdsecAppsecBodyLimit: 10485760
           crowdsecLapiKey: KQyWziTV9wT3cwItTzKuhf/qIPNPDyV6e7OE1C4+s4g
-          crowdsecLapiHost: crowdsec:8080
+          crowdsecLapiHost: crowdsec:9879
           crowdsecLapiScheme: http
           crowdsecLapiTLSInsecureVerify: true
           forwardedHeadersTrustedIPs:
