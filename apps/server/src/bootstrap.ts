@@ -32,7 +32,7 @@ export default function createApp(env: Env) {
     apiRouter,
     auth,
     db,
-    environment: env.ENV,
+    environment: env,
     apiPath: "/api",
   });
 

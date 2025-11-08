@@ -3,26 +3,5 @@ filenames:
   - /var/log/syslog
   - /var/log/kern.log
   - /var/log/ufw.log
-  - /var/log/mail.log
 labels:
   type: syslog
----
-source: docker
-container_name:
- - feedback-postgres
- - feedback-redis
- - feedback-minio
-labels:
-  type: log_type
----
-poll_without_inotify: false
-filenames:
-  - /var/log/traefik/*.log
-labels:
-  type: traefik
----
-listen_addr: 0.0.0.0:7422
-appsec_config: crowdsecurity/appsec-default
-source: appsec
-labels:
-  type: appsec

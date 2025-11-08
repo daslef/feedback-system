@@ -13,14 +13,9 @@ import type { Database } from "./interface";
 
 function getDialect() {
   if (env.ENV === "production" || env.ENV === "staging") {
-    const {
-      POSTGRES_HOST,
-      POSTGRES_PORT,
-      POSTGRES_USER,
-      POSTGRES_PASSWORD,
-      POSTGRES_DB,
-    } = env;
-    const POSTGRES_DATABASE_URI = `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}`;
+    const { POSTGRES_HOST, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB } =
+      env;
+    const POSTGRES_DATABASE_URI = `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:5432/${POSTGRES_DB}`;
 
     return new PostgresDialect({
       pool: new Pool({

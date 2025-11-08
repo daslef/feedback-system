@@ -1,7 +1,7 @@
 include:
-  - ./shared/database/compose.local.yaml
+  - ./infrastructure/compose.postgres.yaml
+  - ./infrastructure/compose.minio.local.yaml
   - ./shared/queue/compose.local.yaml
-  - ./shared/minio/compose.local.yaml
 
 services:
   server:
@@ -95,3 +95,11 @@ services:
     restart: unless-stopped
     depends_on:
       - server
+
+secrets:
+  minio_access_key:
+    file: ./infrastructure/secrets/authelia_jwt_secret
+  minio_secret_key:
+    file: ./infrastructure/secrets/authelia_session_secret
+  walg_libsodium_key:
+    file: ./infrastructure/secrets/walg_libsodium_key

@@ -11,7 +11,6 @@ export const envSchema = v.union([
   v.object({
     ENV: v.picklist(["production", "staging"]),
     POSTGRES_HOST: v.string(),
-    POSTGRES_PORT: v.string(),
     POSTGRES_USER: v.string(),
     POSTGRES_PASSWORD: v.string(),
     POSTGRES_DB: v.string(),

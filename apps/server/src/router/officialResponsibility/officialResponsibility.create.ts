@@ -6,7 +6,7 @@ const createOfficialResponsibility =
     async ({ context, input, errors }) => {
       try {
         let officialResponsibilityId;
-        if (context.environment === "development") {
+        if (context.environment.ENV === "development") {
           const { insertId } = await context.db
             .insertInto("official_responsibility")
             .values(input)

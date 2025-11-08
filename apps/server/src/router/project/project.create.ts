@@ -6,7 +6,7 @@ const createProject = protectedProcedure.project.create.handler(
     try {
       let projectId;
 
-      if (context.environment === "development") {
+      if (context.environment.ENV === "development") {
         const { insertId } = await context.db
           .insertInto("project")
           .values(input)

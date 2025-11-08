@@ -10,9 +10,7 @@
   },
   "dependencies": {
     "@shared/logger": "workspace:*",
-    "@dotenvx/dotenvx": "catalog:",
-    "minio": "catalog:",
-    "valibot": "catalog:"
+    "minio": "catalog:"
   },
   "devDependencies": {
     "@shared/typescript-config": "workspace:*",
