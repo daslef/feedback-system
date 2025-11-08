@@ -13,6 +13,8 @@ async function seedDatabase() {
     "seedFeedbackTopicCategoryTopic",
     "seedPersonTypes",
     "seedProjects",
+    "seedVotingRegions",
+    "seedVotingUnits"
   ] as const;
 
   for await (const seedFunctionName of seedFunctionIdentifiers) {

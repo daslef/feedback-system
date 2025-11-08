@@ -28,6 +28,27 @@ services:
     depends_on:
       - postgres
 
+  bot:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: prod-bot
+    container_name: bot
+    restart: unless-stopped
+    ports:
+      - 11224:8000
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/telegram-bot
+          target: /app
+          ignore:
+            - .venv/
+        - action: rebuild
+          path: ./uv.lock
+    depends_on:
+      - server
+
   workers:
     build:
       context: .

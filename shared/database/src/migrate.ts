@@ -122,6 +122,37 @@ async function migrateSqlite() {
     .execute();
 
   await db.schema
+    .createTable("voting_region")
+    .ifNotExists()
+    .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
+    .addColumn("title", "text", (col) => col.notNull().unique())
+    .execute();
+
+  await db.schema
+    .createTable("voting_unit")
+    .ifNotExists()
+    .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
+    .addColumn("title", "text", (col) => col.notNull().unique())
+    .addColumn("voting_region_id", "integer", (col) =>
+      col.references("voting_region.id").onDelete("set null"),
+    )
+    .execute();
+
+  await db.schema
+    .createTable("voting_vote")
+    .ifNotExists()
+    .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
+    .addColumn("voting_unit_id", "integer", (col) =>
+      col.references("voting_unit.id").onDelete("set null"),
+    )
+    .addColumn("username", "text", (col) => col.notNull().unique())
+    .addColumn("description", "text", (col) => col.notNull().unique())
+    .addColumn("created_at", "timestamp", (col) =>
+      col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
+    )
+    .execute();
+
+  await db.schema
     .createTable("feedback")
     .ifNotExists()
     .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
@@ -312,6 +343,37 @@ async function migratePostgres() {
       col.notNull().references("feedback.id").onDelete("cascade"),
     )
     .addColumn("link_to_s3", "text", (col) => col.notNull())
+    .execute();
+
+  await db.schema
+    .createTable("voting_region")
+    .ifNotExists()
+    .addColumn("id", "serial", (col) => col.primaryKey())
+    .addColumn("title", "text", (col) => col.notNull().unique())
+    .execute();
+
+  await db.schema
+    .createTable("voting_unit")
+    .ifNotExists()
+    .addColumn("id", "serial", (col) => col.primaryKey())
+    .addColumn("title", "text", (col) => col.notNull().unique())
+    .addColumn("voting_region_id", "integer", (col) =>
+      col.notNull().references("voting_region.id").onDelete("set null"),
+    )
+    .execute();
+
+  await db.schema
+    .createTable("voting_vote")
+    .ifNotExists()
+    .addColumn("id", "serial", (col) => col.primaryKey())
+    .addColumn("voting_unit_id", "integer", (col) =>
+      col.notNull().references("voting_unit.id").onDelete("set null"),
+    )
+    .addColumn("username", "text", (col) => col.notNull().unique())
+    .addColumn("description", "text", (col) => col.notNull().unique())
+    .addColumn("created_at", "timestamp", (col) =>
+      col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
+    )
     .execute();
 
   console.log("база данных успешно создана! :D");

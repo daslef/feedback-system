@@ -1,4 +1,5 @@
 import { type Generated } from "kysely";
+
 import { type AdministrativeUnitTable } from "@shared/schema/administrative_unit";
 import { type AdministrativeUnitTypeTable } from "@shared/schema/administrative_unit_type";
 import { type PersonTable } from "@shared/schema/person";
@@ -13,6 +14,9 @@ import { type TopicCategoryTable } from "@shared/schema/topic_category";
 import { type TopicCategoryTopicTable } from "@shared/schema/topic_category_topic";
 import { type OfficialResponsibilityTable } from "@shared/schema/official_responsibility";
 import { type ProjectTable } from "@shared/schema/project";
+import { type VotingUnitTable } from "@shared/schema/voting_unit";
+import { type VotingRegionTable } from "@shared/schema/voting_region";
+import { type VotingVoteTable } from "@shared/schema/voting_vote";
 
 type GeneratedId = {
   id: Generated<number>;
@@ -37,4 +41,7 @@ export interface Database {
   feedback_image: FeedbackImageTable & GeneratedId;
   feedback_type: FeedbackTypeTable & GeneratedId;
   official_responsibility: OfficialResponsibilityTable & GeneratedId;
+  voting_region: VotingRegionTable & GeneratedId;
+  voting_unit: VotingUnitTable & GeneratedId;
+  voting_vote: VotingVoteTable & GeneratedId & GeneratedTime;
 }

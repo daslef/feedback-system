@@ -53,6 +53,18 @@ services:
       file: compose.local.yaml
       service: workers
 
+  bot:
+    extends:
+      file: compose.local.yaml
+      service: bot
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bot.rule=Host(`telegram.xn--47-dlckcacbiv4afwllqms4x.xn--p1ai`)"
+      - "traefik.http.routers.bot.entrypoints=web-secure"
+      - "traefik.http.routers.bot.tls.certresolver=tlsresolver"
+      - "traefik.http.routers.bot.middlewares=middleware-rate-limit@file"
+      - "traefik.http.services.bot.loadbalancer.server.port=11224"
+
   web:
     extends:
       file: compose.local.yaml

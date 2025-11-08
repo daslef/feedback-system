@@ -7,6 +7,9 @@ import projectsData from "./data/projects_deserialized.json" with {
 import topicsAndCategoriesData from "./data/topics_and_categories.json" with {
   type: "json",
 };
+import votingData from "./data/voting.json" with {
+  type: "json",
+};
 import towns from "./data/towns";
 
 type ProjectsDataItem = {
@@ -25,6 +28,12 @@ type TopicsAndCategoriesDataItem = {
   title: string;
   items: string[];
 };
+
+type VotingDataItem = {
+  region: string;
+  unit: string;
+  unit_center: string;
+}
 
 export async function seedAdministrativeUnitTypes(db: Kysely<Database>) {
   await db
@@ -163,4 +172,38 @@ export async function seedProjects(db: Kysely<Database>) {
   );
 
   await db.insertInto("project").values(records).execute();
+}
+
+export async function seedVotingRegions(db: Kysely<Database>) {
+  const votingRegions: Set<string> = new Set(
+    (votingData as VotingDataItem[])
+      .map(({ region }) => region)
+  );
+
+  await db
+    .insertInto("voting_region")
+    .values([...votingRegions].map((region) => ({ title: region })))
+    .execute();
+}
+
+export async function seedVotingUnits(db: Kysely<Database>) {
+  for (const { region, unit } of votingData) {
+    const { id: regionId } = await db
+      .selectFrom("voting_region")
+      .select("id")
+      .where("title", "=", region)
+      .executeTakeFirstOrThrow();
+
+    try {
+      await db
+        .insertInto("voting_unit")
+        .values({
+          title: unit,
+          voting_region_id: regionId
+        })
+        .execute();
+    } catch (error) {
+      console.error(error)
+    }
+  }
 }

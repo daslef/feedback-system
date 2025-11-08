@@ -29,5 +29,11 @@ module.exports = {
       interpreter: "none",
       args: "./shared/queue/src/run.ts",
     },
+    {
+      name: "telegram-bot",
+      script: "uv",
+      args: ["run", "./.venv/bin/fastapi", "run"],
+      cwd: "./apps/telegram-bot/",
+    },
   ],
 };

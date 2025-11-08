@@ -5,6 +5,9 @@
         "check-types": "tsc -b"
     },
     "exports": {
+        "./voting_region": "./src/voting_region.ts",
+        "./voting_unit": "./src/voting_unit.ts",
+        "./voting_vote": "./src/voting_vote.ts",
         "./administrative_unit": "./src/administrative_unit.ts",
         "./administrative_unit_type": "./src/administrative_unit_type.ts",
         "./feedback_image": "./src/feedback_image.ts",

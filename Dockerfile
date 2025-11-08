@@ -1,4 +1,38 @@
-FROM node:22-alpine AS base
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS uv
+
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+
+ENV UV_PYTHON_DOWNLOADS=0
+
+WORKDIR /app
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=./apps/telegram-bot/uv.lock,target=uv.lock \
+    --mount=type=bind,source=./apps/telegram-bot/pyproject.toml,target=pyproject.toml \
+    uv sync --locked --no-install-project --no-dev
+COPY ./apps/telegram-bot /app
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --locked --no-dev
+
+
+FROM python:3.12-slim-bookworm AS prod-bot
+
+RUN groupadd --system --gid 999 nonroot \
+ && useradd --system --gid 999 --uid 999 --create-home nonroot
+
+COPY --from=uv --chown=nonroot:nonroot /app /app
+
+# Place executables in the environment at the front of the path
+ENV PATH="/app/.venv/bin:$PATH"
+
+USER nonroot
+
+WORKDIR /app
+
+CMD ["fastapi", "run", "--host", "0.0.0.0", "app"]
+
+# =========================================================================== #
+
+FROM node:22-alpine AS base-node
 
 ENV NODE_ENV=production
 ENV PNPM_HOME="/pnpm"
@@ -11,7 +45,7 @@ RUN corepack enable pnpm
 
 # =========================================================================== #
 
-FROM base AS installer
+FROM base-node AS installer
 
 COPY . /app
 WORKDIR /app
@@ -61,7 +95,7 @@ WORKDIR /app
 
 # =========================================================================== #
 
-FROM base AS prod-web
+FROM base-node AS prod-web
 
 COPY --from=deploy-web /app/prod/web/dist /app
 WORKDIR /app
