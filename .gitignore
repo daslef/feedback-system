@@ -6,7 +6,7 @@ node_modules
 .DS_Store
 
 infrastructure/secrets/*
-
+infrastructure/traefik/logs/*
 infrastructure/postgres/data
 infrastructure/authelia/*
 !infrastructure/authelia/configuration.yml
