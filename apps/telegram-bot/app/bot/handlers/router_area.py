@@ -9,23 +9,23 @@ router_area = Router()
 
 
 @router_area.callback_query(
-    FormStates.waiting_for_area_selection, ~F.data.in_(provider.get().keys())
+    FormStates.waiting_for_area_selection, ~F.data.in_(state.get_data()["available_areas"])
 )
 async def handle_area_selection(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
-    selected_area = callback.data
+    selected_area_id = callback.data
 
     await callback.message.answer(
-        templates.area_success.format(selected_area), parse_mode="MarkdownV2"
+        templates.area_success.format(selected_area_id), parse_mode="MarkdownV2"
     )
-    await state.update_data(subLocation=selected_area)
+    await state.update_data(voting_unit_id=selected_area_id)
     await state.set_state(FormStates.waiting_for_feedback)
 
 
 @router_area.message(FormStates.waiting_for_area_selection)
 async def handle_handwritten_area(message: types.Message, state: FSMContext):
-    selected_region = await state.get_data()["location"]
-    available_areas = provider.get().get(selected_region)
+    selected_region_id = await state.get_data()["selected_region_id"]
+    available_areas = provider.get_areas(selected_region_id)
 
     await message.answer(
         text=templates.error_handwritten,

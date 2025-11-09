@@ -11,6 +11,11 @@ infrastructure/authelia/*
 !infrastructure/authelia/configuration.yml
 !infrastructure/authelia/users.example.yml
 
+infrastructure/postgres/data
+!infrastructure/postgres/data/pg_wal/*
+!infrastructure/postgres/data/pg_hba.conf
+!infrastructure/postgres/data/postgresql.conf
+
 __pycache__/
 *.py[cod]
 *.pyo

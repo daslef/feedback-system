@@ -12,6 +12,7 @@ type Env = {
   PUBLIC_SERVER_URL: string;
   PUBLIC_WEB_URL: string;
   PUBLIC_ADMIN_URL: string;
+  PUBLIC_BOT_URL: string;
   MINIO_ACCESS_KEY: string;
   MINIO_SECRET_KEY: string;
   MINIO_ENDPOINT: string;

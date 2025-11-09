@@ -6,11 +6,11 @@ services:
     container_name: feedback-postgres
     restart: unless-stopped
     env_file:
-      - ../../shared/database/.env
+      - ../shared/database/.env
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER-LcUgfcteNXXSBrDiqniRJpGq}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD-7mQd*@cmKnTPC@H2d%kkwACjTeuh@Eq}
+      POSTGRES_DB: ${POSTGRES_DB-feedback}
       POSTGRES_PORT: 5432
       DATA_PATH: ./postgres/data
       LOGS_PATH: ./postgres/logs
@@ -36,7 +36,7 @@ services:
       - ./postgres/data:/var/lib/postgresql/data
       - ./postgres/logs:/var/log/wal-g
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER-LcUgfcteNXXSBrDiqniRJpGq} -d ${POSTGRES_DB-feedback}"]
       interval: 30s
       timeout: 10s
       retries: 5

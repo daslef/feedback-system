@@ -14,7 +14,10 @@ export const getManyVotingRegionSchema = v.array(
 
 export const createVotingRegionSchema = v.omit(getVotingRegionSchema, ["id"]);
 
-export const updateVotingRegionSchema = v.omit(getVotingRegionSchema, ["id"]);
+export const updateVotingRegionSchema = v.object({
+  body: v.omit(getVotingRegionSchema, ["id"]),
+  params: v.object({ id: v.string() }),
+})
 
 export type VotingRegionTable = v.InferOutput<
   typeof votingRegionSchema

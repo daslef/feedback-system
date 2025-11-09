@@ -92,3 +92,9 @@ secrets:
     file: ./infrastructure/secrets/pgadmin_default_email
   pgadmin_default_password:
     file: ./infrastructure/secrets/pgadmin_default_password
+  minio_access_key:
+    file: ./infrastructure/secrets/authelia_jwt_secret
+  minio_secret_key:
+    file: ./infrastructure/secrets/authelia_session_secret
+  walg_libsodium_key:
+    file: ./infrastructure/secrets/walg_libsodium_key

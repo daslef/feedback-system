@@ -18,6 +18,10 @@ import officialResponsibilityContract from "./officialResponsibility";
 
 import projectContract from "./project";
 
+import votingRegionContract from "./votingRegion";
+import votingUnitContract from "./votingUnit";
+import votingVoteContract from "./votingVote";
+
 const apiContract = oc
   .errors({
     NOT_FOUND: {
@@ -64,6 +68,10 @@ const apiContract = oc
     project: projectContract,
 
     officialResponsibility: officialResponsibilityContract,
+
+    votingUnit: votingUnitContract,
+    votingRegion: votingRegionContract,
+    votingVote: votingVoteContract
   });
 
 export default apiContract;

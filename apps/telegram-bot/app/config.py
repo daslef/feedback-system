@@ -9,7 +9,6 @@ class Config:
     webhook_path: str
     redis_url: str
     gateway_url: str
-    gateway_bearer: str
 
 
 def load_config() -> Config:
@@ -26,5 +25,4 @@ def load_config() -> Config:
         webhook_url=webhook_url,
         redis_url=env.str("REDIS_URL"),
         gateway_url=env.str("GATEWAY_URL"),
-        gateway_bearer=env.str("GATEWAY_BEARER"),
     )

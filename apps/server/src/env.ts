@@ -13,6 +13,7 @@ export const envSchema = v.object({
   PUBLIC_SERVER_URL: v.pipe(v.string(), v.url()),
   PUBLIC_WEB_URL: v.pipe(v.string(), v.url()),
   PUBLIC_ADMIN_URL: v.pipe(v.string(), v.url()),
+  PUBLIC_BOT_URL: v.pipe(v.string(), v.url()),
 
   MINIO_ACCESS_KEY: v.pipe(v.string(), v.minLength(12)),
   MINIO_SECRET_KEY: v.pipe(v.string(), v.minLength(12)),

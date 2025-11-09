@@ -1,7 +1,7 @@
 services:
   minio:
     extends:
-      file: compose.local.yaml
+      file: compose.minio.local.yaml
       service: minio
     labels:
       - traefik.enable=true

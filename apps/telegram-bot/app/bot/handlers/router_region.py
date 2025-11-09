@@ -9,20 +9,21 @@ router_region = Router()
 
 
 @router_region.callback_query(
-    FormStates.waiting_for_region_selection, F.data.in_(provider.get().keys())
+    FormStates.waiting_for_region_selection, F.data.in_([region["id"] for region in provider.get_regions()])
 )
 async def handle_region_selection(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
-    selected_region = callback.data
-    available_areas = provider.get().get(selected_region)
+    selected_region_id = callback.data
+    available_areas = provider.get_areas(selected_region_id)
 
     await callback.message.answer(
-        templates.prompt_to_area.format(selected_region),
+        templates.prompt_to_area.format(selected_region_id),
         reply_markup=build_area_keyboard(available_areas),
         parse_mode="MarkdownV2",
     )
 
-    await state.update_data(location=selected_region)
+    await state.update_data(voting_region_id=selected_region_id)
+    await state.update_data(available_areas=available_areas)
     await state.set_state(FormStates.waiting_for_area_selection)
 
 
