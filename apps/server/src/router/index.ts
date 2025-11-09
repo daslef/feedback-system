@@ -9,6 +9,7 @@ import officialResponsibilityRouter from "./officialResponsibility";
 
 import votingRegionRouter from "./votingRegion";
 import votingUnitRouter from "./votingUnit";
+import votingVoteRouter from "./votingVote";
 
 import feedbackTypeRouter from "./enumerations/feedbackType";
 import administrativeUnitTypeRouter from "./enumerations/administrativeUnitType";
@@ -29,7 +30,8 @@ const apiRouter = {
   personType: personTypeRouter,
   officialResponsibility: officialResponsibilityRouter,
   votingRegion: votingRegionRouter,
-  votingUnit: votingUnitRouter
+  votingUnit: votingUnitRouter,
+  votingVote: votingVoteRouter
 };
 
 export default apiRouter;

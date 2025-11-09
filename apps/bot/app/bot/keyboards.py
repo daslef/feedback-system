@@ -12,7 +12,7 @@ restart_button = [
 
 def _generate_inline_keyboard(values: List[str]):
     """Генерация инлайн-клавиатур"""
-    return [[InlineKeyboardButton(text=value, callback_data=value)] for value in values]
+    return [[InlineKeyboardButton(text=item["title"], callback_data=str(item["id"]))] for item in values]
 
 
 def build_region_keyboard(regions: List) -> InlineKeyboardMarkup:

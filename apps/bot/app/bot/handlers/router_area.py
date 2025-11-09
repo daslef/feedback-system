@@ -9,7 +9,7 @@ router_area = Router()
 
 
 @router_area.callback_query(
-    FormStates.waiting_for_area_selection, ~F.data.in_(state.get_data()["available_areas"])
+    FormStates.waiting_for_area_selection
 )
 async def handle_area_selection(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()

@@ -11,14 +11,16 @@ GATEWAY_HEADERS = {
 def get_regions():
     url = f"{config.gateway_url}/voting_regions"
     r = httpx.get(url, headers=GATEWAY_HEADERS)
-
-    return r.json()
+    data = r.json()
+    print(data)
+    return data
 
 def get_areas(area_id):
     url = f"{config.gateway_url}/voting_units?filter=voting_region_id[eq]{area_id}"
     r = httpx.get(url, headers=GATEWAY_HEADERS)
-
-    return r.json()
+    data = r.json()
+    print(data)
+    return data
 
 def save(payload):
     url = f"{config.gateway_url}/voting_votes"

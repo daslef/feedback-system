@@ -4,30 +4,51 @@ services:
     container_name: feedback-redis
     restart: unless-stopped
     env_file: .env
+    environment:
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    command:
+      [
+        "redis-server",
+        "--requirepass",
+        "${REDIS_PASSWORD}",
+        "--maxmemory-policy",
+        "noeviction",
+        "--save",
+        "60",
+        "1", 
+        "--loglevel",
+        "debug"
+      ]
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      test:
+        - CMD-SHELL
+        - "redis-cli -a $${REDIS_PASSWORD} --sni --tls ping"
+      interval: 15s
+      timeout: 20s
+      retries: 10
 
   bullboard:
     container_name: feedback-bullboard
     image: venatum/bull-board
     restart: unless-stopped
-    env_file: .env
     ports:
       - "7990:3000"
+    env_file: .env
     environment:
       REDIS_HOST: ${REDIS_HOST}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
       REDIS_PORT: 6379
       REDIS_USE_TLS: false
       BULL_PREFIX: bull
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
+        restart: true
 
 volumes:
   redis_data:

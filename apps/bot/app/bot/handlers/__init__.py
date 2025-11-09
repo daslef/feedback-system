@@ -35,8 +35,8 @@ async def send_welcome_message(message: types.Message, state: FSMContext):
 async def handle_start(message: types.Message, state: FSMContext):
     await state.clear()
 
-    regions = provider.get().keys()
     removeMarkupMessage = await message.answer("Получение данных...", reply_markup=ReplyKeyboardRemove())
+    regions = provider.get_regions()
     await removeMarkupMessage.delete()
 
     await message.answer(
@@ -51,7 +51,7 @@ async def handle_start(message: types.Message, state: FSMContext):
 async def handle_back(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
 
-    regions = provider.get().keys()
+    regions = provider.get_regions()
 
     await callback.message.answer(
         text=templates.prompt_to_regions,

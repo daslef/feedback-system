@@ -1,3 +1,4 @@
+import datetime
 from aiogram import types, Router, F
 from aiogram.fsm.context import FSMContext
 
@@ -11,19 +12,27 @@ router_feedback = Router()
 @router_feedback.message(FormStates.waiting_for_feedback, F.text.len() > 1)
 async def handle_feedback(message: types.Message, state: FSMContext):
     try:
+        removeMarkupMessage = await message.answer("Отправляем данные...", reply_markup=types.ReplyKeyboardRemove())
+
+        state_data = await state.get_data()
+
+        tz = datetime.timezone(datetime.timedelta(hours=3), name="Europe/Moscow")
+
+        provider.save(
+            {
+                "voting_unit_id": int(state_data["voting_unit_id"]),
+                "description": message.text,
+                "username": message.from_user.username or message.from_user.first_name,
+                "created_at": datetime.datetime.now(tz=tz).isoformat()
+            }
+        )
+
+        await removeMarkupMessage.delete()
+
         await message.answer(
             templates.feedback_success,
             reply_markup=build_feedback_keyboard(),
             parse_mode="MarkdownV2",
-        )
-
-        state_data = await state.get_data()
-        provider.save(
-            {
-                **state_data,
-                "description": message.text,
-                "username": message.from_user.username or message.from_user.first_name,
-            }
         )
 
     except Exception:

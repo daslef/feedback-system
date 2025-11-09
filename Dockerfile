@@ -6,10 +6,10 @@ ENV UV_PYTHON_DOWNLOADS=0
 
 WORKDIR /app
 RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=./apps/telegram-bot/uv.lock,target=uv.lock \
-    --mount=type=bind,source=./apps/telegram-bot/pyproject.toml,target=pyproject.toml \
+    --mount=type=bind,source=./apps/bot/uv.lock,target=uv.lock \
+    --mount=type=bind,source=./apps/bot/pyproject.toml,target=pyproject.toml \
     uv sync --locked --no-install-project --no-dev
-COPY ./apps/telegram-bot /app
+COPY ./apps/bot /app
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-dev
 
@@ -21,7 +21,6 @@ RUN groupadd --system --gid 999 nonroot \
 
 COPY --from=uv --chown=nonroot:nonroot /app /app
 
-# Place executables in the environment at the front of the path
 ENV PATH="/app/.venv/bin:$PATH"
 
 USER nonroot

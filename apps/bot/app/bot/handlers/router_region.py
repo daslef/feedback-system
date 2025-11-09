@@ -9,12 +9,15 @@ router_region = Router()
 
 
 @router_region.callback_query(
-    FormStates.waiting_for_region_selection, F.data.in_([region["id"] for region in provider.get_regions()])
+    FormStates.waiting_for_region_selection, F.data.in_([str(region["id"]) for region in provider.get_regions()])
 )
 async def handle_region_selection(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
     selected_region_id = callback.data
+
+    removeMarkupMessage = await callback.message.answer("Получение данных...", reply_markup=types.ReplyKeyboardRemove())
     available_areas = provider.get_areas(selected_region_id)
+    await removeMarkupMessage.delete()
 
     await callback.message.answer(
         templates.prompt_to_area.format(selected_region_id),
@@ -29,8 +32,10 @@ async def handle_region_selection(callback: types.CallbackQuery, state: FSMConte
 
 @router_region.message(FormStates.waiting_for_region_selection)
 async def handle_incorrect_region(message: types.Message):
+    regions = provider.get_regions()
+
     await message.answer(
         text=templates.error_handwritten,
-        reply_markup=build_area_keyboard(provider.get().keys()),
+        reply_markup=build_region_keyboard(regions),
         parse_mode="MarkdownV2",
     )

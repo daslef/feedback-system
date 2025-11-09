@@ -64,7 +64,7 @@ services:
       - "traefik.http.routers.bot.entrypoints=web-secure"
       - "traefik.http.routers.bot.tls.certresolver=tlsresolver"
       - "traefik.http.routers.bot.middlewares=middleware-rate-limit@file"
-      - "traefik.http.services.bot.loadbalancer.server.port=11224"
+      - "traefik.http.services.bot.loadbalancer.server.port=8000"
 
   web:
     extends:
@@ -98,3 +98,7 @@ secrets:
     file: ./infrastructure/secrets/authelia_session_secret
   walg_libsodium_key:
     file: ./infrastructure/secrets/walg_libsodium_key
+  postgres_user:
+    file: ./infrastructure/secrets/postgres_user
+  postgres_password:
+    file: ./infrastructure/secrets/postgres_password
