@@ -35,3 +35,4 @@ venv/
 *.egg/
 dist/
 build/
+infrastructure/traefik/logs/access.log
