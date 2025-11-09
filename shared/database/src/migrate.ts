@@ -145,8 +145,8 @@ async function migrateSqlite() {
     .addColumn("voting_unit_id", "integer", (col) =>
       col.references("voting_unit.id").onDelete("set null"),
     )
-    .addColumn("username", "text", (col) => col.notNull().unique())
-    .addColumn("description", "text", (col) => col.notNull().unique())
+    .addColumn("username", "text", (col) => col.notNull())
+    .addColumn("description", "text", (col) => col.notNull())
     .addColumn("created_at", "timestamp", (col) =>
       col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
     )

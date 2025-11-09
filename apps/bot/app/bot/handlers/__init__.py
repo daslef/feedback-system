@@ -31,15 +31,16 @@ async def send_welcome_message(message: types.Message, state: FSMContext):
     )
 
 
-@router.message(F.text == "Начать")
-async def handle_start(message: types.Message, state: FSMContext):
+@router.callback_query(F.data == "Начать")
+async def handle_start(callback: types.CallbackQuery, state: FSMContext):
     await state.clear()
+    await callback.answer()
 
-    removeMarkupMessage = await message.answer("Получение данных...", reply_markup=ReplyKeyboardRemove())
+    removeMarkupMessage = await callback.message.answer("Получение данных...", reply_markup=ReplyKeyboardRemove())
     regions = provider.get_regions()
     await removeMarkupMessage.delete()
 
-    await message.answer(
+    await callback.message.answer(
         templates.prompt_to_regions,
         reply_markup=keyboards.build_region_keyboard(regions),
         parse_mode="MarkdownV2",

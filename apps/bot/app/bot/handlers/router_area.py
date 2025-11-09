@@ -12,9 +12,9 @@ router_area = Router()
     FormStates.waiting_for_area_selection
 )
 async def handle_area_selection(callback: types.CallbackQuery, state: FSMContext):
-    await callback.answer()
     selected_area_id = callback.data
 
+    await callback.answer()
     await callback.message.answer(
         templates.area_success.format(selected_area_id), parse_mode="MarkdownV2"
     )

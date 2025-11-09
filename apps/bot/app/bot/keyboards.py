@@ -34,4 +34,5 @@ def build_feedback_keyboard() -> InlineKeyboardMarkup:
 
 def build_start_keyboard() -> KeyboardButton:
     """Начало взаимодействия"""
-    return ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="Начать")]], is_persistent=True, resize_keyboard=True)
+    return InlineKeyboardMarkup(inline_keyboard=[start_button])
+    # return ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="Предложить")]], is_persistent=True, resize_keyboard=True)
