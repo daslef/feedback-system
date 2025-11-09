@@ -28,7 +28,7 @@ function App() {
     translate: (key: string, params?: any) => {
       return String(t(key, params));
     },
-    changeLocale: (_: string) => {},
+    changeLocale: (_: string) => { },
     getLocale: () => {
       return "ru";
     },
@@ -96,6 +96,29 @@ function App() {
                   label: "Поселения",
                 },
               },
+              {
+                name: "voting-results",
+                list: "/voting-results",
+                meta: {
+                  parent: "Голосование",
+                  label: "Результаты",
+                }
+              },
+              {
+                name: "voting-units",
+                list: "/voting-units",
+                meta: {
+                  parent: "Голосование",
+                  label: "Участники",
+                }
+              },
+              {
+                name: "voting-regions",
+                list: "/voting-regions",
+                meta: {
+                  hide: true
+                }
+              }
             ]}
           >
             <AppRoutes />

@@ -27,6 +27,9 @@ const ListOfficials = React.lazy(() => import("./pages/officials/list"));
 const ListFeedback = React.lazy(() => import("./pages/feedback/list"));
 const ShowFeedback = React.lazy(() => import("./pages/feedback/show"));
 
+const ListVotingResults = React.lazy(() => import("./pages/voting-results/list"));
+const ListVotingUnits = React.lazy(() => import("./pages/voting-units/list"));
+
 const Login = React.lazy(() => import("./pages/auth/login"));
 const Register = React.lazy(() => import("./pages/auth/register"));
 
@@ -63,6 +66,10 @@ export default function AppRoutes() {
         </Route>
         <Route path="/persons" element={<ListPersons />} />
         <Route path="/officials" element={<ListOfficials />} />
+
+        <Route path="/voting-results" element={<ListVotingResults />} />
+        <Route path="/voting-units" element={<ListVotingUnits />} />
+
       </Route>
       <Route
         element={

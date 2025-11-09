@@ -34,7 +34,7 @@ const allVotingUnits = publicProcedure.votingUnit.all.handler(
 
           if (column === "id") {
             column =
-              "voting_region.id" as keyof Database["voting_unit"];
+              "voting_unit.id" as keyof Database["voting_unit"];
           }
 
           const operator = matchResult[2] as keyof typeof mapOperatorsToSql;
