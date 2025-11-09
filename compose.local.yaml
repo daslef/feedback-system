@@ -103,3 +103,7 @@ secrets:
     file: ./infrastructure/secrets/authelia_session_secret
   walg_libsodium_key:
     file: ./infrastructure/secrets/walg_libsodium_key
+  postgres_user:
+    file: ./infrastructure/secrets/postgres_user
+  postgres_password:
+    file: ./infrastructure/secrets/postgres_password

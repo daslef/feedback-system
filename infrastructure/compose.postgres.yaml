@@ -5,12 +5,10 @@ services:
       context: ./postgres
     container_name: feedback-postgres
     restart: unless-stopped
-    env_file:
-      - ../shared/database/.env
     environment:
-      POSTGRES_USER: ${POSTGRES_USER-LcUgfcteNXXSBrDiqniRJpGq}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD-7mQd*@cmKnTPC@H2d%kkwACjTeuh@Eq}
-      POSTGRES_DB: ${POSTGRES_DB-feedback}
+      POSTGRES_USER: /run/secrets/postgres_user
+      POSTGRES_PASSWORD: /run/secrets/postgres_password
+      POSTGRES_DB: feedback
       POSTGRES_PORT: 5432
       DATA_PATH: ./postgres/data
       LOGS_PATH: ./postgres/logs
@@ -23,6 +21,8 @@ services:
       WALG_S3_PREFIX: s3://backup/postgres-backups
       LC_LANG: ru_RU.UTF-8
     secrets:
+      - postgres_user
+      - postgres_password
       - minio_access_key
       - minio_secret_key
       - walg_libsodium_key
