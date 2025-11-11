@@ -67,8 +67,8 @@ export default function AppRoutes() {
         <Route path="/persons" element={<ListPersons />} />
         <Route path="/officials" element={<ListOfficials />} />
 
-        <Route path="/voting-results" element={<ListVotingResults />} />
-        <Route path="/voting-units" element={<ListVotingUnits />} />
+        <Route path="/voting_votes" element={<ListVotingResults />} />
+        <Route path="/voting_units" element={<ListVotingUnits />} />
 
       </Route>
       <Route

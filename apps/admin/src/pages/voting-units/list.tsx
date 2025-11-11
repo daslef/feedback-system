@@ -141,8 +141,14 @@ const ListVotingUnits = () => {
               defaultSortOrder={getDefaultSortOrder("voting_region", sorters)}
               render={(value: string, record: UnitRecord) => {
                 return isEditing(record.id) ? (
-                  <Form.Item name="last_name" style={{ margin: 0 }}>
-                    <Input autoFocus size="small" />
+                  <Form.Item name="voting_region_id" style={{ margin: 0 }}>
+                    <Select {...votingRegionsSelectProps}>
+                      {votingRegionsSelectProps?.options?.map((option) => (
+                        <Select.Option key={option.id} value={option.id}>
+                          {option.title}
+                        </Select.Option>
+                      ))}
+                    </Select>
                   </Form.Item>
                 ) : manyVotingRegionsQuery.isLoading ? (
                   <TextField
@@ -165,7 +171,7 @@ const ListVotingUnits = () => {
               defaultSortOrder={getDefaultSortOrder("title", sorters)}
               render={(value: string, record: UnitRecord) => {
                 return isEditing(record.id) ? (
-                  <Form.Item name="first_name" style={{ margin: 0 }}>
+                  <Form.Item name="title" style={{ margin: 0 }}>
                     <Input autoFocus size="small" defaultValue={value} />
                   </Form.Item>
                 ) : (
@@ -206,7 +212,7 @@ const ListVotingUnits = () => {
                       hideText
                       size="small"
                       recordItemId={record.id}
-                      resource="persons"
+                      resource="voting_units"
                     />
                   </Space>
                 );

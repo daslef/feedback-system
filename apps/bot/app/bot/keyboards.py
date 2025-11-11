@@ -6,7 +6,7 @@ start_button = [InlineKeyboardButton(text="Начать", callback_data="Нач�
 back_button = [InlineKeyboardButton(text="Назад", callback_data="Назад")]
 
 restart_button = [
-    InlineKeyboardButton(text="Дополнить сообщение", callback_data="Назад")
+    InlineKeyboardButton(text="Дополнить сообщение", callback_data="Начать")
 ]
 
 

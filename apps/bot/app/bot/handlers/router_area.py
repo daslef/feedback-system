@@ -8,13 +8,26 @@ from ..fsm import FormStates
 router_area = Router()
 
 
-@router_area.callback_query(
-    FormStates.waiting_for_area_selection
-)
+@router_area.callback_query(FormStates.waiting_for_area_selection, F.data == "Назад")
+async def handle_back(callback: types.CallbackQuery, state: FSMContext):
+    await callback.answer()
+    await callback.message.delete()
+
+    await state.set_state(FormStates.waiting_for_region_selection)
+
+
+@router_area.callback_query(FormStates.waiting_for_area_selection)
 async def handle_area_selection(callback: types.CallbackQuery, state: FSMContext):
+    await callback.answer()
+
+    state_data = await state.get_data()
+    available_areas_ids = [str(area["id"]) for area in state_data.get("available_areas")]
     selected_area_id = callback.data
 
-    await callback.answer()
+    if selected_area_id not in available_areas_ids:
+        await callback.message.answer(templates.error_handwritten, parse_mode="MarkdownV2")
+        return
+
     await callback.message.answer(
         templates.area_success.format(selected_area_id), parse_mode="MarkdownV2"
     )
@@ -23,12 +36,5 @@ async def handle_area_selection(callback: types.CallbackQuery, state: FSMContext
 
 
 @router_area.message(FormStates.waiting_for_area_selection)
-async def handle_handwritten_area(message: types.Message, state: FSMContext):
-    selected_region_id = await state.get_data()["selected_region_id"]
-    available_areas = provider.get_areas(selected_region_id)
-
-    await message.answer(
-        text=templates.error_handwritten,
-        reply_markup=build_area_keyboard(available_areas),
-        parse_mode="MarkdownV2",
-    )
+async def handle_handwritten_area(message: types.Message):
+    await message.answer(templates.error_handwritten, parse_mode="MarkdownV2")

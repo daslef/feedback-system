@@ -16,7 +16,7 @@ async def handle_feedback(message: types.Message, state: FSMContext):
 
         state_data = await state.get_data()
 
-        tz = datetime.timezone(datetime.timedelta(hours=3), name="Europe/Moscow")
+        tz = datetime.timezone(datetime.timedelta(hours=0), name="Europe/Moscow")
 
         provider.save(
             {

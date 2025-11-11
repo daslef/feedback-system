@@ -62,7 +62,7 @@ const ListProjects = () => {
           defaultSortOrder={getDefaultSortOrder("title", sorters)}
         />
         <Table.Column
-          dataIndex={"administrative_unit_id"}
+          dataIndex="administrative_unit_id"
           title="Поселение"
           sorter
           render={(value) => {
@@ -100,24 +100,6 @@ const ListProjects = () => {
           title="Год реализации"
           sorter
           defaultSortOrder={getDefaultSortOrder("year_of_completion", sorters)}
-          filterDropdown={(props) => (
-            <FilterDropdown
-              {...props}
-              mapValue={(selectedKey) => {
-                if (Array.isArray(selectedKey)) return undefined;
-                return selectedKey && selectedKey !== ""
-                  ? Number(selectedKey)
-                  : undefined;
-              }}
-            >
-              <Select style={{ minWidth: 200 }} />
-            </FilterDropdown>
-          )}
-          defaultFilteredValue={getDefaultFilter(
-            "year_of_completion",
-            filters,
-            "eq",
-          )}
         />
         <Table.Column dataIndex="latitude" title="Широта" />
         <Table.Column dataIndex="longitude" title="Долгота" />

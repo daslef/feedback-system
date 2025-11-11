@@ -31,11 +31,5 @@ async def handle_region_selection(callback: types.CallbackQuery, state: FSMConte
 
 
 @router_region.message(FormStates.waiting_for_region_selection)
-async def handle_incorrect_region(message: types.Message):
-    regions = provider.get_regions()
-
-    await message.answer(
-        text=templates.error_handwritten,
-        reply_markup=build_region_keyboard(regions),
-        parse_mode="MarkdownV2",
-    )
+async def handle_handwritten_region(message: types.Message):
+    await message.answer(templates.error_handwritten, parse_mode="MarkdownV2")

@@ -97,24 +97,24 @@ function App() {
                 },
               },
               {
-                name: "voting-results",
-                list: "/voting-results",
+                name: "voting_votes",
+                list: "/voting_votes",
                 meta: {
                   parent: "Голосование",
                   label: "Результаты",
                 }
               },
               {
-                name: "voting-units",
-                list: "/voting-units",
+                name: "voting_units",
+                list: "/voting_units",
                 meta: {
                   parent: "Голосование",
                   label: "Участники",
                 }
               },
               {
-                name: "voting-regions",
-                list: "/voting-regions",
+                name: "voting_regions",
+                list: "/voting_regions",
                 meta: {
                   hide: true
                 }

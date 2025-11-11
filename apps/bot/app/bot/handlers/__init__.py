@@ -48,20 +48,6 @@ async def handle_start(callback: types.CallbackQuery, state: FSMContext):
     await state.set_state(FormStates.waiting_for_region_selection)
 
 
-@router.callback_query(F.data == "Назад")
-async def handle_back(callback: types.CallbackQuery, state: FSMContext):
-    await callback.answer()
-
-    regions = provider.get_regions()
-
-    await callback.message.answer(
-        text=templates.prompt_to_regions,
-        reply_markup=keyboards.build_region_keyboard(regions),
-        parse_mode="MarkdownV2",
-    )
-    await state.set_state(FormStates.waiting_for_region_selection)
-
-
 @router.message(F.text.startswith("/"))
 async def handle_unknown_message(message: types.Message):
     await message.answer(templates.error_unknown, parse_mode="MarkdownV2")
