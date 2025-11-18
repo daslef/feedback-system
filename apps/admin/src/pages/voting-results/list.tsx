@@ -43,9 +43,15 @@ const ListVotingResults = () => {
   const { triggerExport, isLoading: exportLoading } = useExport({
     pageSize: 48,
     resource: "voting_votes",
+    meta: {
+      export: true
+    },
     mapData: (item) => ({
-      ...item,
-      created_at: new Date(item.created_at).toLocaleString("ru-RU")
+      "Респондент": item.username,
+      "Описание": item.description,
+      "Поселение": item.voting_unit,
+      "Район": item.voting_region,
+      "Дата": new Date(item.created_at).toLocaleString("ru-RU")
     })
   });
 

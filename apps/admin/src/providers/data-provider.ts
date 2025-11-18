@@ -68,6 +68,10 @@ export const dataProvider: DataProvider = {
       }
     }
 
+    if (meta?.export) {
+      params.append("export", "true")
+    }
+
     const response = await fetcher(
       `${API_URL}/${resource}?${params.toString()}`,
     );

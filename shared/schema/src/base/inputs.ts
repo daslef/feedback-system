@@ -69,6 +69,7 @@ export const baseInputAll = v.object({
   ...basePaginationInput.entries,
   sort: baseSortInput,
   filter: baseFilterInput,
+  export: v.optional(v.string())
 });
 
 export type BaseInputAll = v.InferOutput<typeof baseInputAll>;

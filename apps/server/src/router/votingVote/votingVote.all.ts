@@ -9,6 +9,19 @@ const allVotingVotes = publicProcedure.votingVote.all.handler(
 
       let query = _baseSelect(context.db)
 
+      if (input.export) {
+        query = query
+          .innerJoin('voting_unit', 'voting_unit.id', 'voting_vote.voting_unit_id')
+          .innerJoin('voting_region', 'voting_unit.voting_region_id', 'voting_region.id')
+          .select([
+            "voting_vote.username",
+            "voting_vote.description",
+            "voting_unit.title as voting_unit",
+            "voting_region.title as voting_region",
+            "voting_vote.created_at",
+          ])
+      }
+
       if (filter?.length) {
         const mapOperatorsToSql = {
           eq: "=",

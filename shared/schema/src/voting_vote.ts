@@ -14,7 +14,11 @@ export const votingVoteSchema = v.object({
   ]),
 });
 
-export const getVotingVoteSchema = votingVoteSchema
+export const getVotingVoteSchema = v.object({
+  ...votingVoteSchema.entries,
+  voting_unit: v.optional(v.pipe(v.string(), v.nonEmpty())),
+  voting_region: v.optional(v.pipe(v.string(), v.nonEmpty())),
+})
 
 export const createVotingVoteSchema = v.omit(votingVoteSchema, [
   "id",
